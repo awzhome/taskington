@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>ppbackup-console</AssemblyName>
+    <PackageId>PPBackup.Console</PackageId>
+    <Authors>Andreas Weizel</Authors>
+    <Product>PPBackup</Product>
+    <Description>PPBackup Console Frontend</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="UI.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PPBackup.Base\PPBackup.Base.csproj" />
+  </ItemGroup>
+
+</Project>

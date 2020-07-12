@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>ppbackup-ui</AssemblyName>
+    <PackageId>PPBackup.WinApp</PackageId>
+    <Authors>Andreas Weizel</Authors>
+    <Product>PPBackup</Product>
+    <Description>PPBackup Windows GUI Frontend</Description>
+    <Copyright>Copyright (c) 2020 Andreas Weizel</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PPBackup.Base\PPBackup.Base.csproj" />
+  </ItemGroup>
+
+</Project>
