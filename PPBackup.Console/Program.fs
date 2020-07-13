@@ -11,13 +11,22 @@ let main argv =
 
     let planExecutions = application.Services.Get<seq<IPlanExecution>>()
 
+    let mutable cursorPos = UI.getCursorPos()
+
     for exec in planExecutions do
         exec.Status.PropertyChanged.AddHandler (PropertyChangedEventHandler(fun o e ->
-            printfn "[%s %d%%] %s" exec.BackupPlan.Name exec.Status.Progress exec.Status.StateText
+            UI.setCursorPos cursorPos
+            UI.emptyline 4
+            UI.setCursorPos cursorPos
+            printfn "[%d%%] %s" exec.Status.Progress exec.BackupPlan.Name
+            printfn "%s" exec.Status.StateText
         ))
 
     UI.menu "PPBackup" (planExecutions
         |> Seq.map(fun exec ->
-            (exec.BackupPlan.Name, fun() -> exec.Execute())))
+            (exec.BackupPlan.Name, fun() ->
+                cursorPos <- UI.getCursorPos()
+                exec.Execute()
+            )))
 
     0

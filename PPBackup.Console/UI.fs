@@ -20,6 +20,23 @@ module UI =
         line()
         margin()
 
+    let public head() =
+        margin()
+        line()
+        printfn "  PPBackup"
+        line()
+        margin()
+
+    let public emptyline count =
+        for i = 1 to count do
+            printfn "%s" (new String(' ', Console.BufferWidth))
+
+    let public getCursorPos() =
+        (Console.CursorLeft, Console.CursorTop)
+
+    let public setCursorPos pos =
+        Console.SetCursorPosition((fst pos), (snd pos))
+
     let private menuloop (title : string) (entries : seq<string * (unit -> unit)>) =
         let i = ref 0
         let entriesmap =
@@ -31,11 +48,7 @@ module UI =
                     )
                 |> Map.ofSeq
         
-        margin()
-        line()
-        printfn "  %s" title
-        line()
-        margin()
+        head()
         entriesmap |> Map.iter (fun key value ->
             printfn "[%s] %s" key (fst value))
         margin()
