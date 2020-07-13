@@ -16,7 +16,7 @@ let main argv =
             printfn "[%s %d%%] %s" exec.BackupPlan.Name exec.Status.Progress exec.Status.StateText
         ))
 
-    UI.menu "PerspectivesPictured Backup Frontend" (planExecutions
+    UI.menu "PPBackup" (planExecutions
         |> Seq.map(fun exec ->
             (exec.BackupPlan.Name, fun() -> exec.Execute())))
 
