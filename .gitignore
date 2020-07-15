@@ -4,3 +4,5 @@ packages/
 *.user
 .vs/
 .ionide/
+.fake/
+build.fsx.lock
