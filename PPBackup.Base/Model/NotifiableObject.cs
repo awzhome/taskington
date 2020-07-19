@@ -7,7 +7,7 @@ namespace PPBackup.Base.Model
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected void NotifyPropertyChange([CallerMemberName] string propertyName = "")
+        public void NotifyPropertyChange([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

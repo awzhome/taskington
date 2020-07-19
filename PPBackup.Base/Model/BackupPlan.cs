@@ -20,27 +20,5 @@ namespace PPBackup.Base.Model
         }
 
         public ObservableCollection<BackupStep> Steps { get; } = new ObservableCollection<BackupStep>();
-
-        private bool hasErrors;
-        public bool HasErrors
-        {
-            get => hasErrors;
-            set
-            {
-                hasErrors = value;
-                NotifyPropertyChange();
-            }
-        }
-
-        private string? errorMessage;
-        public string? ErrorMessage
-        {
-            get => errorMessage;
-            set
-            {
-                errorMessage = value;
-                NotifyPropertyChange();
-            }
-        }
     }
 }

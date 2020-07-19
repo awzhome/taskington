@@ -95,8 +95,7 @@ namespace PPBackup.Base.Config
                                         }
                                         else
                                         {
-                                            plan.HasErrors = true;
-                                            plan.ErrorMessage = "Backup plan contains steps of unknown type.";
+                                            plan.Steps.Add(new InvalidBackupStep("Step has no type."));
                                         }
                                     }
                                 }

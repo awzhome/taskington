@@ -1,7 +1,9 @@
 ﻿using PPBackup.Base.Config;
 using PPBackup.Base.Executors;
+using PPBackup.Base.Model;
 using PPBackup.Base.SystemOperations;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace PPBackup.Base
@@ -42,15 +44,31 @@ namespace PPBackup.Base
 
             foreach (var plan in backupPlans)
             {
-                var planExecutionCreator = Services.Get<IPlanExecutionCreator>(execution => execution.RunType == plan.RunType);
-                if (planExecutionCreator == null)
+                if (plan.Steps.OfType<InvalidBackupStep>().Any())
                 {
-                    plan.HasErrors = true;
-                    plan.ErrorMessage = $"Unknown backup plan run type '{plan.RunType}";
+                    planExecutions.Add(new InvalidPlanExecution(plan,
+                        new PlanExecutionStatus()
+                        {
+                            HasErrors = true,
+                            StateText = $"Plan contains invalid steps."
+                        }));
                 }
                 else
                 {
-                    planExecutions.Add(planExecutionCreator.Create(plan, new PlanExecutionStatus()));
+                    var planExecutionCreator = Services.Get<IPlanExecutionCreator>(execution => execution.RunType == plan.RunType);
+                    if (planExecutionCreator == null)
+                    {
+                        planExecutions.Add(new InvalidPlanExecution(plan,
+                            new PlanExecutionStatus()
+                            {
+                                HasErrors = true,
+                                StateText = $"Unknown backup plan run type '{plan.RunType}'"
+                            }));
+                    }
+                    else
+                    {
+                        planExecutions.Add(planExecutionCreator.Create(plan, new PlanExecutionStatus()));
+                    }
                 }
             }
         }
