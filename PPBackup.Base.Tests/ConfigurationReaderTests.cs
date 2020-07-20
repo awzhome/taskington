@@ -1,4 +1,5 @@
 ﻿using PPBackup.Base.Config;
+using PPBackup.Base.Model;
 using System;
 using Xunit;
 
@@ -33,7 +34,7 @@ namespace PPBackup.Base.Tests
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.False(plan.HasErrors, nameof(plan.HasErrors));
+                    Assert.IsType<BackupPlan>(plan);
                     Assert.Equal("manually", plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("somevalue", plan["somekey"]);
@@ -56,7 +57,7 @@ namespace PPBackup.Base.Tests
                 },
                 plan =>
                 {
-                    Assert.False(plan.HasErrors, nameof(plan.HasErrors));
+                    Assert.IsType<BackupPlan>(plan);
                     Assert.Equal("automatically", plan.RunType);
                     Assert.Equal("Test Plan 2", plan.Name);
                     Assert.Collection(plan.Steps,
@@ -85,7 +86,7 @@ namespace PPBackup.Base.Tests
             var plans = configReader.Read();
             Assert.Collection(configReader.Read(), plan =>
             {
-                Assert.False(plan.HasErrors, nameof(plan.HasErrors));
+                Assert.IsType<BackupPlan>(plan);
                 Assert.Equal("SOMETHINGUNKNOWN", plan.RunType);
                 Assert.Equal("Test Plan", plan.Name);
                 Assert.Collection(plan.Steps,
@@ -114,7 +115,7 @@ namespace PPBackup.Base.Tests
             var plans = configReader.Read();
             Assert.Collection(configReader.Read(), plan =>
             {
-                Assert.False(plan.HasErrors, nameof(plan.HasErrors));
+                Assert.IsType<BackupPlan>(plan);
                 Assert.Equal("manually", plan.RunType);
                 Assert.Equal("Test Plan", plan.Name);
                 Assert.Collection(plan.Steps,
@@ -158,7 +159,7 @@ steps:
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.False(plan.HasErrors, nameof(plan.HasErrors));
+                    Assert.IsType<BackupPlan>(plan);
                     Assert.Equal("manually", plan.RunType);
                     Assert.Equal("Test Plan", plan.Name);
                     Assert.Null(plan["somekey"]);
