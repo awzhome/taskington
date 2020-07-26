@@ -1,4 +1,5 @@
 ﻿using PPBackup.Base.Model;
+using System.Threading.Tasks;
 
 namespace PPBackup.Base.Executors
 {
@@ -31,11 +32,11 @@ namespace PPBackup.Base.Executors
             Status = status;
         }
 
-        public void Execute()
+        public async Task ExecuteAsync()
         {
             if (BackupPlan != null && Status != null)
             {
-                planExecutionHelper.Execute(BackupPlan, Status);
+                await planExecutionHelper.ExecuteAsync(BackupPlan, Status);
             }
         }
     }

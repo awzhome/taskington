@@ -26,7 +26,7 @@ let main argv =
         |> Seq.map(fun exec ->
             (exec.BackupPlan.Name, fun() ->
                 cursorPos <- UI.getCursorPos()
-                exec.Execute()
+                exec.ExecuteAsync().Wait()
             )))
 
     0

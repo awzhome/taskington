@@ -1,4 +1,5 @@
 ﻿using PPBackup.Base.Model;
+using System.Threading.Tasks;
 
 namespace PPBackup.Base.Executors
 {
@@ -10,7 +11,7 @@ namespace PPBackup.Base.Executors
 
     public interface IPlanExecution
     {
-        void Execute();
+        Task ExecuteAsync();
         BackupPlan BackupPlan { get; }
         PlanExecutionStatus Status { get; }
     }

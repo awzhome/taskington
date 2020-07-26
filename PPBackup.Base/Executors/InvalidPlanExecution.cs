@@ -1,5 +1,6 @@
 ﻿using PPBackup.Base.Model;
 using System;
+using System.Threading.Tasks;
 
 namespace PPBackup.Base.Executors
 {
@@ -18,6 +19,12 @@ namespace PPBackup.Base.Executors
         public void Execute()
         {
             Status.NotifyPropertyChange(nameof(Status.HasErrors));
+        }
+
+        public Task ExecuteAsync()
+        {
+            Status.NotifyPropertyChange(nameof(Status.HasErrors));
+            return Task.CompletedTask;
         }
     }
 }
