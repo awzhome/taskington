@@ -19,7 +19,10 @@ let main argv =
             UI.emptyline 4
             UI.setCursorPos cursorPos
             printfn "[%d%%] %s" exec.Status.Progress exec.BackupPlan.Name
-            printfn "%s" exec.Status.StateText
+            if exec.Status.HasErrors then
+                printfn "ERROR: %s" exec.Status.StateText
+            else
+                printfn "%s" exec.Status.StateText
         ))
 
     UI.menu "PPBackup" (planExecutions
