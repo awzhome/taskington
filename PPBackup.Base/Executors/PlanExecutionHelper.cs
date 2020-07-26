@@ -28,7 +28,7 @@ namespace PPBackup.Base.Executors
                 int planProgress = 0;
                 foreach (var step in plan.Steps)
                 {
-                    var stepExecution = application.Services.Get<IStepExecution>(s => s.Type == step.RunType);
+                    var stepExecution = application.Services.Get<IStepExecution>(s => s.Type == step.StepType);
                     if (stepExecution != null)
                     {
                         var stepStatus = new StepExecutionStatus();
@@ -56,7 +56,7 @@ namespace PPBackup.Base.Executors
                     else
                     {
                         status.HasErrors = true;
-                        status.StateText = $"Unknown execution step '{step.RunType}'";
+                        status.StateText = $"Unknown execution step '{step.StepType}'";
                         break;
                     }
                 }

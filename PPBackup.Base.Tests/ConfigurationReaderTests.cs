@@ -43,14 +43,14 @@ namespace PPBackup.Base.Tests
                     Assert.Collection(plan.Steps,
                         step =>
                         {
-                            Assert.Equal("sync", step.RunType);
+                            Assert.Equal("sync", step.StepType);
                             Assert.Equal("path1/path2", step["from"]);
                             Assert.Equal("path3/path4", step["to"]);
                             Assert.Null(step["step"]);
                         },
                         step =>
                         {
-                            Assert.Equal("sync", step.RunType);
+                            Assert.Equal("sync", step.StepType);
                             Assert.Equal("path5/path6/file7", step["from"]);
                             Assert.Equal("path8/path9/file0", step["to"]);
                         });
@@ -63,7 +63,7 @@ namespace PPBackup.Base.Tests
                     Assert.Collection(plan.Steps,
                         step =>
                         {
-                            Assert.Equal("sync", step.RunType);
+                            Assert.Equal("sync", step.StepType);
                             Assert.Equal("path11/path12", step["from"]);
                             Assert.Equal("path13/path14", step["to"]);
                         });
@@ -92,7 +92,7 @@ namespace PPBackup.Base.Tests
                 Assert.Collection(plan.Steps,
                     step =>
                     {
-                        Assert.Equal("sync", step.RunType);
+                        Assert.Equal("sync", step.StepType);
                         Assert.Equal("path1/path2", step["from"]);
                         Assert.Equal("path3/path4", step["to"]);
                     });
@@ -121,7 +121,7 @@ namespace PPBackup.Base.Tests
                 Assert.Collection(plan.Steps,
                     step =>
                     {
-                        Assert.Equal("SOMETHINGUNKNOWN", step.RunType);
+                        Assert.Equal("SOMETHINGUNKNOWN", step.StepType);
                         Assert.Equal("path1/path2", step["from"]);
                         Assert.Equal("path3/path4", step["to"]);
                     });

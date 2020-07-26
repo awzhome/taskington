@@ -4,8 +4,9 @@ namespace PPBackup.Base.Model
 {
     public class BackupPlan : Model
     {
-        public BackupPlan(string type) : base(type)
+        public BackupPlan(string type)
         {
+            this.type = type;
         }
 
         private string? name;
@@ -15,6 +16,17 @@ namespace PPBackup.Base.Model
             set
             {
                 name = value;
+                NotifyPropertyChange();
+            }
+        }
+
+        private string type;
+        public string RunType
+        {
+            get => type;
+            set
+            {
+                type = value;
                 NotifyPropertyChange();
             }
         }

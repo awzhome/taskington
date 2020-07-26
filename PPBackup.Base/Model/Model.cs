@@ -4,23 +4,7 @@ namespace PPBackup.Base.Model
 {
     public abstract class Model : NotifiableObject
     {
-        private string type;
         private readonly Dictionary<string, string> properties = new Dictionary<string, string>();
-
-        public Model(string type)
-        {
-            this.type = type;
-        }
-
-        public string RunType
-        {
-            get => type;
-            set
-            {
-                type = value;
-                NotifyPropertyChange();
-            }
-        }
 
         public string? this[string name]
         {
