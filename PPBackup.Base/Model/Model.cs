@@ -2,7 +2,7 @@
 
 namespace PPBackup.Base.Model
 {
-    public abstract class Model : NotifiableObject
+    public abstract class Model
     {
         private readonly Dictionary<string, string> properties = new Dictionary<string, string>();
 

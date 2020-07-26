@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace PPBackup.Base.Model
 {
@@ -6,31 +7,13 @@ namespace PPBackup.Base.Model
     {
         public BackupPlan(string type)
         {
-            this.type = type;
+            RunType = type;
         }
 
-        private string? name;
-        public string? Name
-        {
-            get => name;
-            set
-            {
-                name = value;
-                NotifyPropertyChange();
-            }
-        }
+        public string? Name { get; set; }
 
-        private string type;
-        public string RunType
-        {
-            get => type;
-            set
-            {
-                type = value;
-                NotifyPropertyChange();
-            }
-        }
+        public string RunType { get; set; }
 
-        public ObservableCollection<BackupStep> Steps { get; } = new ObservableCollection<BackupStep>();
+        public List<BackupStep> Steps { get; } = new List<BackupStep>();
     }
 }
