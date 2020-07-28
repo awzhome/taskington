@@ -16,7 +16,7 @@ namespace PPBackup.Base.Executors
 
         public string Type => "sync";
 
-        public void Execute(BackupStep step, Placeholders placeholders, StepExecutionStatus status)
+        public void Execute(BackupStep step, Placeholders placeholders, StepExecutionEvents status)
         {
             var syncStep = new SyncStep(step, placeholders);
             if (syncStep.From != null && syncStep.To != null)
@@ -37,14 +37,14 @@ namespace PPBackup.Base.Executors
                             {
                                 SyncDirectory(syncStep.SyncDirection, dir, Path.Combine(syncStep.To, Path.GetFileName(dir)), status);
                                 dirsFinished++;
-                                status.Progress = dirsFinished * 100 / directoryCount;
+                                status.Progress(dirsFinished * 100 / directoryCount);
                             }
                             break;
                         }
                     case SynchronizedObject.File:
                         if (syncStep.File != null)
                         {
-                            status.StateText = $"Sync file {Path.GetFileName(syncStep.File)}";
+                            status.StatusText($"Sync file {Path.GetFileName(syncStep.File)}");
                             systemOperations.SyncFile(syncStep.From, syncStep.To, syncStep.File);
                         }
                         break;
@@ -52,9 +52,9 @@ namespace PPBackup.Base.Executors
             }
         }
 
-        private void SyncDirectory(SyncDirection syncDirection, string dir1, string dir2, StepExecutionStatus status)
+        private void SyncDirectory(SyncDirection syncDirection, string dir1, string dir2, StepExecutionEvents status)
         {
-            status.StateText = $"Sync directory {Path.GetFileName(dir1)}";
+            status.StatusText($"Sync directory {Path.GetFileName(dir1)}");
             systemOperations.SyncDirectory(syncDirection, dir1, dir2);
         }
     }

@@ -9,27 +9,53 @@ let main argv =
     let application = Application()
     application.Start()
 
-    let planExecutions = application.Services.Get<seq<IPlanExecution>>()
+    let executablePlans = application.Services.Get<seq<ExecutableBackupPlan>>()
 
     let mutable cursorPos = UI.getCursorPos()
+    let mutable planName = ""
+    let mutable progress = 0
+    let mutable hasErrors = false
+    let mutable statusText = ""
+    let mutable isRunning = false
 
-    for exec in planExecutions do
-        exec.Status.PropertyChanged.AddHandler (PropertyChangedEventHandler(fun o e ->
+    let initProgress() =
+        progress <- 0
+        hasErrors <- false
+        statusText <- ""
+
+    let updateProgress() =
+        if isRunning then
             UI.setCursorPos cursorPos
             UI.emptyline 4
             UI.setCursorPos cursorPos
-            printfn "[%d%%] %s" exec.Status.Progress exec.BackupPlan.Name
-            if exec.Status.HasErrors then
-                printfn "ERROR: %s" exec.Status.StateText
+            printfn "[%d%%] %s" progress planName
+            if hasErrors then
+                printfn "ERROR: %s" statusText
             else
-                printfn "%s" exec.Status.StateText
-        ))
+                printfn "%s" statusText
 
-    UI.menu "PPBackup" (planExecutions
-        |> Seq.map(fun exec ->
-            (exec.BackupPlan.Name, fun() ->
+    for plan in executablePlans do
+        plan.Events.IsRunningUpdated.AddHandler (fun o e ->
+            if e.IsRunning then
+                initProgress()
+                planName <- e.BackupPlan.Name
+            isRunning <- e.IsRunning)
+        plan.Events.ProgressUpdated.AddHandler (fun o e ->
+            progress <- e.Progress
+            updateProgress())
+        plan.Events.HasErrorsUpdated.AddHandler (fun o e ->
+            hasErrors <- e.HasErrors
+            statusText <- e.StatusText
+            updateProgress())
+        plan.Events.StatusTextUpdated.AddHandler (fun o e ->
+            statusText <- e.StatusText
+            updateProgress())
+
+    UI.menu "PPBackup" (executablePlans
+        |> Seq.map(fun plan ->
+            (plan.BackupPlan.Name, fun() ->
                 cursorPos <- UI.getCursorPos()
-                exec.ExecuteAsync().Wait()
+                plan.Execution.ExecuteAsync().Wait()
             )))
 
     0

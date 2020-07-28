@@ -6,6 +6,6 @@ namespace PPBackup.Base.Executors
     public interface IStepExecution
     {
         string Type { get; }
-        void Execute(BackupStep backupStep, Placeholders placeholders, StepExecutionStatus status);
+        void Execute(BackupStep backupStep, Placeholders placeholders, StepExecutionEvents status);
     }
 }

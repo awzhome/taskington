@@ -4,7 +4,6 @@ using PPBackup.Base.Model;
 using PPBackup.Base.SystemOperations;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 
 namespace PPBackup.Base
 {
@@ -21,7 +20,7 @@ namespace PPBackup.Base
 
         private void RegisterDefaultServices()
         {
-            var planExecutions = new List<IPlanExecution>();
+            var executablePlans = new List<ExecutableBackupPlan>();
 
             Services
                 .With(this)
@@ -31,43 +30,45 @@ namespace PPBackup.Base
                 .With<IStepExecution, SyncStepExecution>()
                 .With<PlanExecutionHelper>()
                 .With<IPlanExecutionCreator, ManualPlanExecution.Creator>()
-                .With(planExecutions)
-                .With<IEnumerable<IPlanExecution>>(planExecutions);
+                .With(executablePlans)
+                .With<IEnumerable<ExecutableBackupPlan>>(executablePlans);
         }
 
         public void Start()
         {
             Services.Start();
 
-            var planExecutions = Services.Get<List<IPlanExecution>>();
+            var executablePlans = Services.Get<List<ExecutableBackupPlan>>();
             var backupPlans = Services.Get<ConfigurationReader>().Read();
 
             foreach (var plan in backupPlans)
             {
+                var events = new PlanExecutionEvents(plan);
+
                 if (plan.Steps.OfType<InvalidBackupStep>().Any())
                 {
-                    planExecutions.Add(new InvalidPlanExecution(plan,
-                        new PlanExecutionStatus()
-                        {
-                            HasErrors = true,
-                            StateText = $"Plan contains invalid steps."
-                        }));
+                    executablePlans.Add(new ExecutableBackupPlan(
+                        plan,
+                        new InvalidPlanExecution(events, "Plan contains invalid steps."),
+                        events));
                 }
                 else
                 {
-                    var planExecutionCreator = Services.Get<IPlanExecutionCreator>(execution => execution.RunType == plan.RunType);
+                    var planExecutionCreator = Services.Get<IPlanExecutionCreator>(
+                        execution => execution.RunType == plan.RunType);
                     if (planExecutionCreator == null)
                     {
-                        planExecutions.Add(new InvalidPlanExecution(plan,
-                            new PlanExecutionStatus()
-                            {
-                                HasErrors = true,
-                                StateText = $"Unknown backup plan run type '{plan.RunType}'"
-                            }));
+                        executablePlans.Add(new ExecutableBackupPlan(
+                            plan,
+                            new InvalidPlanExecution(events, $"Unknown backup plan run type '{plan.RunType}'"),
+                            events));
                     }
                     else
                     {
-                        planExecutions.Add(planExecutionCreator.Create(plan, new PlanExecutionStatus()));
+                        executablePlans.Add(new ExecutableBackupPlan(
+                            plan,
+                            planExecutionCreator.Create(plan, events),
+                            events));
                     }
                 }
             }

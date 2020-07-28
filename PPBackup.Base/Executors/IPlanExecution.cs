@@ -6,13 +6,11 @@ namespace PPBackup.Base.Executors
     public interface IPlanExecutionCreator
     {
         string RunType { get; }
-        IPlanExecution Create(BackupPlan plan, PlanExecutionStatus status);
+        IPlanExecution Create(BackupPlan plan, PlanExecutionEvents events);
     }
 
     public interface IPlanExecution
     {
         Task ExecuteAsync();
-        BackupPlan BackupPlan { get; }
-        PlanExecutionStatus Status { get; }
     }
 }

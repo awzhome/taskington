@@ -1,21 +1,18 @@
 ﻿using PPBackup.Base.Model;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PPBackup.Base.Executors
 {
     public class ExecutableBackupPlan
     {
-        public ExecutableBackupPlan(BackupPlan plan, IPlanExecution planExecution, PlanExecutionStatus status)
+        public ExecutableBackupPlan(BackupPlan backupPlan, IPlanExecution execution, IPlanExecutionEvents events)
         {
-            Plan = plan;
-            PlanExecution = planExecution;
-            Status = status;
+            BackupPlan = backupPlan;
+            Execution = execution;
+            Events = events;
         }
 
-        public BackupPlan Plan { get; }
-        public IPlanExecution PlanExecution { get; }
-        public PlanExecutionStatus Status { get; }
+        public BackupPlan BackupPlan { get; }
+        public IPlanExecution Execution { get; }
+        public IPlanExecutionEvents Events { get; }
     }
 }

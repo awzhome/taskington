@@ -6,10 +6,8 @@ namespace PPBackup.Base.Executors
     internal class ManualPlanExecution : IPlanExecution
     {
         private readonly PlanExecutionHelper planExecutionHelper;
-
-        public BackupPlan BackupPlan { get; }
-
-        public PlanExecutionStatus Status { get; }
+        private readonly BackupPlan backupPlan;
+        private readonly PlanExecutionEvents events;
 
         public class Creator : IPlanExecutionCreator
         {
@@ -22,21 +20,21 @@ namespace PPBackup.Base.Executors
 
             public string RunType => "manually";
 
-            public IPlanExecution Create(BackupPlan plan, PlanExecutionStatus status) => new ManualPlanExecution(planExecutionHelper, plan, status);
+            public IPlanExecution Create(BackupPlan plan, PlanExecutionEvents events) => new ManualPlanExecution(planExecutionHelper, plan, events);
         }
 
-        public ManualPlanExecution(PlanExecutionHelper planExecutionHelper, BackupPlan plan, PlanExecutionStatus status)
+        public ManualPlanExecution(PlanExecutionHelper planExecutionHelper, BackupPlan backupPlan, PlanExecutionEvents events)
         {
             this.planExecutionHelper = planExecutionHelper;
-            BackupPlan = plan;
-            Status = status;
+            this.backupPlan = backupPlan;
+            this.events = events;
         }
 
         public async Task ExecuteAsync()
         {
-            if (BackupPlan != null && Status != null)
+            if (backupPlan != null && events != null)
             {
-                await planExecutionHelper.ExecuteAsync(BackupPlan, Status);
+                await planExecutionHelper.ExecuteAsync(backupPlan, events);
             }
         }
     }

@@ -17,57 +17,44 @@ namespace PPBackup.Base.Executors
             this.systemOperations = systemOperations;
         }
 
-        public async Task ExecuteAsync(BackupPlan plan, PlanExecutionStatus status)
+        public async Task ExecuteAsync(BackupPlan plan, PlanExecutionEvents events)
         {
             await Task.Run(() =>
             {
                 try
                 {
+                    events.IsRunning(true);
+
                     var placeholders = new Placeholders();
                     systemOperations.LoadSystemPlaceholders(placeholders);
 
                     int stepsFinished = 0;
-                    status.Progress = 0;
+                    events.Progress(0);
                     int planProgress = 0;
                     foreach (var step in plan.Steps)
                     {
                         var stepExecution = application.Services.Get<IStepExecution>(s => s.Type == step.StepType);
                         if (stepExecution != null)
                         {
-                            var stepStatus = new StepExecutionStatus();
-                            stepStatus.PropertyChanged += (sender, e) =>
-                            {
-                                switch (e.PropertyName)
-                                {
-                                    case nameof(stepStatus.StateText):
-                                        status.StateText = stepStatus.StateText;
-                                        break;
-
-                                    case nameof(stepStatus.Progress):
-                                        status.Progress = planProgress + stepStatus.Progress / plan.Steps.Count;
-                                        break;
-
-                                    default:
-                                        break;
-                                }
-                            };
-                            stepExecution.Execute(step, placeholders, stepStatus);
+                            var stepEvents = new StepExecutionEvents();
+                            stepEvents.ProgressUpdated += (o, e) => events.Progress(planProgress + e.Progress / plan.Steps.Count);
+                            stepEvents.StatusTextUpdated += (o, e) => events.StatusText(e.StatusText);
+                            stepExecution.Execute(step, placeholders, stepEvents);
                             stepsFinished++;
                             planProgress = stepsFinished * 100 / plan.Steps.Count;
-                            status.Progress = planProgress;
+                            events.Progress(planProgress);
                         }
                         else
                         {
-                            status.HasErrors = true;
-                            status.StateText = $"Unknown execution step '{step.StepType}'";
+                            events.HasErrors(true, $"Unknown execution step '{step.StepType}'");
                             break;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    status.HasErrors = true;
-                    status.StateText = ex.Message;
+                    events.HasErrors(true, ex.Message);
+                    events.IsRunning(false);
                 }
             });
         }

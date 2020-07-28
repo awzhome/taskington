@@ -6,24 +6,18 @@ namespace PPBackup.Base.Executors
 {
     class InvalidPlanExecution : IPlanExecution
     {
-        public BackupPlan BackupPlan { get; }
+        private readonly PlanExecutionEvents events;
+        private readonly string reason;
 
-        public PlanExecutionStatus Status { get; }
-
-        public InvalidPlanExecution(BackupPlan backupPlan, PlanExecutionStatus status)
+        public InvalidPlanExecution(PlanExecutionEvents events, string reason)
         {
-            BackupPlan = backupPlan;
-            Status = status;
-        }
-
-        public void Execute()
-        {
-            Status.NotifyPropertyChange(nameof(Status.HasErrors));
+            this.events = events;
+            this.reason = reason;
         }
 
         public Task ExecuteAsync()
         {
-            Status.NotifyPropertyChange(nameof(Status.HasErrors));
+            events.HasErrors(true, reason);
             return Task.CompletedTask;
         }
     }
