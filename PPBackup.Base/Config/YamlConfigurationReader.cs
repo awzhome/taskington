@@ -7,11 +7,11 @@ using YamlDotNet.RepresentationModel;
 
 namespace PPBackup.Base.Config
 {
-    public class ConfigurationReader
+    public class YamlConfigurationReader
     {
-        private readonly IConfigurationProvider configurationProvider;
+        private readonly IYamlConfigurationProvider configurationProvider;
 
-        public ConfigurationReader(IConfigurationProvider configurationProvider)
+        public YamlConfigurationReader(IYamlConfigurationProvider configurationProvider)
         {
             this.configurationProvider = configurationProvider;
         }

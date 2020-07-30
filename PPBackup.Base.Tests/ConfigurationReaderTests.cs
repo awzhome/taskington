@@ -29,7 +29,7 @@ namespace PPBackup.Base.Tests
       to: path13/path14
 ";
 
-            var configReader = new ConfigurationReader(new YamlStringConfigurationProvider(yaml));
+            var configReader = new YamlConfigurationReader(new YamlStringConfigurationProvider(yaml));
             var plans = configReader.Read();
             Assert.Collection(configReader.Read(),
                 plan =>
@@ -82,7 +82,7 @@ namespace PPBackup.Base.Tests
       to: path3/path4
 ";
 
-            var configReader = new ConfigurationReader(new YamlStringConfigurationProvider(yaml));
+            var configReader = new YamlConfigurationReader(new YamlStringConfigurationProvider(yaml));
             var plans = configReader.Read();
             Assert.Collection(configReader.Read(), plan =>
             {
@@ -111,7 +111,7 @@ namespace PPBackup.Base.Tests
       to: path3/path4
 ";
 
-            var configReader = new ConfigurationReader(new YamlStringConfigurationProvider(yaml));
+            var configReader = new YamlConfigurationReader(new YamlStringConfigurationProvider(yaml));
             var plans = configReader.Read();
             Assert.Collection(configReader.Read(), plan =>
             {
@@ -140,7 +140,7 @@ steps:
     to: path3/path4
 ";
 
-            var configReader = new ConfigurationReader(new YamlStringConfigurationProvider(yaml));
+            var configReader = new YamlConfigurationReader(new YamlStringConfigurationProvider(yaml));
             Assert.Empty(configReader.Read());
         }
 
@@ -155,7 +155,7 @@ steps:
     - blubb
 ";
 
-            var configReader = new ConfigurationReader(new YamlStringConfigurationProvider(yaml));
+            var configReader = new YamlConfigurationReader(new YamlStringConfigurationProvider(yaml));
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
@@ -178,7 +178,7 @@ steps=
     to: path3/path4
 ";
 
-            var configReader = new ConfigurationReader(new YamlStringConfigurationProvider(yaml));
+            var configReader = new YamlConfigurationReader(new YamlStringConfigurationProvider(yaml));
             Assert.Throws<InvalidOperationException>(() => configReader.Read());
         }
     }

@@ -2,7 +2,7 @@
 
 namespace PPBackup.Base.Config
 {
-    public class YamlStringConfigurationProvider : IConfigurationProvider
+    public class YamlStringConfigurationProvider : IYamlConfigurationProvider
     {
         private readonly string yamlContent;
 

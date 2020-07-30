@@ -3,7 +3,7 @@ using System.IO;
 
 namespace PPBackup.Base.Config
 {
-    public class YamlFileConfigurationProvider : IConfigurationProvider
+    public class YamlFileConfigurationProvider : IYamlConfigurationProvider
     {
         public TextReader OpenConfiguration()
         {

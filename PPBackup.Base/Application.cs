@@ -24,8 +24,8 @@ namespace PPBackup.Base
 
             Services
                 .With(this)
-                .With<IConfigurationProvider, YamlFileConfigurationProvider>()
-                .With<ConfigurationReader>()
+                .With<IYamlConfigurationProvider, YamlFileConfigurationProvider>()
+                .With<YamlConfigurationReader>()
                 .With(SystemOperationsFactory.CreateSystemOperations)
                 .With<IStepExecution, SyncStepExecution>()
                 .With<PlanExecutionHelper>()
@@ -39,7 +39,7 @@ namespace PPBackup.Base
             Services.Start();
 
             var executablePlans = Services.Get<List<ExecutableBackupPlan>>();
-            var backupPlans = Services.Get<ConfigurationReader>().Read();
+            var backupPlans = Services.Get<YamlConfigurationReader>().Read();
 
             foreach (var plan in backupPlans)
             {

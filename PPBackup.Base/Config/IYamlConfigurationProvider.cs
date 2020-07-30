@@ -2,7 +2,7 @@
 
 namespace PPBackup.Base.Config
 {
-    public interface IConfigurationProvider
+    public interface IYamlConfigurationProvider
     {
         TextReader OpenConfiguration();
     }
