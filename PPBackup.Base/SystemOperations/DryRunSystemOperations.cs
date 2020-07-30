@@ -23,11 +23,7 @@ namespace PPBackup.Base.SystemOperations
 
         public void LoadSystemPlaceholders(Placeholders placeholders)
         {
-            var systemDrives = DriveInfo.GetDrives();
-            foreach (var drive in systemDrives)
-            {
-                placeholders[$"drive:{drive.VolumeLabel}"] = drive.RootDirectory.FullName.TrimEnd(Path.DirectorySeparatorChar);
-            }
+            WindowsSystemOperations.LoadWindowsSystemPlaceholders(placeholders);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -33,11 +34,18 @@ namespace PPBackup.Base.SystemOperations
 
         public void LoadSystemPlaceholders(Placeholders placeholders)
         {
+            LoadWindowsSystemPlaceholders(placeholders);
+        }
+
+        internal static void LoadWindowsSystemPlaceholders(Placeholders placeholders)
+        {
             var systemDrives = DriveInfo.GetDrives();
             foreach (var drive in systemDrives)
             {
                 placeholders[$"drive:{drive.VolumeLabel}"] = drive.RootDirectory.FullName.TrimEnd(Path.DirectorySeparatorChar);
             }
+
+            placeholders["AppDataRoaming"] = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
         }
     }
 }
