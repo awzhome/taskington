@@ -45,7 +45,7 @@ namespace PPBackup.Base.SystemOperations
                 placeholders[$"drive:{drive.VolumeLabel}"] = drive.RootDirectory.FullName.TrimEnd(Path.DirectorySeparatorChar);
             }
 
-            placeholders["AppDataRoaming"] = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            placeholders["AppDataRoaming"] = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         }
     }
 }
