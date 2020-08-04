@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using PPBackup.WinApp.ViewModel;
 using System.Windows;
 
 namespace PPBackup.WinApp
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            var application = new Base.Application();
+            application.Start();
+
+            var mainViewModel = new MainViewModel(application);
+
+            var mainView = new MainView();
+            mainView.DataContext = mainViewModel;
+            mainView.Show();
+        }
     }
 }
