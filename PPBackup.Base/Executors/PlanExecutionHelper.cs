@@ -54,6 +54,9 @@ namespace PPBackup.Base.Executors
                 catch (Exception ex)
                 {
                     events.HasErrors(true, ex.Message);
+                }
+                finally
+                {
                     events.IsRunning(false);
                 }
             });
