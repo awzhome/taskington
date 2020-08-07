@@ -10,7 +10,17 @@ namespace PPBackup.WinApp.ViewModel
         public BackupPlanViewModel(ExecutableBackupPlan executableBackupPlan)
         {
             this.executableBackupPlan = executableBackupPlan;
+
+            executableBackupPlan.Events.IsRunningUpdated += (o, e) => IsRunning = e.IsRunning;
+            executableBackupPlan.Events.ProgressUpdated += (o, e) => Progress = e.Progress;
+            executableBackupPlan.Events.StatusTextUpdated += (o, e) => StatusText = e.StatusText;
+            executableBackupPlan.Events.HasErrorsUpdated += (o, e) => HasErrors = e.HasErrors;
+            executableBackupPlan.Events.CanExecuteUpdated += (o, e) => CanExecute = e.CanExecute;
+
+            ExecutePlanCommand = new RelayCommand(() => executableBackupPlan.Execution.ExecuteAsync(), () => true);
         }
+
+        public RelayCommand ExecutePlanCommand { get; }
 
         public string Name => executableBackupPlan.BackupPlan.Name;
 
@@ -54,6 +64,17 @@ namespace PPBackup.WinApp.ViewModel
             private set
             {
                 statusText = value;
+                NotifyPropertyChange();
+            }
+        }
+
+        private bool canExecute;
+        public bool CanExecute
+        {
+            get => canExecute;
+            private set
+            {
+                canExecute = value;
                 NotifyPropertyChange();
             }
         }
