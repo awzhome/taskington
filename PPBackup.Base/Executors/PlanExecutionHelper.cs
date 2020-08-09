@@ -58,6 +58,7 @@ namespace PPBackup.Base.Executors
                 finally
                 {
                     events.IsRunning(false);
+                    events.StatusText("Finished successfully");
                 }
             });
         }

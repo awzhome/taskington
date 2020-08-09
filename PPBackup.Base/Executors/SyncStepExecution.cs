@@ -44,7 +44,7 @@ namespace PPBackup.Base.Executors
                     case SynchronizedObject.File:
                         if (syncStep.File != null)
                         {
-                            status.StatusText($"Sync file {Path.GetFileName(syncStep.File)}");
+                            status.StatusText($"Sync file '{Path.GetFileName(syncStep.File)}'");
                             systemOperations.SyncFile(syncStep.From, syncStep.To, syncStep.File);
                         }
                         break;
@@ -54,7 +54,7 @@ namespace PPBackup.Base.Executors
 
         private void SyncDirectory(SyncDirection syncDirection, string dir1, string dir2, StepExecutionEvents status)
         {
-            status.StatusText($"Sync directory {Path.GetFileName(dir1)}");
+            status.StatusText($"Sync directory '{Path.GetFileName(dir1)}'");
             systemOperations.SyncDirectory(syncDirection, dir1, dir2);
         }
     }
