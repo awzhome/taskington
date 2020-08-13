@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		build.fsx = build.fsx
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPBackup.Base.Tests", "PPBackup.Base.Tests\PPBackup.Base.Tests.csproj", "{0D5F7529-F557-4701-B327-D3A2D1C9270C}"
@@ -18,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPBackup.Base.Tests", "PPBa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPBackup.WinApp", "PPBackup.WinApp\PPBackup.WinApp.csproj", "{29F3E57A-5A7A-4098-9E41-6C85D6DD77EA}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PPBackup.Console", "PPBackup.Console\PPBackup.Console.fsproj", "{C39E7CDE-9C95-4D43-98C1-505EF9728A6E}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "PPBackup.Console", "PPBackup.Console\PPBackup.Console.fsproj", "{C39E7CDE-9C95-4D43-98C1-505EF9728A6E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
