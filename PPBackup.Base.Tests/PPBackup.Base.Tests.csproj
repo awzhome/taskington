@@ -7,6 +7,7 @@
     <Product>PPBackup</Product>
     <Description>PPBackup Base Framework Tests</Description>
 	<Nullable>enable</Nullable>
+	<Version>0.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
