@@ -10,6 +10,7 @@
 		<Product>PPBackup</Product>
 		<Description>PPBackup Windows GUI Frontend</Description>
 		<Copyright>Copyright (c) 2020 Andreas Weizel</Copyright>
+		<Version>0.1.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

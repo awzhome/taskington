@@ -8,6 +8,7 @@
     <Authors>Andreas Weizel</Authors>
     <Product>PPBackup</Product>
     <Description>PPBackup Console Frontend</Description>
+    <Version>0.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
