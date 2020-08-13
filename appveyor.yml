@@ -9,6 +9,10 @@ branches:
 init:
   - cmd: git config --global core.autocrlf true
 
+cache:
+  - .fake
+  - packages
+
 for:
   - branches:
       only:
