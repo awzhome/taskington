@@ -17,7 +17,7 @@ Target.create "Build" (fun _ ->
   DotNet.build (fun defaults -> defaults) "PPBackup.sln"
 )
 
-Target.create "Rebuild" (fun _ ->
+Target.create "CleanBuild" (fun _ ->
   Target.run 1 "Clean" []
   Target.run 1 "Build" []
 )

@@ -1,0 +1,33 @@
+version: '0.1.{build}'
+image: Visual Studio 2019
+
+branches:
+  only:
+  - master
+  - release
+
+init:
+  - cmd: git config --global core.autocrlf true
+
+for:
+  - branches:
+      only:
+        - master
+    dotnet_csproj:
+      patch: true
+      file: '**\*.csproj'
+      version: '{version}'
+
+before_build:
+  - cmd: dotnet --version
+  - cmd: dotnet tool restore
+  
+build_script:
+  - cmd: dotnet fake build --target CleanBuild
+
+artifacts:
+  # TODO
+
+clone_depth: 1
+
+deploy: off
