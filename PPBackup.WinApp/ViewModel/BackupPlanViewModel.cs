@@ -32,6 +32,7 @@ namespace PPBackup.WinApp.ViewModel
             {
                 isRunning = value;
                 NotifyPropertyChange();
+                NotifyPropertyChange(nameof(IsPlayable));
             }
         }
 
@@ -76,7 +77,10 @@ namespace PPBackup.WinApp.ViewModel
             {
                 canExecute = value;
                 NotifyPropertyChange();
+                NotifyPropertyChange(nameof(IsPlayable));
             }
         }
+
+        public bool IsPlayable => canExecute && !isRunning;
     }
 }

@@ -17,6 +17,8 @@ namespace PPBackup.WinApp
             var mainView = new MainView();
             mainView.DataContext = mainViewModel;
             mainView.Show();
+
+            application.NotifyInitialStates();
         }
     }
 }
