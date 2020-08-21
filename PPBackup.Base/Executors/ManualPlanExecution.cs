@@ -30,6 +30,15 @@ namespace PPBackup.Base.Executors
             this.events = events;
         }
 
+        public void NotifyInitialStates()
+        {
+            events
+                .HasErrors(false)
+                .CanExecute(true)
+                .IsRunning(false)
+                .StatusText("Not run yet");
+        }
+
         public async Task ExecuteAsync()
         {
             if (backupPlan != null && events != null)

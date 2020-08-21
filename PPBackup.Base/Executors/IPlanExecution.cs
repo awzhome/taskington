@@ -11,6 +11,7 @@ namespace PPBackup.Base.Executors
 
     public interface IPlanExecution
     {
+        void NotifyInitialStates();
         Task ExecuteAsync();
     }
 }

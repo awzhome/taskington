@@ -14,10 +14,16 @@ namespace PPBackup.Base.Executors
             this.events = events;
             this.reason = reason;
         }
+        public void NotifyInitialStates()
+        {
+            events
+                .CanExecute(false)
+                .IsRunning(false)
+                .HasErrors(true, reason);
+        }
 
         public Task ExecuteAsync()
         {
-            events.HasErrors(true, reason);
             return Task.CompletedTask;
         }
     }

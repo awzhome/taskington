@@ -73,5 +73,13 @@ namespace PPBackup.Base
                 }
             }
         }
+
+        public void NotifyInitialStates()
+        {
+            foreach (var execution in Services.Get<List<ExecutableBackupPlan>>().Select(executablePlan => executablePlan.Execution))
+            {
+                execution.NotifyInitialStates();
+            }
+        }
     }
 }
