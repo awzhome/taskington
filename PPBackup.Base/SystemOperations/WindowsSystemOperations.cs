@@ -9,28 +9,33 @@ namespace PPBackup.Base.SystemOperations
     {
         private void RunProcess(string fileName, params string[] arguments)
         {
-            var procStartInfo = new ProcessStartInfo()
+            var process = new Process()
             {
-                RedirectStandardOutput = true,
-                RedirectStandardError = false,
-                UseShellExecute = false,
-                FileName = fileName,
-                Arguments = string.Join(" ", arguments.Select(arg => arg switch
+                StartInfo = new ProcessStartInfo()
                 {
-                    var a when a.Contains(" ") => $"\"{arg}\"",
-                    _ => arg
-                }))
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = false,
+                    UseShellExecute = false,
+                    FileName = fileName,
+                    Arguments = string.Join(" ", arguments.Select(arg => arg switch
+                    {
+                        var a when a.Contains(" ") => $"\"{arg}\"",
+                        _ => arg
+                    }))
+                }
             };
+            process.Start();
+            process.StandardOutput.ReadToEnd();
         }
 
         private void RunRoboCopy(params string[] arguments) =>
             RunProcess("robocopy", arguments);
 
         public void SyncDirectory(SyncDirection syncDirection, string fromDir, string toDir) =>
-            RunRoboCopy(fromDir, toDir, "/MIR", "/FFT", "/NFL", "/NJH", "/NJS", "/L");
+            RunRoboCopy(fromDir, toDir, "/MIR", "/FFT", "/NFL", "/NJH", "/NJS" /*, "/L"*/);
 
         public void SyncFile(string fromDir, string toDir, string file) =>
-            RunRoboCopy(fromDir, toDir, file, "/NFL", "/NJH", "/NJS", "/L");
+            RunRoboCopy(fromDir, toDir, file, "/NFL", "/NJH", "/NJS" /*, "/L"*/);
 
         public void LoadSystemPlaceholders(Placeholders placeholders)
         {

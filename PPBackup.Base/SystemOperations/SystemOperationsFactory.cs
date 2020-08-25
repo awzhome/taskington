@@ -4,8 +4,8 @@
     {
         public static ISystemOperations CreateSystemOperations()
         {
-            //return new WindowsSystemOperations();
-            return new DryRunSystemOperations();
+            return new WindowsSystemOperations();
+            //return new DryRunSystemOperations();
         }
     }
 }
