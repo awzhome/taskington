@@ -27,7 +27,7 @@ before_build:
   - cmd: dotnet tool restore
   
 build_script:
-  - cmd: dotnet fake build --target CleanBuild
+  - cmd: dotnet fake build
 
 artifacts:
   # TODO
