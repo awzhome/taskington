@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PPBackup.WinApp
+namespace PPBackup.WinApp.View
 {
     /// <summary>
     /// Interaction logic for MainView.xaml

@@ -14,7 +14,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Images\PerspectivesPictured.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Page Remove="Images\PerspectivesPictured.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="Images\PerspectivesPictured.png" />
 	</ItemGroup>
 
 	<ItemGroup>
