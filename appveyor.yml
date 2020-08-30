@@ -30,7 +30,7 @@ build_script:
   - cmd: dotnet fake build
 
 artifacts:
-  # TODO
+  - path: build\artifacts\*
 
 clone_depth: 1
 
