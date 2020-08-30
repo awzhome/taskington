@@ -51,8 +51,5 @@ Target.create "Installer-Win64" (fun _ ->
 "Publish-Win64"
   ==> "Installer-Win64"
 
-"Publish"
-  ==> "Installer-Win"
-
 // *** Start Build ***
 Target.runOrDefaultWithArguments "Installer-Win64"
