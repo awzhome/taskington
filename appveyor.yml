@@ -18,7 +18,7 @@ for:
       only:
         - master
     before_build:
-      - cmd: dotnet fake build -t UpdateVersion-CI $(APPVEYOR_BUILD_VERSION) preview
+      - cmd: dotnet fake build -t UpdateVersion-CI %APPVEYOR_BUILD_VERSION% preview
 
 build_script:
   - cmd: dotnet fake build
