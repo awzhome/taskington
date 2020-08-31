@@ -1,31 +1,25 @@
-version: '0.1.{build}'
+﻿version: "0.1.{build}"
 image: Visual Studio 2019
 
 branches:
   only:
-  - master
-  - release
+    - master
+    - release
 
 init:
   - cmd: git config --global core.autocrlf true
 
-#cache:
-#  - .fake
-#  - packages
+install:
+  - cmd: dotnet --version
+  - cmd: dotnet tool restore
 
 for:
   - branches:
       only:
         - master
-    dotnet_csproj:
-      patch: true
-      file: '**\*.csproj'
-      version: '{version}'
+    before_build:
+      - cmd: dotnet fake build -t UpdateVersion-CI $(APPVEYOR_BUILD_VERSION) preview
 
-before_build:
-  - cmd: dotnet --version
-  - cmd: dotnet tool restore
-  
 build_script:
   - cmd: dotnet fake build
 
