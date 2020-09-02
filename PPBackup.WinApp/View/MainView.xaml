@@ -47,22 +47,8 @@
             <Setter Property="Background" Value="{StaticResource PlanCardBackgroundBrush}" />
         </Style>
 
-        <Style x:Key="PlanCardPlayButton" TargetType="Button">
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="Margin" Value="0,0,20,0" />
-            <Setter Property="Foreground" Value="{StaticResource WindowForegroundBrush}" />
-            <Setter Property="FontFamily" Value="Webdings" />
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Margin="0">
-                            <ContentPresenter Margin="2,2,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                    MinWidth="20" MinHeight="20" Content="{TemplateBinding Content}" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+        <Style x:Key="PlanCardRightPanel" TargetType="StackPanel">
+            <Setter Property="Margin" Value="20,0,0,0" />
         </Style>
 
         <Style x:Key="PlanCardTitle" TargetType="TextBlock">
@@ -81,6 +67,10 @@
             <Setter Property="Margin" Value="10,0,10,0" />
         </Style>
 
+        <Style TargetType="view:CardButton">
+            <Setter Property="BorderBrush" Value="{StaticResource WindowForegroundBrush}" />
+        </Style>
+
         <DataTemplate DataType="{x:Type viewmodel:BackupPlanViewModel}">
             <Border Style="{StaticResource PlanCardOuterBorder}">
                 <StackPanel Style="{StaticResource PlanCardPanel}" Orientation="Vertical">
@@ -90,11 +80,11 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Grid.Column="0" Style="{StaticResource PlanCardPlayButton}" Content="4"
-                                Command="{Binding ExecutePlanCommand}" VerticalAlignment="Top"
+                        <view:CardButton Grid.Column="0" Text="4" Command="{Binding ExecutePlanCommand}"
+                                VerticalAlignment="Top"
                                 Visibility="{Binding IsPlayable, Converter={StaticResource BoolToVisibilityConverter}}" />
 
-                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                        <StackPanel Grid.Column="1" Style="{StaticResource PlanCardRightPanel}" Orientation="Vertical">
                             <TextBlock Style="{StaticResource PlanCardTitle}" Text="{Binding Name}" />
 
                             <StackPanel Orientation="Vertical" Style="{StaticResource PlanCardStatusContainer}">
