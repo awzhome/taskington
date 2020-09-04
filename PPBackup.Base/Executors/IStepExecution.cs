@@ -1,5 +1,6 @@
 ﻿using PPBackup.Base.Model;
 using PPBackup.Base.SystemOperations;
+using System.Collections.Generic;
 
 namespace PPBackup.Base.Executors
 {
@@ -7,5 +8,6 @@ namespace PPBackup.Base.Executors
     {
         string Type { get; }
         void Execute(BackupStep backupStep, Placeholders placeholders, StepExecutionEvents status);
+        bool CanExecuteSupportedSteps(IEnumerable<BackupStep> backupSteps, Placeholders placeholders);
     }
 }

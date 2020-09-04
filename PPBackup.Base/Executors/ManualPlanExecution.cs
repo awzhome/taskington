@@ -33,8 +33,8 @@ namespace PPBackup.Base.Executors
         public void NotifyInitialStates()
         {
             events
+                .CanExecute(planExecutionHelper.CanExecute(backupPlan))
                 .HasErrors(false)
-                .CanExecute(true)
                 .IsRunning(false)
                 .StatusText("Not run yet");
         }

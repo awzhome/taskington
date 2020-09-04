@@ -81,5 +81,33 @@ namespace PPBackup.Base.SystemOperations
 
             return output.ToString();
         }
+
+        public IEnumerable<(string Placeholder, string? Resolved)> ExtractPlaceholders(string input)
+        {
+            int pos = 0;
+            while (pos < input.Length)
+            {
+                int placeholderStart = input.IndexOf("${", pos);
+                if (placeholderStart == -1)
+                {
+                    break;
+                }
+                else
+                {
+                    int placeholderEnd = input.IndexOf('}', placeholderStart);
+                    if (placeholderEnd == -1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        string placeholder = input.Substring(placeholderStart + 2, placeholderEnd - placeholderStart - 2);
+                        yield return (placeholder, this[placeholder]);
+
+                        pos = placeholderEnd + 1;
+                    }
+                }
+            }
+        }
     }
 }

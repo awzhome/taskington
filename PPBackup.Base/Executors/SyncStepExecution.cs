@@ -1,5 +1,6 @@
 ﻿using PPBackup.Base.Model;
 using PPBackup.Base.SystemOperations;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -15,6 +16,29 @@ namespace PPBackup.Base.Executors
         }
 
         public string Type => "sync";
+
+        private IEnumerable<string> GetRelevantPathsOfStep(BackupStep step)
+        {
+            var from = step["from"];
+            if (from != null)
+            {
+                yield return from;
+            }
+            var to = step["to"];
+            if (to != null)
+            {
+                yield return to;
+            }
+        }
+
+        public bool CanExecuteSupportedSteps(IEnumerable<BackupStep> backupSteps, Placeholders placeholders)
+        {
+            return !backupSteps
+                .Where(step => step.StepType == Type)
+                .SelectMany(GetRelevantPathsOfStep)
+                .SelectMany(placeholders.ExtractPlaceholders)
+                .Any(result => result.Placeholder.StartsWith("drive:") && (result.Resolved == null));
+        }
 
         public void Execute(BackupStep step, Placeholders placeholders, StepExecutionEvents status)
         {

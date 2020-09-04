@@ -2,6 +2,8 @@
 using PPBackup.Base.Model;
 using PPBackup.Base.SystemOperations;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PPBackup.Base.Executors
@@ -15,6 +17,18 @@ namespace PPBackup.Base.Executors
         {
             this.application = application;
             this.systemOperations = systemOperations;
+        }
+
+        public bool CanExecute(BackupPlan plan)
+        {
+            var placeholders = new Placeholders();
+            systemOperations.LoadSystemPlaceholders(placeholders);
+
+            var stepTypes = new HashSet<string>(plan.Steps.Select(step => step.StepType));
+            return
+                !stepTypes.Select(type => application.Services.Get<IStepExecution>(s => s.Type == type)
+                    ?.CanExecuteSupportedSteps(plan.Steps, placeholders))
+                .Any(result => !(result ?? true));
         }
 
         public async Task ExecuteAsync(BackupPlan plan, PlanExecutionEvents events)
