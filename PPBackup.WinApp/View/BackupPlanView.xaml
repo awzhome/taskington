@@ -57,7 +57,7 @@
                 </Grid.ColumnDefinitions>
 
                 <view:CardButton Grid.Column="0" Text="4" Command="{Binding ExecutePlanCommand}" VerticalAlignment="Top"
-                        Visibility="{Binding IsPlayable, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        IsEnabled="{Binding IsPlayable}" />
 
                 <StackPanel Grid.Column="1" Style="{StaticResource PlanCardRightPanel}" Orientation="Vertical">
                     <TextBlock Style="{StaticResource PlanCardTitle}" Text="{Binding Name}" />
