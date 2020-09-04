@@ -31,7 +31,7 @@
         </Style>
     </UserControl.Resources>
 
-    <Border BorderBrush="{Binding ElementName=ThisUserControl, Path=BorderBrush}" BorderThickness="1">
+    <Border BorderBrush="{Binding ElementName=ThisUserControl, Path=BorderBrush}" BorderThickness="1" CornerRadius="500">
         <TextBlock Foreground="{Binding ElementName=ThisUserControl, Path=Foreground}"
                 Text="{Binding ElementName=ThisUserControl, Path=Text}">
             <TextBlock.InputBindings>
