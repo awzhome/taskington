@@ -15,7 +15,7 @@
         <Style x:Key="PlanCardOuterBorder" TargetType="{x:Type Border}">
             <Setter Property="BorderThickness" Value="20" />
             <Setter Property="BorderBrush" Value="{StaticResource PlanCardBackgroundBrush}" />
-            <Setter Property="Margin" Value="20,20,20,0" />
+            <Setter Property="Margin" Value="20,0,20,20" />
         </Style>
 
         <Style x:Key="PlanCardPanel" TargetType="{x:Type StackPanel}">

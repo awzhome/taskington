@@ -24,8 +24,11 @@
             <Setter Property="Foreground" Value="{StaticResource WindowForegroundBrush}" />
         </Style>
 
+        <Style x:Key="PlanCardContainerScrollViewer" TargetType="ScrollViewer">
+            <Setter Property="Margin" Value="50,50,50,0" />
+        </Style>
+
         <Style x:Key="PlanCardContainerPanel" TargetType="StackPanel">
-            <Setter Property="Margin" Value="50,0,50,0" />
             <Setter Property="MinWidth" Value="600" />
         </Style>
 
@@ -45,12 +48,15 @@
             <TextBlock Style="{StaticResource PPLogoText}">Backup</TextBlock>
         </Grid>
 
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding BackupPlans}" HorizontalAlignment="Center">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Style="{StaticResource PlanCardContainerPanel}" Orientation="Vertical" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+        <ScrollViewer Grid.Row="1" Style="{StaticResource PlanCardContainerScrollViewer}"
+                HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding BackupPlans}" HorizontalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Style="{StaticResource PlanCardContainerPanel}" Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </Window>
