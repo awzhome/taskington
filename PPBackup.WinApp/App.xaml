@@ -9,6 +9,9 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>-->
 
+        <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#151515" />
+        <SolidColorBrush x:Key="WindowForegroundBrush" Color="#ffffff" />
+
         <Style TargetType="{x:Type ProgressBar}">
             <Setter Property="Template">
                 <Setter.Value>
