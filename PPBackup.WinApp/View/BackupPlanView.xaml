@@ -3,52 +3,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:view="clr-namespace:PPBackup.WinApp.View"
         xmlns:viewmodel="clr-namespace:PPBackup.WinApp.ViewModel" x:Class="PPBackup.WinApp.View.BackupPlanView"
-        mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
+        xmlns:iconpacks="http://metro.mahapps.com/winfx/xaml/iconpacks" mc:Ignorable="d" d:DesignHeight="450"
+        d:DesignWidth="800">
 
     <UserControl.Resources>
         <viewmodel:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
-        <SolidColorBrush x:Key="PlanCardBackgroundBrush" Color="#252525" />
+        <SolidColorBrush x:Key="PlanCardBackgroundBrush" Color="#353535" />
         <SolidColorBrush x:Key="PlanCardProgressBarBrush" Color="#1d9be7" />
         <SolidColorBrush x:Key="PlanCardButtonHighlightBackgroundBrush" Color="#454545" />
 
         <Style x:Key="PlanCardOuterBorder" TargetType="{x:Type Border}">
             <Setter Property="BorderThickness" Value="20" />
             <Setter Property="BorderBrush" Value="{StaticResource PlanCardBackgroundBrush}" />
-            <Setter Property="Margin" Value="20,0,20,20" />
         </Style>
 
         <Style x:Key="PlanCardPanel" TargetType="{x:Type StackPanel}">
             <Setter Property="Background" Value="{StaticResource PlanCardBackgroundBrush}" />
         </Style>
 
-        <Style x:Key="PlanCardRightPanel" TargetType="{x:Type StackPanel}">
-            <Setter Property="Margin" Value="20,0,0,0" />
-        </Style>
-
         <Style x:Key="PlanCardTitle" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="16" />
-            <Setter Property="Margin" Value="0,0,0,20" />
         </Style>
 
-        <Style x:Key="PlanCardProgressBar" TargetType="{x:Type ProgressBar}"
-                BasedOn="{StaticResource {x:Type ProgressBar}}">
-            <Setter Property="Background" Value="{StaticResource PlanCardBackgroundBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource PlanCardProgressBarBrush}" />
-            <Setter Property="Margin" Value="0,5,0,0" />
-            <Setter Property="Height" Value="5" />
-        </Style>
-
-        <Style x:Key="PlanCardStatusContainer" TargetType="{x:Type StackPanel}">
-            <Setter Property="Margin" Value="10,0,10,0" />
-        </Style>
-
-        <Style TargetType="{x:Type view:CardButton}">
-            <Setter Property="BorderBrush" Value="{StaticResource WindowForegroundBrush}" />
+        <Style x:Key="PlanCardButtonStyle" BasedOn="{StaticResource MahApps.Styles.Button.Circle}" TargetType="Button">
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Width" Value="32" />
         </Style>
     </UserControl.Resources>
 
-    <Border Style="{StaticResource PlanCardOuterBorder}">
+    <Border Style="{StaticResource PlanCardOuterBorder}" Margin="20,0,20,20">
         <StackPanel Style="{StaticResource PlanCardPanel}" Orientation="Vertical">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -56,16 +40,18 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <view:CardButton Grid.Column="0" Text="4" Command="{Binding ExecutePlanCommand}" VerticalAlignment="Top"
-                        IsEnabled="{Binding IsPlayable}" />
+                <Button Grid.Column="0" Command="{Binding ExecutePlanCommand}" VerticalAlignment="Top"
+                        IsEnabled="{Binding IsPlayable}" Style="{StaticResource PlanCardButtonStyle}">
+                    <iconpacks:Modern Kind="ControlPlay" />
+                </Button>
 
-                <StackPanel Grid.Column="1" Style="{StaticResource PlanCardRightPanel}" Orientation="Vertical">
-                    <TextBlock Style="{StaticResource PlanCardTitle}" Text="{Binding Name}" />
+                <StackPanel Grid.Column="1" Margin="20,0,0,0" Orientation="Vertical">
+                    <TextBlock Style="{StaticResource PlanCardTitle}" Margin="0,0,0,20" Text="{Binding Name}" />
 
-                    <StackPanel Orientation="Vertical" Style="{StaticResource PlanCardStatusContainer}">
+                    <StackPanel Orientation="Vertical" Margin="10,0,10,0">
                         <TextBlock Text="{Binding StatusText, Mode=OneWay}" />
 
-                        <ProgressBar Style="{StaticResource PlanCardProgressBar}" Minimum="0" Maximum="100"
+                        <ProgressBar Minimum="0" Maximum="100" Margin="0,5,0,0" Height="5"
                                 Value="{Binding Progress, Mode=OneWay}"
                                 Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel>
