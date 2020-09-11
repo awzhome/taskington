@@ -23,6 +23,11 @@ for:
 build_script:
   - cmd: dotnet fake build
 
+test:
+  assemblies:
+    only:
+      - PPBackup.Base.Tests.dll
+
 artifacts:
   - path: build\artifacts\*
 
