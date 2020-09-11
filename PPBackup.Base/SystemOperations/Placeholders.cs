@@ -84,6 +84,8 @@ namespace PPBackup.Base.SystemOperations
 
         public IEnumerable<(string Placeholder, string? Resolved)> ExtractPlaceholders(string input)
         {
+            var foundPlaceholders = new HashSet<string>();
+
             int pos = 0;
             while (pos < input.Length)
             {
@@ -102,7 +104,11 @@ namespace PPBackup.Base.SystemOperations
                     else
                     {
                         string placeholder = input.Substring(placeholderStart + 2, placeholderEnd - placeholderStart - 2);
-                        yield return (placeholder, this[placeholder]);
+                        if (!foundPlaceholders.Contains(placeholder))
+                        {
+                            yield return (placeholder, this[placeholder]);
+                            foundPlaceholders.Add(placeholder);
+                        }
 
                         pos = placeholderEnd + 1;
                     }

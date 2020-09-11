@@ -3,14 +3,14 @@ using Xunit;
 
 namespace PPBackup.Base.Tests
 {
-    public class PlaceholdersTests
+    public class ResolvePlaceholdersTests
     {
         [Fact]
         public void PlaceholderFillsInput()
         {
-            var helper = new Placeholders();
-            helper["dir"] = "bla";
-            Assert.Equal("bla", helper.ResolvePlaceholders("${dir}"));
+            var placeholders = new Placeholders();
+            placeholders["dir"] = "bla";
+            Assert.Equal("bla", placeholders.ResolvePlaceholders("${dir}"));
         }
 
         [Fact]
