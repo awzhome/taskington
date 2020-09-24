@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace PPBackup.Base.Model
 {
@@ -14,6 +15,6 @@ namespace PPBackup.Base.Model
 
         public string RunType { get; set; }
 
-        public List<BackupStep> Steps { get; } = new List<BackupStep>();
+        public IEnumerable<BackupStep> Steps { get; set; } = Enumerable.Empty<BackupStep>();
     }
 }

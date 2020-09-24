@@ -51,11 +51,11 @@ namespace PPBackup.Base.Executors
                         if (stepExecution != null)
                         {
                             var stepEvents = new StepExecutionEvents();
-                            stepEvents.ProgressUpdated += (o, e) => events.Progress(planProgress + e.Progress / plan.Steps.Count);
+                            stepEvents.ProgressUpdated += (o, e) => events.Progress(planProgress + e.Progress / plan.Steps.Count());
                             stepEvents.StatusTextUpdated += (o, e) => events.StatusText(e.StatusText);
                             stepExecution.Execute(step, placeholders, stepEvents);
                             stepsFinished++;
-                            planProgress = stepsFinished * 100 / plan.Steps.Count;
+                            planProgress = stepsFinished * 100 / plan.Steps.Count();
                             events.Progress(planProgress);
                         }
                         else

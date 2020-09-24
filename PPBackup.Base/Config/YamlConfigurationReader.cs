@@ -9,9 +9,9 @@ namespace PPBackup.Base.Config
 {
     public class YamlConfigurationReader
     {
-        private readonly IYamlConfigurationProvider configurationProvider;
+        private readonly IConfigurationStreamProvider configurationProvider;
 
-        public YamlConfigurationReader(IYamlConfigurationProvider configurationProvider)
+        public YamlConfigurationReader(IConfigurationStreamProvider configurationProvider)
         {
             this.configurationProvider = configurationProvider;
         }
@@ -20,7 +20,7 @@ namespace PPBackup.Base.Config
         {
             List<BackupPlan> plans = new List<BackupPlan>();
 
-            using (var reader = configurationProvider.OpenConfiguration())
+            using (var reader = configurationProvider.CreateConfigurationReader())
             {
                 var yamlStream = new YamlStream();
                 try
@@ -31,8 +31,12 @@ namespace PPBackup.Base.Config
                     {
                         foreach (var planEntry in root.Children.OfType<YamlMappingNode>())
                         {
+                            List<BackupStep> steps = new List<BackupStep>();
                             var planType = (GetChildNode(planEntry.Children, "run") as YamlScalarNode)?.Value ?? "manually";
-                            var plan = new BackupPlan(planType);
+                            var plan = new BackupPlan(planType)
+                            {
+                                Steps = steps
+                            };
 
                             foreach (var planProperty in planEntry.Children)
                             {
@@ -91,11 +95,11 @@ namespace PPBackup.Base.Config
                                                 }
                                             }
 
-                                            plan.Steps.Add(step);
+                                            steps.Add(step);
                                         }
                                         else
                                         {
-                                            plan.Steps.Add(new InvalidBackupStep("Step has no type."));
+                                            steps.Add(new InvalidBackupStep("Step has no type."));
                                         }
                                     }
                                 }

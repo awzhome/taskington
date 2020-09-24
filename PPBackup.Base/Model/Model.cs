@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace PPBackup.Base.Model
 {
@@ -29,5 +30,7 @@ namespace PPBackup.Base.Model
                 }
             }
         }
+
+        public IEnumerable<KeyValuePair<string, string>> Properties => properties;       
     }
 }

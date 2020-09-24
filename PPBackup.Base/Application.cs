@@ -24,7 +24,7 @@ namespace PPBackup.Base
 
             Services
                 .With(this)
-                .With<IYamlConfigurationProvider, YamlFileConfigurationProvider>()
+                .With<IConfigurationStreamProvider, YamlFileConfigurationProvider>()
                 .With<YamlConfigurationReader>()
                 .With(SystemOperationsFactory.CreateSystemOperations)
                 .With<IStepExecution, SyncStepExecution>()
