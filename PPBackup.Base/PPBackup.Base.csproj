@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Product>PPBackup</Product>
     <Authors>Andreas Weizel</Authors>
     <Copyright>Copyright (c) 2020 Andreas Weizel</Copyright>

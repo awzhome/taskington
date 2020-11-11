@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Copyright>Copyright (c) 2020 Andreas Weizel</Copyright>
     <Authors>Andreas Weizel</Authors>
     <Product>PPBackup</Product>
     <Description>PPBackup Base Framework Tests</Description>
 	<Nullable>enable</Nullable>
 	<Version>0.1.0</Version>
+	<OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
