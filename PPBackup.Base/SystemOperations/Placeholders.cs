@@ -11,7 +11,7 @@ namespace PPBackup.Base.SystemOperations
         {
             get
             {
-                if (placeholderMappings.TryGetValue(placeholder, out string val))
+                if (placeholderMappings.TryGetValue(placeholder, out string? val))
                 {
                     return val;
                 }
@@ -47,7 +47,7 @@ namespace PPBackup.Base.SystemOperations
                 int placeholderStart = input.IndexOf("${", pos);
                 if (placeholderStart == -1)
                 {
-                    output.Append(input.Substring(pos));
+                    output.Append(input[pos..]);
                     break;
                 }
                 else
@@ -57,7 +57,7 @@ namespace PPBackup.Base.SystemOperations
                     int placeholderEnd = input.IndexOf('}', placeholderStart);
                     if (placeholderEnd == -1)
                     {
-                        output.Append(input.Substring(placeholderStart));
+                        output.Append(input[placeholderStart..]);
                         break;
                     }
                     else

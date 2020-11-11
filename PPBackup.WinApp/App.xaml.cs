@@ -15,8 +15,10 @@ namespace PPBackup.WinApp
 
             var mainViewModel = new MainViewModel(application);
 
-            var mainView = new MainView();
-            mainView.DataContext = mainViewModel;
+            var mainView = new MainView
+            {
+                DataContext = mainViewModel
+            };
             mainView.Show();
 
             application.NotifyInitialStates();

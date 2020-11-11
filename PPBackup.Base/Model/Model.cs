@@ -11,7 +11,7 @@ namespace PPBackup.Base.Model
         {
             get
             {
-                if (properties.TryGetValue(name, out string value))
+                if (properties.TryGetValue(name, out string? value))
                 {
                     return value;
                 }

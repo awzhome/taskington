@@ -55,7 +55,7 @@ namespace PPBackup.Base.Executors
                     case SynchronizedObject.SubDirectories:
                         {
                             var directories = Directory.GetDirectories(syncStep.From);
-                            var directoryCount = directories.Count();
+                            var directoryCount = directories.Length;
                             int dirsFinished = 0;
                             foreach (var dir in directories)
                             {

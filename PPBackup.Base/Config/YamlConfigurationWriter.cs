@@ -17,29 +17,29 @@ namespace PPBackup.Base.Config
 
         public void Write(IEnumerable<BackupPlan> plans)
         {
-            using (var writer = configurationProvider.CreateConfigurationWriter())
-            {
-                var serializer = new Serializer();
-                var yamlRoot = new YamlSequenceNode(
-                    plans.Select(plan =>
+            using var writer = configurationProvider.CreateConfigurationWriter();
+            var serializer = new Serializer();
+            var yamlRoot = new YamlSequenceNode(
+                plans.Select(plan =>
+                {
+                    var mappings = new List<KeyValuePair<YamlNode, YamlNode>>
                     {
-                        var mappings = new List<KeyValuePair<YamlNode, YamlNode>>();
-                        mappings.Add(StringMapping("plan", plan.Name));
-                        mappings.Add(StringMapping("run", plan.RunType));
-                        mappings.AddRange(plan.Properties.Select(keyValue => StringMapping(keyValue.Key, keyValue.Value)));
-                        mappings.Add(Mapping("steps", new YamlSequenceNode(
-                            plan.Steps.Select(step => new YamlMappingNode(
-                                new[] { StringMapping(step.StepType, step.DefaultProperty) }.Concat(
-                                    step.Properties.Select(keyValue => StringMapping(keyValue.Key, keyValue.Value))
-                                )
-                            ))
-                        )));
+                        StringMapping("plan", plan.Name),
+                        StringMapping("run", plan.RunType)
+                    };
+                    mappings.AddRange(plan.Properties.Select(keyValue => StringMapping(keyValue.Key, keyValue.Value)));
+                    mappings.Add(Mapping("steps", new YamlSequenceNode(
+                        plan.Steps.Select(step => new YamlMappingNode(
+                            new[] { StringMapping(step.StepType, step.DefaultProperty) }.Concat(
+                                step.Properties.Select(keyValue => StringMapping(keyValue.Key, keyValue.Value))
+                            )
+                        ))
+                    )));
 
-                        return new YamlMappingNode(mappings);
-                    }));
+                    return new YamlMappingNode(mappings);
+                }));
 
-                serializer.Serialize(writer, yamlRoot);
-            }
+            serializer.Serialize(writer, yamlRoot);
         }
 
         private static KeyValuePair<YamlNode, YamlNode> Mapping(string key, YamlNode value) =>

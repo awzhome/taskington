@@ -118,9 +118,9 @@ namespace PPBackup.Base.Config
             return plans;
         }
 
-        private YamlNode? GetChildNode(IDictionary<YamlNode, YamlNode> children, string key, YamlNode? defaultValue = default)
+        private static YamlNode? GetChildNode(IDictionary<YamlNode, YamlNode> children, string key, YamlNode? defaultValue = default)
         {
-            if (children.TryGetValue(new YamlScalarNode(key), out YamlNode value))
+            if (children.TryGetValue(new YamlScalarNode(key), out YamlNode? value))
             {
                 return value;
             }

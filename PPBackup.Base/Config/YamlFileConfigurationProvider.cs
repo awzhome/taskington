@@ -15,7 +15,7 @@ namespace PPBackup.Base.Config
             return new StreamWriter(DetermineFileName());
         }
 
-        private string DetermineFileName()
+        private static string DetermineFileName()
         {
             string fileName = "ppbackup.yml";
             string userFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), fileName);

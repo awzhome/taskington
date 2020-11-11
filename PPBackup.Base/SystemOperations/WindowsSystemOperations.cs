@@ -7,7 +7,7 @@ namespace PPBackup.Base.SystemOperations
 {
     internal class WindowsSystemOperations : ISystemOperations
     {
-        private void RunProcess(string fileName, params string[] arguments)
+        private static void RunProcess(string fileName, params string[] arguments)
         {
             var process = new Process()
             {

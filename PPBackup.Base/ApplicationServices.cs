@@ -49,7 +49,7 @@ namespace PPBackup.Base
 
         public T Get<T>() => serviceProvider.GetRequiredService<T>();
 
-        public T Get<T>(Func<T, bool> predicate) => serviceProvider.GetServices<T>().FirstOrDefault(predicate);
+        public T? Get<T>(Func<T, bool> predicate) => serviceProvider.GetServices<T>().FirstOrDefault(predicate);
 
         public IEnumerable<T> GetAll<T>() => serviceProvider.GetServices<T>();
     }
