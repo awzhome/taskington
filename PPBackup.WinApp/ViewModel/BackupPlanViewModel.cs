@@ -1,15 +1,18 @@
-﻿using PPBackup.Base.Executors;
+﻿using MahApps.Metro.Controls.Dialogs;
+using PPBackup.Base.Executors;
 using PPBackup.Base.Model;
 
 namespace PPBackup.WinApp.ViewModel
 {
-    class BackupPlanViewModel : NotifiableObject
+    public class BackupPlanViewModel : NotifiableObject
     {
         private readonly ExecutableBackupPlan executableBackupPlan;
+        private readonly DialogController dialogController;
 
-        public BackupPlanViewModel(ExecutableBackupPlan executableBackupPlan)
+        public BackupPlanViewModel(ExecutableBackupPlan executableBackupPlan, DialogController dialogController)
         {
             this.executableBackupPlan = executableBackupPlan;
+            this.dialogController = dialogController;
 
             executableBackupPlan.Events.IsRunningUpdated += (o, e) => IsRunning = e.IsRunning;
             executableBackupPlan.Events.ProgressUpdated += (o, e) => Progress = e.Progress;
@@ -18,11 +21,17 @@ namespace PPBackup.WinApp.ViewModel
             executableBackupPlan.Events.CanExecuteUpdated += (o, e) => CanExecute = e.CanExecute;
 
             ExecutePlanCommand = new RelayCommand(() => executableBackupPlan.Execution.ExecuteAsync(), () => true);
+            EditPlanCommand = dialogController.OpenEditBackupPlanDialogCommand(this, () => true);
+            CloseEditDialogCommand = dialogController.HideDialogCommand();
         }
 
         public RelayCommand ExecutePlanCommand { get; }
 
-        public string Name => executableBackupPlan.BackupPlan.Name;
+        public AsyncRelayCommand EditPlanCommand { get; }
+
+        public AsyncRelayCommand<BaseMetroDialog> CloseEditDialogCommand { get; }
+
+        public string? Name => executableBackupPlan.BackupPlan.Name;
 
         private bool isRunning;
         public bool IsRunning
@@ -58,8 +67,8 @@ namespace PPBackup.WinApp.ViewModel
             }
         }
 
-        private string statusText;
-        public string StatusText
+        private string? statusText;
+        public string? StatusText
         {
             get => statusText;
             private set

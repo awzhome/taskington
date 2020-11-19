@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net5.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<AssemblyName>ppbackup-ui</AssemblyName>
 		<PackageId>PPBackup.WinApp</PackageId>

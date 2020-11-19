@@ -3,9 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
         xmlns:view="clr-namespace:PPBackup.WinApp.View" xmlns:viewmodel="clr-namespace:PPBackup.WinApp.ViewModel"
-        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" mc:Ignorable="d" Title="Perspectives Pictured Backup"
-        Height="450" Width="800" MinWidth="500" Style="{DynamicResource MainWindowStyle}">
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" mc:Ignorable="d"
+        Title="Perspectives Pictured Backup" Height="450" Width="800" MinWidth="500"
+        Style="{DynamicResource MainWindowStyle}" dialogs:DialogParticipation.Register="{Binding}">
 
     <mah:MetroWindow.Resources>
         <Style x:Key="MainWindowStyle" TargetType="mah:MetroWindow">

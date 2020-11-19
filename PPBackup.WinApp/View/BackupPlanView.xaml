@@ -38,6 +38,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0" Command="{Binding ExecutePlanCommand}" VerticalAlignment="Top"
@@ -56,6 +57,11 @@
                                 Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel>
                 </StackPanel>
+
+                <Button Grid.Column="2" VerticalAlignment="Top" Style="{StaticResource PlanCardButtonStyle}"
+                        Command="{Binding EditPlanCommand}">
+                    <iconpacks:Modern Kind="Edit" />
+                </Button>
             </Grid>
 
         </StackPanel>

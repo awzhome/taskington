@@ -3,12 +3,12 @@ using System.Windows.Input;
 
 namespace PPBackup.WinApp.ViewModel
 {
-    class RelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
-        private readonly Func<bool> canExecute;
+        private readonly Func<bool>? canExecute;
         private readonly Action execute;
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 
         public RelayCommand(Action execute)
             : this(execute, null)
@@ -16,25 +16,22 @@ namespace PPBackup.WinApp.ViewModel
         }
 
         public RelayCommand(Action execute,
-                       Func<bool> canExecute)
+                       Func<bool>? canExecute)
         {
             this.execute = execute;
             this.canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter) => CanExecute();
+
+        public bool CanExecute() => canExecute?.Invoke() ?? true;
+
+        public void Execute(object? parameter)
         {
-            if (canExecute == null)
+            if (CanExecute())
             {
-                return true;
+                execute();
             }
-
-            return canExecute();
-        }
-
-        public void Execute(object parameter)
-        {
-            execute();
         }
 
         public void RaiseCanExecuteChanged()

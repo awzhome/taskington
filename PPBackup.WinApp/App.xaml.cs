@@ -1,4 +1,5 @@
-﻿using PPBackup.WinApp.View;
+﻿using MahApps.Metro.Controls.Dialogs;
+using PPBackup.WinApp.View;
 using PPBackup.WinApp.ViewModel;
 using System.Windows;
 
