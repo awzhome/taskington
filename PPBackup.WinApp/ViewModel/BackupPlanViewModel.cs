@@ -1,6 +1,7 @@
 ﻿using MahApps.Metro.Controls.Dialogs;
 using PPBackup.Base.Executors;
 using PPBackup.Base.Model;
+using PPBackup.WinApp.View;
 
 namespace PPBackup.WinApp.ViewModel
 {
@@ -21,15 +22,19 @@ namespace PPBackup.WinApp.ViewModel
             executableBackupPlan.Events.CanExecuteUpdated += (o, e) => CanExecute = e.CanExecute;
 
             ExecutePlanCommand = new RelayCommand(() => executableBackupPlan.Execution.ExecuteAsync(), () => true);
-            EditPlanCommand = dialogController.OpenEditBackupPlanDialogCommand(this, () => true);
+            OpenEditDialogCommand = dialogController.OpenDialogCommand(
+                () => new EditBackupPlanDialog() { DataContext = new EditBackupPlanViewModel(this) },
+                () => true);
             CloseEditDialogCommand = dialogController.HideDialogCommand();
         }
 
         public RelayCommand ExecutePlanCommand { get; }
 
-        public AsyncRelayCommand EditPlanCommand { get; }
+        public AsyncRelayCommand OpenEditDialogCommand { get; }
 
         public AsyncRelayCommand<BaseMetroDialog> CloseEditDialogCommand { get; }
+
+        public ExecutableBackupPlan ExecutableBackupPlan => executableBackupPlan;
 
         public string? Name => executableBackupPlan.BackupPlan.Name;
 

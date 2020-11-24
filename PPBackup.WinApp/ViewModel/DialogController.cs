@@ -1,5 +1,4 @@
 ﻿using MahApps.Metro.Controls.Dialogs;
-using PPBackup.WinApp.View;
 using System;
 using System.Threading.Tasks;
 
@@ -16,16 +15,10 @@ namespace PPBackup.WinApp.ViewModel
             this.mainViewModel = mainViewModel;
         }
 
-        public AsyncRelayCommand OpenEditBackupPlanDialogCommand(BackupPlanViewModel viewModel, Func<bool> canExecute)
+        public AsyncRelayCommand OpenDialogCommand(Func<BaseMetroDialog> dialogCreatorFunc, Func<bool> canExecute)
         {
             return new(async () =>
-                {
-                    await dialogCoordinator.ShowMetroDialogAsync(mainViewModel,
-                        new EditBackupPlanDialog()
-                        {
-                            DataContext = viewModel
-                        });
-                },
+                    await dialogCoordinator.ShowMetroDialogAsync(mainViewModel, dialogCreatorFunc()),
                 canExecute);
         }
 

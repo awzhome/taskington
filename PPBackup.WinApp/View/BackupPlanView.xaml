@@ -59,7 +59,7 @@
                 </StackPanel>
 
                 <Button Grid.Column="2" VerticalAlignment="Top" Style="{StaticResource PlanCardButtonStyle}"
-                        Command="{Binding EditPlanCommand}">
+                        Command="{Binding OpenEditDialogCommand}">
                     <iconpacks:Modern Kind="Edit" />
                 </Button>
             </Grid>
