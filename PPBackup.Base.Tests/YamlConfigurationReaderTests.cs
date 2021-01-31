@@ -30,7 +30,6 @@ namespace PPBackup.Base.Tests
 ";
 
             var configReader = new YamlConfigurationReader(new StringConfigurationProvider(yaml));
-            var plans = configReader.Read();
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
@@ -83,7 +82,6 @@ namespace PPBackup.Base.Tests
 ";
 
             var configReader = new YamlConfigurationReader(new StringConfigurationProvider(yaml));
-            var plans = configReader.Read();
             Assert.Collection(configReader.Read(), plan =>
             {
                 Assert.IsType<BackupPlan>(plan);
@@ -112,7 +110,6 @@ namespace PPBackup.Base.Tests
 ";
 
             var configReader = new YamlConfigurationReader(new StringConfigurationProvider(yaml));
-            var plans = configReader.Read();
             Assert.Collection(configReader.Read(), plan =>
             {
                 Assert.IsType<BackupPlan>(plan);
