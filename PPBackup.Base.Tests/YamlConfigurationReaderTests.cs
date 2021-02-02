@@ -45,7 +45,7 @@ namespace PPBackup.Base.Tests
                             Assert.Equal("sync", step.StepType);
                             Assert.Equal("path1/path2", step["from"]);
                             Assert.Equal("path3/path4", step["to"]);
-                            Assert.Null(step["step"]);
+                            Assert.Null(step["sync"]);
                         },
                         step =>
                         {
