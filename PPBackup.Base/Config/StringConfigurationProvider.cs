@@ -1,9 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 
 namespace PPBackup.Base.Config
 {
-    public class StringConfigurationProvider : IConfigurationStreamProvider
+    public class StringConfigurationProvider : IStreamReaderProvider, IStreamWriterProvider
     {
         private readonly StringBuilder contentBuffer = new StringBuilder();
 
@@ -16,15 +17,17 @@ namespace PPBackup.Base.Config
             contentBuffer.Append(yamlContent);
         }
 
-        public TextReader CreateConfigurationReader()
+        public void ReadConfigurationStreams(Action<TextReader> configReader)
         {
-            return new StringReader(Content);
+            using var reader = new StringReader(Content);
+            configReader(reader);
         }
 
-        public TextWriter CreateConfigurationWriter()
+        public void WriteConfigurationStreams(Action<TextWriter> configWriter)
         {
             contentBuffer.Clear();
-            return new StringWriter(contentBuffer);
+            using var writer = new StringWriter(contentBuffer);
+            configWriter(writer);
         }
 
         public string Content => contentBuffer.ToString();

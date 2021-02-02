@@ -3,16 +3,18 @@ using System.IO;
 
 namespace PPBackup.Base.Config
 {
-    public class YamlFileConfigurationProvider : IConfigurationStreamProvider
+    public class YamlFileConfigurationProvider : IStreamReaderProvider, IStreamWriterProvider
     {
-        public TextReader CreateConfigurationReader()
+        public void ReadConfigurationStreams(Action<TextReader> configReader)
         {
-            return new StreamReader(DetermineFileName());
+            using var reader = new StreamReader(DetermineFileName());
+            configReader(reader);
         }
 
-        public TextWriter CreateConfigurationWriter()
+        public void WriteConfigurationStreams(Action<TextWriter> configWriter)
         {
-            return new StreamWriter(DetermineFileName());
+            using var writer = new StreamWriter(DetermineFileName());
+            configWriter(writer);
         }
 
         private static string DetermineFileName()

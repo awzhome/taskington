@@ -8,38 +8,40 @@ namespace PPBackup.Base.Config
 {
     public class YamlConfigurationWriter
     {
-        private readonly IConfigurationStreamProvider configurationProvider;
+        private readonly IStreamWriterProvider configWriterProvider;
 
-        public YamlConfigurationWriter(IConfigurationStreamProvider configurationProvider)
+        public YamlConfigurationWriter(IStreamWriterProvider configWriterProvider)
         {
-            this.configurationProvider = configurationProvider;
+            this.configWriterProvider = configWriterProvider;
         }
 
         public void Write(IEnumerable<BackupPlan> plans)
         {
-            using var writer = configurationProvider.CreateConfigurationWriter();
-            var serializer = new Serializer();
-            var yamlRoot = new YamlSequenceNode(
-                plans.Select(plan =>
-                {
-                    var mappings = new List<KeyValuePair<YamlNode, YamlNode>>
+            configWriterProvider.WriteConfigurationStreams(writer =>
+            {
+                var serializer = new Serializer();
+                var yamlRoot = new YamlSequenceNode(
+                    plans.Select(plan =>
                     {
+                        var mappings = new List<KeyValuePair<YamlNode, YamlNode>>
+                        {
                         StringMapping("plan", plan.Name),
                         StringMapping("run", plan.RunType)
-                    };
-                    mappings.AddRange(plan.Properties.Select(keyValue => StringMapping(keyValue.Key, keyValue.Value)));
-                    mappings.Add(Mapping("steps", new YamlSequenceNode(
-                        plan.Steps.Select(step => new YamlMappingNode(
-                            new[] { StringMapping(step.StepType, step.DefaultProperty) }.Concat(
-                                step.Properties.Select(keyValue => StringMapping(keyValue.Key, keyValue.Value))
-                            )
-                        ))
-                    )));
+                        };
+                        mappings.AddRange(plan.Properties.Select(keyValue => StringMapping(keyValue.Key, keyValue.Value)));
+                        mappings.Add(Mapping("steps", new YamlSequenceNode(
+                            plan.Steps.Select(step => new YamlMappingNode(
+                                new[] { StringMapping(step.StepType, step.DefaultProperty) }.Concat(
+                                    step.Properties.Select(keyValue => StringMapping(keyValue.Key, keyValue.Value))
+                                )
+                            ))
+                        )));
 
-                    return new YamlMappingNode(mappings);
-                }));
+                        return new YamlMappingNode(mappings);
+                    }));
 
-            serializer.Serialize(writer, yamlRoot);
+                serializer.Serialize(writer, yamlRoot);
+            });
         }
 
         private static KeyValuePair<YamlNode, YamlNode> Mapping(string key, YamlNode value) =>

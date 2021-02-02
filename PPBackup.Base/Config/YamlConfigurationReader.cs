@@ -9,9 +9,9 @@ namespace PPBackup.Base.Config
 {
     public class YamlConfigurationReader
     {
-        private readonly IConfigurationStreamProvider configurationProvider;
+        private readonly IStreamReaderProvider configurationProvider;
 
-        public YamlConfigurationReader(IConfigurationStreamProvider configurationProvider)
+        public YamlConfigurationReader(IStreamReaderProvider configurationProvider)
         {
             this.configurationProvider = configurationProvider;
         }
@@ -20,7 +20,7 @@ namespace PPBackup.Base.Config
         {
             List<BackupPlan> plans = new List<BackupPlan>();
 
-            using (var reader = configurationProvider.CreateConfigurationReader())
+            configurationProvider.ReadConfigurationStreams(reader =>
             {
                 var yamlStream = new YamlStream();
                 try
@@ -113,7 +113,7 @@ namespace PPBackup.Base.Config
                 {
                     throw new InvalidOperationException("Faulty backup plan configuration.", ex);
                 }
-            }
+            });
 
             return plans;
         }

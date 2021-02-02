@@ -20,12 +20,15 @@ namespace PPBackup.Base
 
         private void RegisterDefaultServices()
         {
+            var applicationEvents = new ApplicationEvents();
             var executablePlans = new List<ExecutableBackupPlan>();
 
             Services
                 .With(this)
-                .With<IConfigurationStreamProvider, YamlFileConfigurationProvider>()
-                .With<YamlConfigurationReader>()
+                .With(applicationEvents)
+                .With<IApplicationEvents>(applicationEvents)
+                .With<IStreamReaderProvider, ScriptFileConfigurationProvider>()
+                .With<ScriptConfigurationReader>()
                 .With(SystemOperationsFactory.CreateSystemOperations)
                 .With<IStepExecution, SyncStepExecution>()
                 .With<PlanExecutionHelper>()
@@ -39,7 +42,7 @@ namespace PPBackup.Base
             Services.Start();
 
             var executablePlans = Services.Get<List<ExecutableBackupPlan>>();
-            var backupPlans = Services.Get<YamlConfigurationReader>().Read();
+            var backupPlans = Services.Get<ScriptConfigurationReader>().Read();
 
             foreach (var plan in backupPlans)
             {
