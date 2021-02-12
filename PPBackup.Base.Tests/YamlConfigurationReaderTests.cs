@@ -12,7 +12,7 @@ namespace PPBackup.Base.Tests
         {
             string yaml = @"
 - plan: Test Plan 1
-  run: manually
+  on: selection
   somekey: somevalue
   steps:
     - sync: dir
@@ -22,7 +22,7 @@ namespace PPBackup.Base.Tests
       from: path5/path6/file7
       to: path8/path9/file0
 - plan: Test Plan 2
-  run: automatically
+  on: start
   steps:
     - sync: dir
       from: path11/path12
@@ -34,11 +34,11 @@ namespace PPBackup.Base.Tests
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("somevalue", plan["somekey"]);
                     Assert.Null(plan["plan"]);
-                    Assert.Null(plan["run"]);
+                    Assert.Null(plan["on"]);
                     Assert.Collection(plan.Steps,
                         step =>
                         {
@@ -57,7 +57,7 @@ namespace PPBackup.Base.Tests
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("automatically", plan.RunType);
+                    Assert.Equal("start", plan.RunType);
                     Assert.Equal("Test Plan 2", plan.Name);
                     Assert.Collection(plan.Steps,
                         step =>
@@ -74,7 +74,7 @@ namespace PPBackup.Base.Tests
         {
             string yaml = @"
 - plan: Test Plan
-  run: SOMETHINGUNKNOWN
+  on: SOMETHINGUNKNOWN
   steps:
     - sync: dir
       from: path1/path2
@@ -102,7 +102,7 @@ namespace PPBackup.Base.Tests
         {
             string yaml = @"
 - plan: Test Plan
-  run: manually
+  on: selection
   steps:
     - SOMETHINGUNKNOWN: bla
       from: path1/path2
@@ -113,7 +113,7 @@ namespace PPBackup.Base.Tests
             Assert.Collection(configReader.Read(), plan =>
             {
                 Assert.IsType<BackupPlan>(plan);
-                Assert.Equal("manually", plan.RunType);
+                Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                 Assert.Equal("Test Plan", plan.Name);
                 Assert.Collection(plan.Steps,
                     step =>
@@ -130,7 +130,7 @@ namespace PPBackup.Base.Tests
         {
             string yaml = @"
 plan: Test Plan
-run: SOMETHINGUNKNOWN
+on: SOMETHINGUNKNOWN
 steps:
   - sync: dir
     from: path1/path2
@@ -146,7 +146,7 @@ steps:
         {
             string yaml = @"
 - plan: Test Plan
-  run: manually
+  on: selection
   somekey:
     - bla
     - blubb
@@ -157,7 +157,7 @@ steps:
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan", plan.Name);
                     Assert.Null(plan["somekey"]);
                 });
@@ -168,7 +168,7 @@ steps:
         {
             string yaml = @"
 -234plan; Test Plan
-          run: SOMETHINGUNKNOWN
+          on: SOMETHINGUNKNOWN
 steps=
   - sync: dir
     from: path1/path2

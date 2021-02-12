@@ -11,7 +11,7 @@ namespace PPBackup.Base.Tests
         public void PlanOneLine()
         {
             string script = @"
-plan ""Test Plan 1"" run manually somekey somevalue
+plan ""Test Plan 1"" on selection somekey somevalue
 ";
 
             var configReader = new ScriptConfigurationReader(new StringConfigurationProvider(script));
@@ -19,11 +19,11 @@ plan ""Test Plan 1"" run manually somekey somevalue
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("somevalue", plan["somekey"]);
                     Assert.Null(plan["plan"]);
-                    Assert.Null(plan["run"]);
+                    Assert.Null(plan["on"]);
                 });
         }
 
@@ -32,7 +32,7 @@ plan ""Test Plan 1"" run manually somekey somevalue
         {
             string script = @"
 plan ""Test Plan 1""
-    run manually somekey somevalue
+    on selection somekey somevalue
 ";
 
             var configReader = new ScriptConfigurationReader(new StringConfigurationProvider(script));
@@ -40,11 +40,11 @@ plan ""Test Plan 1""
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("somevalue", plan["somekey"]);
                     Assert.Null(plan["plan"]);
-                    Assert.Null(plan["run"]);
+                    Assert.Null(plan["on"]);
                 });
         }
 
@@ -53,7 +53,7 @@ plan ""Test Plan 1""
         {
             string script = @"
 plan ""Test Plan 1""
-    run manually
+    on selection
     somekey somevalue
 ";
 
@@ -62,11 +62,11 @@ plan ""Test Plan 1""
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("somevalue", plan["somekey"]);
                     Assert.Null(plan["plan"]);
-                    Assert.Null(plan["run"]);
+                    Assert.Null(plan["on"]);
                 });
         }
 
@@ -74,7 +74,7 @@ plan ""Test Plan 1""
         public void PlanIncompleteKeyValue()
         {
             string script = @"
-plan ""Test Plan 1"" run manually somekey
+plan ""Test Plan 1"" on selection somekey
 ";
 
             var configReader = new ScriptConfigurationReader(new StringConfigurationProvider(script));
@@ -82,11 +82,11 @@ plan ""Test Plan 1"" run manually somekey
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Null(plan["somekey"]);
                     Assert.Null(plan["plan"]);
-                    Assert.Null(plan["run"]);
+                    Assert.Null(plan["on"]);
                 });
         }
 
@@ -94,7 +94,7 @@ plan ""Test Plan 1"" run manually somekey
         public void PlanMissingKey()
         {
             string script = @"
-plan ""Test Plan 1"" run manually ""somevalue""
+plan ""Test Plan 1"" on selection ""somevalue""
 ";
 
             var configReader = new ScriptConfigurationReader(new StringConfigurationProvider(script));
@@ -102,11 +102,11 @@ plan ""Test Plan 1"" run manually ""somevalue""
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Null(plan["somekey"]);
                     Assert.Null(plan["plan"]);
-                    Assert.Null(plan["run"]);
+                    Assert.Null(plan["on"]);
                 });
         }
 
@@ -114,7 +114,7 @@ plan ""Test Plan 1"" run manually ""somevalue""
         public void PlanKeyInQuotes()
         {
             string script = @"
-plan ""Test Plan 1"" run manually ""somekey"" somevalue
+plan ""Test Plan 1"" on selection ""somekey"" somevalue
 ";
 
             var configReader = new ScriptConfigurationReader(new StringConfigurationProvider(script));
@@ -122,11 +122,11 @@ plan ""Test Plan 1"" run manually ""somekey"" somevalue
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Null(plan["somekey"]);
                     Assert.Null(plan["plan"]);
-                    Assert.Null(plan["run"]);
+                    Assert.Null(plan["on"]);
                 });
         }
 
@@ -135,7 +135,7 @@ plan ""Test Plan 1"" run manually ""somekey"" somevalue
         {
             string script = @"
 plan ""Test Plan 1""
-    run manually somekey somevalue
+    on selection somekey somevalue
 
 sync dir from path1/path2 to path3/path4
 sync file from path5/path6/file7 to path8/path9/file0
@@ -146,11 +146,11 @@ sync file from path5/path6/file7 to path8/path9/file0
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("somevalue", plan["somekey"]);
                     Assert.Null(plan["plan"]);
-                    Assert.Null(plan["run"]);
+                    Assert.Null(plan["on"]);
                     Assert.Collection(plan.Steps,
                         step =>
                         {
@@ -173,7 +173,7 @@ sync file from path5/path6/file7 to path8/path9/file0
         {
             string script = @"
 plan ""Test Plan 1""
-    run manually somekey somevalue
+    on selection somekey somevalue
 
 sync dir
     from path1/path2
@@ -188,11 +188,11 @@ sync file
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("somevalue", plan["somekey"]);
                     Assert.Null(plan["plan"]);
-                    Assert.Null(plan["run"]);
+                    Assert.Null(plan["on"]);
                     Assert.Collection(plan.Steps,
                         step =>
                         {
@@ -215,7 +215,7 @@ sync file
         {
             string script = @"
 plan ""Test Plan""
-  run SOMETHINGUNKNOWN
+  on SOMETHINGUNKNOWN
 sync dir from path1/path2 to path3/path4
 ";
 
@@ -240,7 +240,7 @@ sync dir from path1/path2 to path3/path4
         {
             string script = @"
 plan ""Test Plan""
-  run manually
+  on selection
 SOMETHINGUNKNOWN bla
       from path1/path2
       to path3/path4
@@ -250,7 +250,7 @@ SOMETHINGUNKNOWN bla
             Assert.Collection(configReader.Read(), plan =>
             {
                 Assert.IsType<BackupPlan>(plan);
-                Assert.Equal("manually", plan.RunType);
+                Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                 Assert.Equal("Test Plan", plan.Name);
                 Assert.Collection(plan.Steps,
                     step =>
@@ -266,7 +266,7 @@ SOMETHINGUNKNOWN bla
         public void SingleQuotes()
         {
             string script = @"
-plan 'Test Plan 1' run manually somekey ""some value""
+plan 'Test Plan 1' on selection somekey ""some value""
 ";
 
             var configReader = new ScriptConfigurationReader(new StringConfigurationProvider(script));
@@ -274,11 +274,11 @@ plan 'Test Plan 1' run manually somekey ""some value""
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("some value", plan["somekey"]);
                     Assert.Null(plan["plan"]);
-                    Assert.Null(plan["run"]);
+                    Assert.Null(plan["on"]);
                 });
         }
 
@@ -286,7 +286,7 @@ plan 'Test Plan 1' run manually somekey ""some value""
         public void InvalidWithMixedQuotes()
         {
             string script = @"
-plan 'Test Plan 1"" run manually somekey somevalue
+plan 'Test Plan 1"" on selection somekey somevalue
 ";
 
             var configReader = new ScriptConfigurationReader(new StringConfigurationProvider(script));
@@ -297,7 +297,7 @@ plan 'Test Plan 1"" run manually somekey somevalue
         public void EmptyValue()
         {
             string script = @"
-plan ""Test Plan 1"" run manually somekey """"
+plan ""Test Plan 1"" on selection somekey """"
 ";
 
             var configReader = new ScriptConfigurationReader(new StringConfigurationProvider(script));
@@ -305,11 +305,11 @@ plan ""Test Plan 1"" run manually somekey """"
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("", plan["somekey"]);
                     Assert.Null(plan["plan"]);
-                    Assert.Null(plan["run"]);
+                    Assert.Null(plan["on"]);
                 });
         }
 
@@ -318,7 +318,7 @@ plan ""Test Plan 1"" run manually somekey """"
         {
             string script = @"
 plan ""Test Plan 1""
-    run manually
+    on selection
 sync dir from path1/path2 to ""${Some Placeholder}/path4""
 ";
 
@@ -327,10 +327,10 @@ sync dir from path1/path2 to ""${Some Placeholder}/path4""
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Null(plan["plan"]);
-                    Assert.Null(plan["run"]);
+                    Assert.Null(plan["on"]);
                     Assert.Collection(plan.Steps,
                         step =>
                         {
@@ -347,7 +347,7 @@ sync dir from path1/path2 to ""${Some Placeholder}/path4""
         {
             string script = @"
 plan ""Test Plan 1""
-    run manually
+    on selection
 sync dir from path1/path2 to ${Some Placeholder}/path4
 ";
 
@@ -356,10 +356,10 @@ sync dir from path1/path2 to ${Some Placeholder}/path4
                 plan =>
                 {
                     Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal("manually", plan.RunType);
+                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Null(plan["plan"]);
-                    Assert.Null(plan["run"]);
+                    Assert.Null(plan["on"]);
                     Assert.Collection(plan.Steps,
                         step =>
                         {
@@ -387,7 +387,7 @@ sync dir from path1/path2 to path3/path4
         {
             string script = @"
 plan ""Test Plan
-  run SOMETHINGUNKNOWN
+  on SOMETHINGUNKNOWN
 sync dir from path1/path2 to path3/path4
 ";
 

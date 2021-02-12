@@ -22,7 +22,7 @@ namespace PPBackup.Base.Config
             configurationProvider.ReadConfigurationStreams(reader =>
             {
                 List<BackupStep> steps = new();
-                BackupPlan backupPlan = new("manually")
+                BackupPlan backupPlan = new(BackupPlan.OnSelectionRunType)
                 {
                     Steps = steps
                 };
@@ -57,7 +57,7 @@ namespace PPBackup.Base.Config
                         }
                         else
                         {
-                            if (key == "run")
+                            if (key == "on")
                             {
                                 backupPlan.RunType = value;
                             }

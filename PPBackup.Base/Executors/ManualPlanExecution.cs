@@ -18,7 +18,7 @@ namespace PPBackup.Base.Executors
                 this.planExecutionHelper = planExecutionHelper;
             }
 
-            public string RunType => "manually";
+            public string RunType => BackupPlan.OnSelectionRunType;
 
             public IPlanExecution Create(BackupPlan plan, PlanExecutionEvents events) => new ManualPlanExecution(planExecutionHelper, plan, events);
         }

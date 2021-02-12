@@ -32,7 +32,7 @@ namespace PPBackup.Base.Config
                         foreach (var planEntry in root.Children.OfType<YamlMappingNode>())
                         {
                             List<BackupStep> steps = new List<BackupStep>();
-                            var planType = (GetChildNode(planEntry.Children, "run") as YamlScalarNode)?.Value ?? "manually";
+                            var planType = (GetChildNode(planEntry.Children, "on") as YamlScalarNode)?.Value ?? BackupPlan.OnSelectionRunType;
                             var plan = new BackupPlan(planType)
                             {
                                 Steps = steps
@@ -43,7 +43,7 @@ namespace PPBackup.Base.Config
                                 if (planProperty.Key is YamlScalarNode scalarKey
                                     && planProperty.Value is YamlScalarNode scalarValue)
                                 {
-                                    if (scalarKey.Value == "run")
+                                    if (scalarKey.Value == "on")
                                     {
                                         continue;
                                     }
