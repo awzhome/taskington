@@ -2,6 +2,7 @@
 using PPBackup.Base.Executors;
 using PPBackup.Base.Model;
 using PPBackup.Base.SystemOperations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -40,7 +41,30 @@ namespace PPBackup.Base
         public void Start()
         {
             Services.Start();
+            Services.Get<ApplicationEvents>().ConfigurationChanged += OnConfigurationChanged;
 
+            ReadConfiguration();
+        }
+
+        private void OnConfigurationChanged(object? sender, EventArgs e)
+        {
+            var applicationEvents = Services.Get<ApplicationEvents>();
+            var executablePlans = Services.Get<List<ExecutableBackupPlan>>();
+            foreach (var executablePlan in executablePlans)
+            {
+                if (executablePlan.Execution is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
+            executablePlans.Clear();
+
+            ReadConfiguration();
+            applicationEvents.ConfigurationReload();
+        }
+
+        private void ReadConfiguration()
+        {
             var executablePlans = Services.Get<List<ExecutableBackupPlan>>();
             var backupPlans = Services.Get<ScriptConfigurationReader>().Read();
 
