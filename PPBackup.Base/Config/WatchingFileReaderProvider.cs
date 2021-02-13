@@ -7,18 +7,21 @@ namespace PPBackup.Base.Config
     public abstract class WatchingFileReaderProvider : IStreamReaderProvider, IDisposable
     {
         private FileSystemWatcher? configFileWatcher;
+        private readonly ApplicationEvents events;
 
         protected static string AppRoamingPath =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ppbackup");
 
         public WatchingFileReaderProvider(ApplicationEvents events)
         {
+            this.events = events;
+
             configFileWatcher = new FileSystemWatcher(GetConfigDirectory(), WatchedFilesFilter)
             {
-                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime | NotifyFilters.Size
+                NotifyFilter = NotifyFilters.LastWrite
             };
             configFileWatcher.Created += (sender, e) => events.ConfigurationChange();
-            configFileWatcher.Changed += (sender, e) => events.ConfigurationChange();
+            configFileWatcher.Changed += OnFileChanged;
             configFileWatcher.Deleted += (sender, e) => events.ConfigurationChange();
             configFileWatcher.EnableRaisingEvents = true;
         }
@@ -26,6 +29,22 @@ namespace PPBackup.Base.Config
         ~WatchingFileReaderProvider()
         {
             DisposeFileWatcher();
+        }
+
+        private void OnFileChanged(object sender, FileSystemEventArgs e)
+        {
+            try
+            {
+                // This is needed, because we might receive Changed events while file is still open and written
+                FileInfo file = new(e.FullPath);
+                using (var fileStream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    fileStream.Close();
+                }
+
+                events.ConfigurationChange();
+            }
+            catch (IOException) { }
         }
 
         public void ReadConfigurationStreams(Action<TextReader> configReader)
