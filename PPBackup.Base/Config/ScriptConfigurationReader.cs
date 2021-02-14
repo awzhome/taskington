@@ -1,4 +1,5 @@
-﻿using PPBackup.Base.Model;
+﻿using PPBackup.Base.Plans;
+using PPBackup.Base.Steps;
 using System;
 using System.Collections.Generic;
 using System.IO;

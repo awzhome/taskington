@@ -1,5 +1,5 @@
-﻿using PPBackup.Base.Executors;
-using PPBackup.Base.Model;
+﻿using PPBackup.Base.Model;
+using PPBackup.Base.Plans;
 
 namespace PPBackup.WinApp.ViewModel
 {

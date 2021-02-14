@@ -1,4 +1,4 @@
-﻿namespace PPBackup.Base.Model
+﻿namespace PPBackup.Base.Steps
 {
     public class InvalidBackupStep : BackupStep
     {

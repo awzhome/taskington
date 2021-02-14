@@ -1,5 +1,5 @@
 ﻿using PPBackup.Base.Config;
-using PPBackup.Base.Model;
+using PPBackup.Base.Plans;
 using System;
 using Xunit;
 

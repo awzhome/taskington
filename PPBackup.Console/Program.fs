@@ -1,8 +1,7 @@
 ﻿open System
 open PPBackup.Console
 open PPBackup.Base
-open PPBackup.Base.Executors
-open System.ComponentModel
+open PPBackup.Base.Plans
 
 [<EntryPoint>]
 let main argv =

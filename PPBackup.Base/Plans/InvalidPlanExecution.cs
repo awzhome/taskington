@@ -1,8 +1,6 @@
-﻿using PPBackup.Base.Model;
-using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace PPBackup.Base.Executors
+namespace PPBackup.Base.Plans
 {
     class InvalidPlanExecution : IPlanExecution
     {

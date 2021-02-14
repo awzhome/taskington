@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PPBackup.Base.Executors
+namespace PPBackup.Base.Steps
 {
     public class StepProgressUpdatedEventArgs
     {

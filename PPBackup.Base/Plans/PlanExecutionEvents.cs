@@ -1,7 +1,6 @@
-﻿using PPBackup.Base.Model;
-using System;
+﻿using System;
 
-namespace PPBackup.Base.Executors
+namespace PPBackup.Base.Plans
 {
     public class PlanProgressUpdatedEventArgs
     {

@@ -1,7 +1,6 @@
-﻿using PPBackup.Base.Model;
-using PPBackup.Base.SystemOperations;
+﻿using PPBackup.Base.SystemOperations;
 
-namespace PPBackup.Base.Executors
+namespace PPBackup.Base.Steps
 {
     enum SynchronizedObject
     {

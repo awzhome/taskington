@@ -1,10 +1,9 @@
-﻿using PPBackup.Base.Model;
-using PPBackup.Base.SystemOperations;
+﻿using PPBackup.Base.SystemOperations;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace PPBackup.Base.Executors
+namespace PPBackup.Base.Steps
 {
     internal class SyncStepExecution : IStepExecution
     {
@@ -37,7 +36,7 @@ namespace PPBackup.Base.Executors
                 .Where(step => step.StepType == Type)
                 .SelectMany(GetRelevantPathsOfStep)
                 .SelectMany(placeholders.ExtractPlaceholders)
-                .Any(result => result.Placeholder.StartsWith("drive:") && (result.Resolved == null));
+                .Any(result => result.Placeholder.StartsWith("drive:") && result.Resolved == null);
         }
 
         public void Execute(BackupStep step, Placeholders placeholders, StepExecutionEvents status)

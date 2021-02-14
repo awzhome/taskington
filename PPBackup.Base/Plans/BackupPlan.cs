@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using PPBackup.Base.Steps;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace PPBackup.Base.Model
+namespace PPBackup.Base.Plans
 {
-    public class BackupPlan : Model
+    public class BackupPlan : Model.Model
     {
         public const string OnSelectionRunType = "selection";
 

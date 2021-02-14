@@ -1,8 +1,7 @@
-﻿using PPBackup.Base.Model;
-using PPBackup.Base.SystemOperations;
+﻿using PPBackup.Base.SystemOperations;
 using System.Collections.Generic;
 
-namespace PPBackup.Base.Executors
+namespace PPBackup.Base.Steps
 {
     public interface IStepExecution
     {

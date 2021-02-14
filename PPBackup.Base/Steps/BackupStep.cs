@@ -1,6 +1,6 @@
-﻿namespace PPBackup.Base.Model
+﻿namespace PPBackup.Base.Steps
 {
-    public class BackupStep : Model
+    public class BackupStep : Model.Model
     {
         public BackupStep(string type)
         {

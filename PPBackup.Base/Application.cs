@@ -1,6 +1,6 @@
 ﻿using PPBackup.Base.Config;
-using PPBackup.Base.Executors;
-using PPBackup.Base.Model;
+using PPBackup.Base.Plans;
+using PPBackup.Base.Steps;
 using PPBackup.Base.SystemOperations;
 using System;
 using System.Collections.Generic;

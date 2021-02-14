@@ -1,7 +1,6 @@
-﻿using PPBackup.Base.Model;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace PPBackup.Base.Executors
+namespace PPBackup.Base.Plans
 {
     public interface IPlanExecutionCreator
     {

@@ -1,5 +1,6 @@
 ﻿using PPBackup.Base.Config;
-using PPBackup.Base.Model;
+using PPBackup.Base.Plans;
+using PPBackup.Base.Steps;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;

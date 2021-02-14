@@ -1,12 +1,11 @@
-﻿using PPBackup.Base;
-using PPBackup.Base.Model;
+﻿using PPBackup.Base.Steps;
 using PPBackup.Base.SystemOperations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PPBackup.Base.Executors
+namespace PPBackup.Base.Plans
 {
     public class PlanExecutionHelper
     {

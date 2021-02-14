@@ -1,6 +1,4 @@
-﻿using PPBackup.Base.Model;
-
-namespace PPBackup.Base.Executors
+﻿namespace PPBackup.Base.Plans
 {
     public class ExecutableBackupPlan
     {
