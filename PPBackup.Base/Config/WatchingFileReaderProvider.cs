@@ -18,10 +18,11 @@ namespace PPBackup.Base.Config
 
             configFileWatcher = new FileSystemWatcher(GetConfigDirectory(), WatchedFilesFilter)
             {
-                NotifyFilter = NotifyFilters.LastWrite
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.LastAccess | NotifyFilters.DirectoryName | NotifyFilters.FileName
             };
-            configFileWatcher.Created += (sender, e) => events.ConfigurationChange();
+            configFileWatcher.Created += OnFileChanged;
             configFileWatcher.Changed += OnFileChanged;
+            configFileWatcher.Renamed += (sender, e) => events.ConfigurationChange();
             configFileWatcher.Deleted += (sender, e) => events.ConfigurationChange();
             configFileWatcher.EnableRaisingEvents = true;
         }
