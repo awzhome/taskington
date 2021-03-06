@@ -13,6 +13,7 @@ namespace PPBackup.Base
         internal ApplicationServices()
         {
             services = new ServiceCollection();
+            With(this);
         }
 
         public ApplicationServices With<T>() where T : class
