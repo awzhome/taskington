@@ -1,7 +1,6 @@
 ﻿using PPBackup.Base.Config;
 using PPBackup.Base.Plans;
 using PPBackup.Base.Steps;
-using PPBackup.Base.SystemOperations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,27 +14,8 @@ namespace PPBackup.Base
         public Application()
         {
             Services = new ApplicationServices();
-
-            RegisterDefaultServices();
-        }
-
-        private void RegisterDefaultServices()
-        {
-            var applicationEvents = new ApplicationEvents();
-            var executablePlans = new List<ExecutableBackupPlan>();
-
-            Services
-                .With(this)
-                .With(applicationEvents)
-                .With<IApplicationEvents>(applicationEvents)
-                .With<IStreamReaderProvider, ScriptFileConfigurationProvider>()
-                .With<ScriptConfigurationReader>()
-                .With(SystemOperationsFactory.CreateSystemOperations)
-                .With<IStepExecution, SyncStepExecution>()
-                .With<PlanExecutionHelper>()
-                .With<IPlanExecutionCreator, ManualPlanExecution.Creator>()
-                .With(executablePlans)
-                .With<IEnumerable<ExecutableBackupPlan>>(executablePlans);
+            BaseServices.Bind(Services);
+            Services.With(this);
         }
 
         public void Start()
@@ -52,10 +32,7 @@ namespace PPBackup.Base
             var executablePlans = Services.Get<List<ExecutableBackupPlan>>();
             foreach (var executablePlan in executablePlans)
             {
-                if (executablePlan.Execution is IDisposable disposable)
-                {
-                    disposable.Dispose();
-                }
+                (executablePlan.Execution as IDisposable)?.Dispose();
             }
             executablePlans.Clear();
 
