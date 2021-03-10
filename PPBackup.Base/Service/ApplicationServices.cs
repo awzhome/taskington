@@ -1,45 +1,63 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using PPBackup.Base.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PPBackup.Base
+namespace PPBackup.Base.Service
 {
-    public class ApplicationServices
+    public interface IAppServiceProvider
+    {
+        T Get<T>();
+        T? Get<T>(Func<T, bool> predicate);
+        IEnumerable<T> GetAll<T>();
+    }
+
+    public interface IAppServiceBinder
+    {
+        IAppServiceBinder Bind<T>() where T : class;
+        IAppServiceBinder Bind<T>(T instance) where T : class;
+        IAppServiceBinder Bind<T>(Func<T> serviceFactory) where T : class;
+        IAppServiceBinder Bind<T, S>()
+            where T : class
+            where S : class, T;
+    }
+
+    class ApplicationServices : IAppServiceProvider, IAppServiceBinder
     {
         private readonly IServiceCollection services;
         private ServiceProvider? serviceProvider;
 
-        private List<Action> autoInitializers = new();
+        private readonly Action<IAppServiceBinder>? binderFunction;
+        private readonly List<Action> autoInitializers = new();
 
-        internal ApplicationServices()
+        internal ApplicationServices(Action<IAppServiceBinder>? binderFunction = null)
         {
+            this.binderFunction = binderFunction;
             services = new ServiceCollection();
-            With(this);
+            Bind<IAppServiceProvider>(this);
         }
 
-        public ApplicationServices With<T>() where T : class
+        public IAppServiceBinder Bind<T>() where T : class
         {
             services.AddSingleton<T>();
             CheckForAutoInitialization<T>();
             return this;
         }
 
-        public ApplicationServices With<T>(T instance) where T : class
+        public IAppServiceBinder Bind<T>(T instance) where T : class
         {
             services.AddSingleton(instance);
             return this;
         }
 
-        public ApplicationServices With<T>(Func<T> serviceFactory)
+        public IAppServiceBinder Bind<T>(Func<T> serviceFactory)
             where T : class
         {
             services.AddSingleton(provider => serviceFactory());
             return this;
         }
 
-        public ApplicationServices With<T, S>()
+        public IAppServiceBinder Bind<T, S>()
             where T : class
             where S : class, T
         {
@@ -49,6 +67,7 @@ namespace PPBackup.Base
 
         public void Start()
         {
+            binderFunction?.Invoke(this);
             serviceProvider = services.BuildServiceProvider();
             foreach (var autoInitializer in autoInitializers)
             {

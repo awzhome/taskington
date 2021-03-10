@@ -1,5 +1,6 @@
-﻿using PPBackup.Base.Config;
-using PPBackup.Base.Plans;
+﻿using PPBackup.Base.Plans;
+using PPBackup.Base.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,23 +8,28 @@ namespace PPBackup.Base
 {
     public class Application
     {
-        public ApplicationServices Services { get; }
+        private readonly ApplicationServices services;
 
-        public Application()
+        public Application(Action<IAppServiceBinder>? binderFunction = null)
         {
-            Services = new ApplicationServices();
-            BaseServices.Bind(Services);
-            Services.With(this);
+            services = new ApplicationServices(binder =>
+            {
+                BaseServices.Bind(binder);
+                binder.Bind(this);
+                binderFunction?.Invoke(binder);
+            });
         }
+
+        public IAppServiceProvider ServiceProvider => services;
 
         public void Start()
         {
-            Services.Start();
+            services.Start();
         }
 
         public void NotifyInitialStates()
         {
-            foreach (var execution in Services.Get<List<ExecutableBackupPlan>>().Select(executablePlan => executablePlan.Execution))
+            foreach (var execution in services.Get<List<ExecutableBackupPlan>>().Select(executablePlan => executablePlan.Execution))
             {
                 execution.NotifyInitialStates();
             }

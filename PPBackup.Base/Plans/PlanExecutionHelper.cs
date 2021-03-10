@@ -1,4 +1,5 @@
-﻿using PPBackup.Base.Steps;
+﻿using PPBackup.Base.Service;
+using PPBackup.Base.Steps;
 using PPBackup.Base.SystemOperations;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,12 @@ namespace PPBackup.Base.Plans
 {
     public class PlanExecutionHelper
     {
-        private readonly Application application;
+        private readonly IAppServiceProvider serviceProvider;
         private readonly ISystemOperations systemOperations;
 
-        public PlanExecutionHelper(Application application, ISystemOperations systemOperations)
+        public PlanExecutionHelper(IAppServiceProvider serviceProvider, ISystemOperations systemOperations)
         {
-            this.application = application;
+            this.serviceProvider = serviceProvider;
             this.systemOperations = systemOperations;
         }
 
@@ -46,7 +47,7 @@ namespace PPBackup.Base.Plans
                     int planProgress = 0;
                     foreach (var step in plan.Steps)
                     {
-                        var stepExecution = application.Services.Get<IStepExecution>(s => s.Type == step.StepType);
+                        var stepExecution = serviceProvider.Get<IStepExecution>(s => s.Type == step.StepType);
                         if (stepExecution != null)
                         {
                             var stepEvents = new StepExecutionEvents();

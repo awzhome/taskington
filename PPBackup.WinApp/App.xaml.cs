@@ -10,11 +10,10 @@ namespace PPBackup.WinApp
         {
             base.OnStartup(e);
 
-            var application = new Base.Application();
-            application.Services.With<MainViewModel>();
+            var application = new Base.Application(binder => binder.Bind<MainViewModel>());
             application.Start();
 
-            var mainViewModel = application.Services.Get<MainViewModel>();
+            var mainViewModel = application.ServiceProvider.Get<MainViewModel>();
             var mainView = new MainView
             {
                 DataContext = mainViewModel

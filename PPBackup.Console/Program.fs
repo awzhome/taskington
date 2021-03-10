@@ -8,7 +8,7 @@ let main argv =
     let application = Application()
     application.Start()
 
-    let executablePlans = application.Services.Get<seq<ExecutableBackupPlan>>()
+    let executablePlans = application.ServiceProvider.Get<seq<ExecutableBackupPlan>>()
 
     let mutable cursorPos = UI.getCursorPos()
     let mutable planName = ""

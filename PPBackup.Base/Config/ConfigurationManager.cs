@@ -15,18 +15,18 @@ namespace PPBackup.Base.Config
         private bool reloadDelayed = false;
         private readonly HashSet<BackupPlan> runningPlans = new();
 
-        private readonly ApplicationServices services;
+        private readonly IAppServiceProvider serviceProvider;
         private readonly ApplicationEvents applicationEvents;
         private readonly List<ExecutableBackupPlan> executablePlans;
         private readonly ScriptConfigurationReader scriptConfigurationReader;
 
         public ConfigurationManager(
-            ApplicationServices services,
+            IAppServiceProvider serviceProvider,
             ApplicationEvents applicationEvents,
             List<ExecutableBackupPlan> executablePlans,
             ScriptConfigurationReader scriptConfigurationReader)
         {
-            this.services = services;
+            this.serviceProvider = serviceProvider;
             this.applicationEvents = applicationEvents;
             this.executablePlans = executablePlans;
             this.scriptConfigurationReader = scriptConfigurationReader;
@@ -94,7 +94,7 @@ namespace PPBackup.Base.Config
                 }
                 else
                 {
-                    var planExecutionCreator = services.Get<IPlanExecutionCreator>(
+                    var planExecutionCreator = serviceProvider.Get<IPlanExecutionCreator>(
                         execution => execution.RunType == plan.RunType);
                     if (planExecutionCreator == null)
                     {
