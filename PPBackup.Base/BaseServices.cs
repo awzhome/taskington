@@ -10,13 +10,14 @@ namespace PPBackup.Base
     {
         public static void Bind(ApplicationServices services)
         {
-            var applicationEvents = new ApplicationEvents();
-            var executablePlans = new List<ExecutableBackupPlan>();
+            ApplicationEvents applicationEvents = new();
+            List<ExecutableBackupPlan> executablePlans = new();
 
             services
                 .With(applicationEvents)
                 .With<IApplicationEvents>(applicationEvents)
                 .With<IStreamReaderProvider, ScriptFileConfigurationProvider>()
+                .With<ConfigurationManager>()
                 .With<ScriptConfigurationReader>()
                 .With(SystemOperationsFactory.CreateSystemOperations)
                 .With<IStepExecution, SyncStepExecution>()

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using PPBackup.Base.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace PPBackup.Base
         private readonly IServiceCollection services;
         private ServiceProvider? serviceProvider;
 
+        private List<Action> autoInitializers = new();
+
         internal ApplicationServices()
         {
             services = new ServiceCollection();
@@ -19,6 +22,7 @@ namespace PPBackup.Base
         public ApplicationServices With<T>() where T : class
         {
             services.AddSingleton<T>();
+            CheckForAutoInitialization<T>();
             return this;
         }
 
@@ -46,6 +50,18 @@ namespace PPBackup.Base
         public void Start()
         {
             serviceProvider = services.BuildServiceProvider();
+            foreach (var autoInitializer in autoInitializers)
+            {
+                autoInitializer();
+            }
+        }
+
+        private void CheckForAutoInitialization<T>()
+        {
+            if (typeof(IAutoInitializable).IsAssignableFrom(typeof(T)))
+            {
+                autoInitializers.Add(() => (Get<T>() as IAutoInitializable)?.Initialize());
+            }
         }
 
         public T Get<T>() => serviceProvider.GetRequiredService<T>();
