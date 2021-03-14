@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - release
+      - ghaction
+  pull_request:
+    branches:
+      - master
+      - release
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Install build tools
+        run: |
+          dotnet --version
+          dotnet tool restore
+
+      - name: Update project version
+        run: dotnet fake build -t UpdateVersion-CI %GITHUB_RUN_NUMBER% preview
+
+      - name: Build
+        run: dotnet fake build
+
+      - name: Test
+        run: dotnet test PPBackup.Base.Tests\PPBackup.Base.Tests.csproj
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Artifacts
+          path: build/artifacts/

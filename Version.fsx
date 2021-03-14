@@ -1,5 +1,7 @@
 module Versioning
 
+#load "CurrentVersion.fsx"
+
 type Version =
     { Major: string
       Minor: string
@@ -49,8 +51,9 @@ let withMajorMinorOnly version =
               Build = None
               Suffix = None }
 
-let splitVersionStr (version: string) =
+let rec splitVersionStr (version: string) =
     match version.Split('.') with
+    | [| build |] -> splitVersionStr(CurrentVersion.currentVersion + "." + build)
     | [| major; minor |] -> Version.Create(major, minor)
     | [| major; minor; build |] -> Version.Create(major, minor, build)
     | _ -> Version.Create("0", "0")

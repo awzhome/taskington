@@ -75,7 +75,10 @@ Target.create "UpdateVersion" (fun p ->
     let version = parseVersionArgs p.Context.Arguments
 
     !! "appveyor.yml"
-    |> writeVersion "version: '$$$.{build}'" (version |> withMajorMinorOnly))
+    |> writeVersion "version: '$$$.{build}'" (version |> withMajorMinorOnly)
+
+    !! "CurrentVersion.fsx"
+    |> writeVersion "let currentVersion = \"$$$\"" (version |> withMajorMinorOnly))
 
 "UpdateVersion-CI" ==> "UpdateVersion"
 
