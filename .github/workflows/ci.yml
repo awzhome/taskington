@@ -30,7 +30,7 @@ jobs:
           dotnet tool restore
 
       - name: Update project version
-        run: dotnet fake build -t UpdateVersion-CI %GITHUB_RUN_NUMBER% preview
+        run: dotnet fake build -t UpdateVersion-CI $env:GITHUB_RUN_NUMBER preview
 
       - name: Build
         run: dotnet fake build
