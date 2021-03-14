@@ -26,7 +26,7 @@ namespace PPBackup.Base.Plans
 
             var stepTypes = new HashSet<string>(plan.Steps.Select(step => step.StepType));
             return
-                !stepTypes.Select(type => application.Services.Get<IStepExecution>(s => s.Type == type)
+                !stepTypes.Select(type => serviceProvider.Get<IStepExecution>(s => s.Type == type)
                     ?.CanExecuteSupportedSteps(plan.Steps, placeholders))
                 .Any(result => !(result ?? true));
         }
