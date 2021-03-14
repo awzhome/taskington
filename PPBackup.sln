@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
 		build.fsx = build.fsx
+		.github\workflows\ci.yml = .github\workflows\ci.yml
+		Version.fsx = Version.fsx
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPBackup.Base.Tests", "PPBackup.Base.Tests\PPBackup.Base.Tests.csproj", "{0D5F7529-F557-4701-B327-D3A2D1C9270C}"
