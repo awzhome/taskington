@@ -48,13 +48,19 @@ namespace PPBackup.Base.Config
 
         private void OnConfigurationChanged(object? sender, EventArgs e)
         {
+            bool configReloaded = false;
             lock (configurationLock)
             {
-                TryReloadConfiguration();
+                configReloaded = TryReloadConfiguration();
+            }
+
+            if (configReloaded)
+            {
+                applicationEvents.ConfigurationReload();
             }
         }
 
-        private void TryReloadConfiguration()
+        private bool TryReloadConfiguration()
         {
             if (runningPlans.Count == 0)
             {
@@ -65,7 +71,7 @@ namespace PPBackup.Base.Config
                 executablePlans.Clear();
 
                 ReadConfiguration();
-                applicationEvents.ConfigurationReload();
+                return true;
             }
             else
             {
@@ -74,6 +80,7 @@ namespace PPBackup.Base.Config
                     applicationEvents.ConfigurationReloadDelay(true);
                 }
                 reloadDelayed = true;
+                return false;
             }
         }
 
@@ -127,6 +134,7 @@ namespace PPBackup.Base.Config
             }
             else
             {
+                bool configReloaded = false;
                 lock (configurationLock)
                 {
                     runningPlans.Remove(e.BackupPlan);
@@ -134,8 +142,12 @@ namespace PPBackup.Base.Config
                     {
                         applicationEvents.ConfigurationReloadDelay(false);
                         reloadDelayed = false;
-                        TryReloadConfiguration();
+                        configReloaded = TryReloadConfiguration();
                     }
+                }
+                if (configReloaded)
+                {
+                    applicationEvents.ConfigurationReload();
                 }
             }
         }
