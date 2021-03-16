@@ -41,5 +41,5 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: Artifacts
-          path: build/artifacts/
+          name: Installer Windows x64
+          path: build/artifacts/ppbackup-setup-win64-*.exe
