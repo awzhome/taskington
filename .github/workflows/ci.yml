@@ -42,5 +42,5 @@ jobs:
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/release'
         uses: actions/upload-artifact@v2
         with:
-          name: Artifacts
-          path: build/artifacts/
+          name: Windows x64 Installer
+          path: build/artifacts/ppbackup-setup-win64-*.exe
