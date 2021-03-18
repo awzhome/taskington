@@ -39,6 +39,7 @@ jobs:
         run: dotnet test PPBackup.Base.Tests\PPBackup.Base.Tests.csproj
 
       - name: Archive artifacts
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/release'
         uses: actions/upload-artifact@v2
         with:
           name: Artifacts
