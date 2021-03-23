@@ -17,9 +17,13 @@ namespace PPBackup.Gui
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                var application = new Base.Application(binder => binder.Bind<MainWindowViewModel>());
+                application.Start();
+
+                var mainViewModel = application.ServiceProvider.Get<MainWindowViewModel>();
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(),
+                    DataContext = mainViewModel
                 };
             }
 

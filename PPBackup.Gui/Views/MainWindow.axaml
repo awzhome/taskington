@@ -1,6 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:PPBackup.Gui.ViewModels"
+		xmlns:models="using:PPBackup.Gui.Models"
+		xmlns:views="using:PPBackup.Gui.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -9,9 +11,40 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="Perspectives Pictured Backup">
 
-	<Design.DataContext>
-		<vm:MainWindowViewModel/>
-	</Design.DataContext>
+	<Window.Styles>
+		<Style Selector="Image.ppLogo">
+			<Setter Property="Margin" Value="50,0,50,0" />
+			<Setter Property="MaxHeight" Value="100" />
+			<Setter Property="MinWidth" Value="500" />
+		</Style>
+		<Style Selector="TextBlock.ppLogoText">
+			<Setter Property="Margin" Value="300,70,50,0" />
+			<Setter Property="FontSize" Value="28" />
+			<Setter Property="HorizontalAlignment" Value="Center" />
+			<Setter Property="Foreground" Value="White" />
+		</Style>
+	</Window.Styles>
 
-	<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	<Window.DataTemplates>
+		<DataTemplate DataType="{x:Type models:BackupPlanModel}">
+			<views:BackupPlanView />
+		</DataTemplate>
+	</Window.DataTemplates>
+
+	<Grid RowDefinitions="Auto,*">
+		<Grid Grid.Row="0">
+			<Image Classes="ppLogo" Source="/Assets/PerspectivesPictured.png" />
+			<TextBlock Classes="ppLogoText">Backup</TextBlock>
+		</Grid>
+
+		<ScrollViewer Grid.Row="1" Margin="50,50,50,0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+			<ItemsControl Items="{Binding BackupPlans}" HorizontalAlignment="Center">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel MinWidth="400" Orientation="Vertical" />
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+			</ItemsControl>
+		</ScrollViewer>
+	</Grid>
 </Window>
