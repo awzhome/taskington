@@ -6,9 +6,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-		Height="800" Width="500" MinWidth="500"
         x:Class="PPBackup.Gui.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
+		Height="800" Width="600" MinWidth="600"
         Title="Perspectives Pictured Backup">
 
 	<Window.Styles>
@@ -23,6 +23,9 @@
 			<Setter Property="HorizontalAlignment" Value="Center" />
 			<Setter Property="Foreground" Value="White" />
 		</Style>
+		<Style Selector="Window">
+			<Setter Property="Background" Value="#151515" />
+		</Style>
 	</Window.Styles>
 
 	<Window.DataTemplates>
@@ -31,7 +34,7 @@
 		</DataTemplate>
 	</Window.DataTemplates>
 
-	<Grid RowDefinitions="Auto,*">
+	<Grid RowDefinitions="Auto,*" Margin="0,20,0,0">
 		<Grid Grid.Row="0">
 			<Image Classes="ppLogo" Source="/Assets/PerspectivesPictured.png" />
 			<TextBlock Classes="ppLogoText">Backup</TextBlock>
