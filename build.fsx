@@ -45,7 +45,7 @@ Target.create "Clean" (fun _ ->
 
 Target.create "Build" (fun _ -> DotNet.build defaults "PPBackup.sln")
 
-Target.create "Publish-Win64" (fun _ -> publish "win64" "win-x64" "PPBackup.WinApp")
+Target.create "Publish-Win64" (fun _ -> publish "win64" "win-x64" "PPBackup.Gui")
 
 Target.create "Installer-Win64" (fun _ ->
     InnoSetup.build (fun p ->
