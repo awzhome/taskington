@@ -19,19 +19,19 @@ namespace PPBackup.Base
         public event EventHandler? ConfigurationReloaded;
         public event EventHandler<ConfigurationReloadDelayEventArgs>? ConfigurationReloadDelayed;
 
-        public ApplicationEvents ConfigurationChange()
+        public ApplicationEvents OnConfigurationChanged()
         {
             ConfigurationChanged?.Invoke(this, new EventArgs());
             return this;
         }
 
-        public ApplicationEvents ConfigurationReload()
+        public ApplicationEvents OnConfigurationReloaded()
         {
             ConfigurationReloaded?.Invoke(this, new EventArgs());
             return this;
         }
 
-        public ApplicationEvents ConfigurationReloadDelay(bool isDelayed)
+        public ApplicationEvents OnConfigurationReloadDelayed(bool isDelayed)
         {
             ConfigurationReloadDelayed?.Invoke(this, new ConfigurationReloadDelayEventArgs() { IsDelayed = isDelayed });
             return this;

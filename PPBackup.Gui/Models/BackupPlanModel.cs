@@ -13,11 +13,11 @@ namespace PPBackup.Gui.Models
         {
             this.executableBackupPlan = executableBackupPlan;
 
-            executableBackupPlan.Events.IsRunningUpdated += (o, e) => IsRunning = e.IsRunning;
-            executableBackupPlan.Events.ProgressUpdated += (o, e) => Progress = e.Progress;
-            executableBackupPlan.Events.StatusTextUpdated += (o, e) => StatusText = e.StatusText;
-            executableBackupPlan.Events.HasErrorsUpdated += (o, e) => HasErrors = e.HasErrors;
-            executableBackupPlan.Events.CanExecuteUpdated += (o, e) => CanExecute = e.CanExecute;
+            executableBackupPlan.Events.IsRunning += (o, e) => IsRunning = e.IsRunning;
+            executableBackupPlan.Events.Progress += (o, e) => Progress = e.Progress;
+            executableBackupPlan.Events.StatusText += (o, e) => StatusText = e.StatusText;
+            executableBackupPlan.Events.HasErrors += (o, e) => HasErrors = e.HasErrors;
+            executableBackupPlan.Events.CanExecute += (o, e) => CanExecute = e.CanExecute;
 
             ExecutePlanCommand = ReactiveCommand.CreateFromTask(executableBackupPlan.Execution.ExecuteAsync);
         }

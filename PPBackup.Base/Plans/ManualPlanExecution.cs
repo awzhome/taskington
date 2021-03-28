@@ -32,10 +32,10 @@ namespace PPBackup.Base.Plans
         public void NotifyInitialStates()
         {
             events
-                .CanExecute(planExecutionHelper.CanExecute(backupPlan))
-                .HasErrors(false)
-                .IsRunning(false)
-                .StatusText("Not run yet");
+                .OnCanExecute(planExecutionHelper.CanExecute(backupPlan))
+                .OnHasErrors(false)
+                .OnIsRunning(false)
+                .OnStatusText("Not run yet");
         }
 
         public async Task ExecuteAsync()

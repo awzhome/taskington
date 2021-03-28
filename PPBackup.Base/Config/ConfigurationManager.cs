@@ -56,7 +56,7 @@ namespace PPBackup.Base.Config
 
             if (configReloaded)
             {
-                applicationEvents.ConfigurationReload();
+                applicationEvents.OnConfigurationReloaded();
             }
         }
 
@@ -77,7 +77,7 @@ namespace PPBackup.Base.Config
             {
                 if (!reloadDelayed)
                 {
-                    applicationEvents.ConfigurationReloadDelay(true);
+                    applicationEvents.OnConfigurationReloadDelayed(true);
                 }
                 reloadDelayed = true;
                 return false;
@@ -119,7 +119,7 @@ namespace PPBackup.Base.Config
                     }
                 }
 
-                events.IsRunningUpdated += OnPlanIsRunningUpdated;
+                events.IsRunning += OnPlanIsRunningUpdated;
             }
         }
 
@@ -140,14 +140,14 @@ namespace PPBackup.Base.Config
                     runningPlans.Remove(e.BackupPlan);
                     if ((runningPlans.Count == 0) && reloadDelayed)
                     {
-                        applicationEvents.ConfigurationReloadDelay(false);
+                        applicationEvents.OnConfigurationReloadDelayed(false);
                         reloadDelayed = false;
                         configReloaded = TryReloadConfiguration();
                     }
                 }
                 if (configReloaded)
                 {
-                    applicationEvents.ConfigurationReload();
+                    applicationEvents.OnConfigurationReloaded();
                 }
             }
         }

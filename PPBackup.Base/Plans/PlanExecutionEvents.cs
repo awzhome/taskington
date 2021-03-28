@@ -66,11 +66,11 @@ namespace PPBackup.Base.Plans
 
     public interface IPlanExecutionEvents
     {
-        event EventHandler<PlanProgressUpdatedEventArgs> ProgressUpdated;
-        event EventHandler<PlanStatusTextUpdatedEventArgs> StatusTextUpdated;
-        event EventHandler<PlanCanExecuteUpdatedEventArgs> CanExecuteUpdated;
-        event EventHandler<PlanHasErrorsUpdatedEventArgs> HasErrorsUpdated;
-        event EventHandler<PlanIsRunningUpdatedEventArgs> IsRunningUpdated;
+        event EventHandler<PlanProgressUpdatedEventArgs> Progress;
+        event EventHandler<PlanStatusTextUpdatedEventArgs> StatusText;
+        event EventHandler<PlanCanExecuteUpdatedEventArgs> CanExecute;
+        event EventHandler<PlanHasErrorsUpdatedEventArgs> HasErrors;
+        event EventHandler<PlanIsRunningUpdatedEventArgs> IsRunning;
     }
 
     public class PlanExecutionEvents : IPlanExecutionEvents
@@ -82,43 +82,43 @@ namespace PPBackup.Base.Plans
             this.backupPlan = backupPlan;
         }
 
-        public event EventHandler<PlanProgressUpdatedEventArgs>? ProgressUpdated;
+        public event EventHandler<PlanProgressUpdatedEventArgs>? Progress;
 
-        public PlanExecutionEvents Progress(int progress)
+        public PlanExecutionEvents OnProgress(int progress)
         {
-            ProgressUpdated?.Invoke(this, new PlanProgressUpdatedEventArgs(backupPlan, progress));
+            Progress?.Invoke(this, new PlanProgressUpdatedEventArgs(backupPlan, progress));
             return this;
         }
 
-        public event EventHandler<PlanStatusTextUpdatedEventArgs>? StatusTextUpdated;
+        public event EventHandler<PlanStatusTextUpdatedEventArgs>? StatusText;
 
-        public PlanExecutionEvents StatusText(string statusText)
+        public PlanExecutionEvents OnStatusText(string statusText)
         {
-            StatusTextUpdated?.Invoke(this, new PlanStatusTextUpdatedEventArgs(backupPlan, statusText));
+            StatusText?.Invoke(this, new PlanStatusTextUpdatedEventArgs(backupPlan, statusText));
             return this;
         }
 
-        public event EventHandler<PlanCanExecuteUpdatedEventArgs>? CanExecuteUpdated;
+        public event EventHandler<PlanCanExecuteUpdatedEventArgs>? CanExecute;
 
-        public PlanExecutionEvents CanExecute(bool canExecute)
+        public PlanExecutionEvents OnCanExecute(bool canExecute)
         {
-            CanExecuteUpdated?.Invoke(this, new PlanCanExecuteUpdatedEventArgs(backupPlan, canExecute));
+            CanExecute?.Invoke(this, new PlanCanExecuteUpdatedEventArgs(backupPlan, canExecute));
             return this;
         }
 
-        public event EventHandler<PlanHasErrorsUpdatedEventArgs>? HasErrorsUpdated;
+        public event EventHandler<PlanHasErrorsUpdatedEventArgs>? HasErrors;
 
-        public PlanExecutionEvents HasErrors(bool hasErrors, string statusText = "")
+        public PlanExecutionEvents OnHasErrors(bool hasErrors, string statusText = "")
         {
-            HasErrorsUpdated?.Invoke(this, new PlanHasErrorsUpdatedEventArgs(backupPlan, hasErrors, statusText));
+            HasErrors?.Invoke(this, new PlanHasErrorsUpdatedEventArgs(backupPlan, hasErrors, statusText));
             return this;
         }
 
-        public event EventHandler<PlanIsRunningUpdatedEventArgs>? IsRunningUpdated;
+        public event EventHandler<PlanIsRunningUpdatedEventArgs>? IsRunning;
 
-        public PlanExecutionEvents IsRunning(bool isRunning)
+        public PlanExecutionEvents OnIsRunning(bool isRunning)
         {
-            IsRunningUpdated?.Invoke(this, new PlanIsRunningUpdatedEventArgs(backupPlan, isRunning));
+            IsRunning?.Invoke(this, new PlanIsRunningUpdatedEventArgs(backupPlan, isRunning));
             return this;
         }
     }

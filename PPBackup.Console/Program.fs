@@ -34,19 +34,19 @@ let main argv =
                 printfn "%s" statusText
 
     for plan in executablePlans do
-        plan.Events.IsRunningUpdated.AddHandler (fun o e ->
+        plan.Events.IsRunning.AddHandler (fun o e ->
             if e.IsRunning then
                 initProgress()
                 planName <- e.BackupPlan.Name
             isRunning <- e.IsRunning)
-        plan.Events.ProgressUpdated.AddHandler (fun o e ->
+        plan.Events.Progress.AddHandler (fun o e ->
             progress <- e.Progress
             updateProgress())
-        plan.Events.HasErrorsUpdated.AddHandler (fun o e ->
+        plan.Events.HasErrors.AddHandler (fun o e ->
             hasErrors <- e.HasErrors
             statusText <- e.StatusText
             updateProgress())
-        plan.Events.StatusTextUpdated.AddHandler (fun o e ->
+        plan.Events.StatusText.AddHandler (fun o e ->
             statusText <- e.StatusText
             updateProgress())
 

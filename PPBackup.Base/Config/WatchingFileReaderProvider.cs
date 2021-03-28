@@ -22,8 +22,8 @@ namespace PPBackup.Base.Config
             };
             configFileWatcher.Created += OnFileChanged;
             configFileWatcher.Changed += OnFileChanged;
-            configFileWatcher.Renamed += (sender, e) => events.ConfigurationChange();
-            configFileWatcher.Deleted += (sender, e) => events.ConfigurationChange();
+            configFileWatcher.Renamed += (sender, e) => events.OnConfigurationChanged();
+            configFileWatcher.Deleted += (sender, e) => events.OnConfigurationChanged();
             configFileWatcher.EnableRaisingEvents = true;
         }
 
@@ -43,7 +43,7 @@ namespace PPBackup.Base.Config
                     fileStream.Close();
                 }
 
-                events.ConfigurationChange();
+                events.OnConfigurationChanged();
             }
             catch (IOException) { }
         }

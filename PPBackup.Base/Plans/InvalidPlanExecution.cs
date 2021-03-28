@@ -15,9 +15,9 @@ namespace PPBackup.Base.Plans
         public void NotifyInitialStates()
         {
             events
-                .CanExecute(false)
-                .IsRunning(false)
-                .HasErrors(true, reason);
+                .OnCanExecute(false)
+                .OnIsRunning(false)
+                .OnHasErrors(true, reason);
         }
 
         public Task ExecuteAsync()
