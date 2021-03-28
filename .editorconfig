@@ -203,3 +203,11 @@ indent_style = space
 [*.fsx]
 indent_size = 4
 indent_style = space
+
+[*.xaml]
+indent_size = 4
+indent_style = space
+
+[*.axaml]
+indent_size = 4
+indent_style = space

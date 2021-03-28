@@ -7,57 +7,58 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PPBackup.Gui.Views.BackupPlanView">
 
-	<UserControl.Resources>
-		<SolidColorBrush x:Key="PlanCardBackgroundBrush" Color="#252525" />
-		<SolidColorBrush x:Key="PlanCardProgressBarBrush" Color="#1d9be7" />
-		<SolidColorBrush x:Key="PlanCardButtonHighlightBackgroundBrush" Color="#454545" />
-	</UserControl.Resources>
-	
-	<UserControl.Styles>
-		<Style Selector="Border.outerBorder">
-			<Setter Property="BorderThickness" Value="20" />
-			<Setter Property="BorderBrush" Value="{StaticResource PlanCardBackgroundBrush}" />
-		</Style>
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="PlanCardBackgroundBrush" Color="#252525" />
+        <SolidColorBrush x:Key="PlanCardProgressBarBrush" Color="#1d9be7" />
+        <SolidColorBrush x:Key="PlanCardButtonHighlightBackgroundBrush" Color="#454545" />
+    </UserControl.Resources>
 
-		<Style Selector="StackPanel.cardPanel">
-			<Setter Property="Background" Value="{StaticResource PlanCardBackgroundBrush}" />
-		</Style>
+    <UserControl.Styles>
+        <Style Selector="Border.outerBorder">
+            <Setter Property="BorderThickness" Value="20" />
+            <Setter Property="BorderBrush" Value="{StaticResource PlanCardBackgroundBrush}" />
+        </Style>
 
-		<Style Selector="TextBlock.cardTitle">
-			<Setter Property="FontSize" Value="16" />
-		</Style>
-		
-		<Style Selector="TextBlock.cardStatus">
-			<Setter Property="FontSize" Value="12" />
-		</Style>
+        <Style Selector="StackPanel.cardPanel">
+            <Setter Property="Background" Value="{StaticResource PlanCardBackgroundBrush}" />
+        </Style>
 
-		<Style Selector="Button">
-			<Setter Property="Height" Value="32" />
-			<Setter Property="Width" Value="32" />
-		</Style>
-	</UserControl.Styles>
+        <Style Selector="TextBlock.cardTitle">
+            <Setter Property="FontSize" Value="16" />
+        </Style>
 
-	<Border Classes="outerBorder" Margin="20,0,20,20">
-		<StackPanel Classes="cardPanel" Orientation="Vertical">
-			<Grid ColumnDefinitions="Auto,*">
-				<Button Grid.Column="0" Command="{Binding ExecutePlanCommand}" VerticalAlignment="Top"
+        <Style Selector="TextBlock.cardStatus">
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+
+        <Style Selector="Button">
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Width" Value="32" />
+        </Style>
+    </UserControl.Styles>
+
+    <Border Classes="outerBorder" Margin="20,0,20,20">
+        <StackPanel Classes="cardPanel" Orientation="Vertical">
+            <Grid ColumnDefinitions="Auto,*">
+                <Button Grid.Column="0" Command="{Binding ExecutePlanCommand}" VerticalAlignment="Top"
                         IsEnabled="{Binding IsPlayable}" i:Attached.Icon="fas fa-play">
-				</Button>
+                </Button>
 
-				<StackPanel Grid.Column="1" Margin="20,0,0,0" Orientation="Vertical">
-					<TextBlock Classes="cardTitle" Margin="0,0,0,20" Text="{Binding Name}" />
+                <StackPanel Grid.Column="1" Margin="20,0,0,0" Orientation="Vertical">
+                    <TextBlock Classes="cardTitle" Margin="0,0,0,20" Text="{Binding Name}" />
 
-					<StackPanel Orientation="Vertical" Margin="0,0,10,0">
-						<TextBlock Classes="cardStatus" Text="{Binding StatusText, Mode=OneWay}" />
+                    <StackPanel Orientation="Vertical" Margin="0,0,10,0">
+                        <TextBlock Classes="cardStatus" Text="{Binding StatusText, Mode=OneWay}" />
 
-						<ProgressBar Minimum="0" Maximum="100" Margin="0,5,0,0" Height="5"
-                                Value="{Binding Progress, Mode=OneWay}"
-                                IsVisible="{Binding IsRunning}" />
-					</StackPanel>
-				</StackPanel>
-			</Grid>
+                        <StackPanel Height="5">
+                            <ProgressBar Minimum="0" Maximum="100" Margin="0,5,0,0" Height="5"
+									Value="{Binding Progress, Mode=OneWay}"
+									IsVisible="{Binding IsRunning}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
 
-		</StackPanel>
-	</Border>
-
+        </StackPanel>
+    </Border>
 </UserControl>
