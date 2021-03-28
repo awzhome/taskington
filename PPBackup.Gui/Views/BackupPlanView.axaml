@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="using:PPBackup.Gui.ViewModels"
+			 xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PPBackup.Gui.Views.BackupPlanView">
 
@@ -40,8 +41,7 @@
 		<StackPanel Classes="cardPanel" Orientation="Vertical">
 			<Grid ColumnDefinitions="Auto,*">
 				<Button Grid.Column="0" Command="{Binding ExecutePlanCommand}" VerticalAlignment="Top"
-                        IsEnabled="{Binding IsPlayable}">
-					>
+                        IsEnabled="{Binding IsPlayable}" i:Attached.Icon="fas fa-play">
 				</Button>
 
 				<StackPanel Grid.Column="1" Margin="20,0,0,0" Orientation="Vertical">

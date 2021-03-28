@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
+using Projektanker.Icons.Avalonia;
+using Projektanker.Icons.Avalonia.FontAwesome;
 using System;
 
 namespace PPBackup.Gui
@@ -12,6 +14,7 @@ namespace PPBackup.Gui
 
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
+                .AfterSetup(_ => IconProvider.Register<FontAwesomeIconProvider>())
                 .UsePlatformDetect()
                 .LogToTrace()
                 .UseReactiveUI();
