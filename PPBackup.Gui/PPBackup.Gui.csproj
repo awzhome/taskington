@@ -29,4 +29,7 @@
   <ItemGroup>
     <Resource Include="Assets\PerspectivesPictured.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
 </Project>

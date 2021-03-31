@@ -1,5 +1,5 @@
-using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace PPBackup.Gui.Views
@@ -14,6 +14,11 @@ namespace PPBackup.Gui.Views
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
+        }
+
+        public void CardMenuClicked(object sender, RoutedEventArgs args)
+        {
+            this.Get<ContextMenu>("CardContextMenu").Open(sender as Control);
         }
     }
 }

@@ -8,5 +8,15 @@
 
     <Application.Styles>
         <FluentTheme Mode="Dark"/>
+        <Style Selector="Window">
+            <Setter Property="Background" Value="#151515" />
+        </Style>
+        <Style Selector="Button.dialogButton">
+            <Setter Property="Width" Value="100" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Margin" Value="0,10,10,10" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
     </Application.Styles>
 </Application>

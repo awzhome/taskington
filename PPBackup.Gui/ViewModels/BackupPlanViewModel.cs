@@ -1,15 +1,20 @@
 ﻿using PPBackup.Base.Model;
 using PPBackup.Base.Plans;
+using PPBackup.Base.Steps;
 using ReactiveUI;
+using System.Collections.Generic;
 using System.Reactive;
 
-namespace PPBackup.Gui.Models
+namespace PPBackup.Gui.ViewModels
 {
-    public class BackupPlanModel : NotifiableObject
+    public class BackupPlanViewModel : NotifiableObject
     {
         private readonly ExecutableBackupPlan executableBackupPlan;
 
-        public BackupPlanModel(ExecutableBackupPlan executableBackupPlan)
+        public BackupPlanViewModel(ExecutableBackupPlan executableBackupPlan,
+            ReactiveCommand<BackupPlanViewModel, Unit> executePlanCommand,
+            ReactiveCommand<BackupPlanViewModel, Unit> editPlanCommand,
+            ReactiveCommand<BackupPlanViewModel, Unit> removePlanCommand)
         {
             this.executableBackupPlan = executableBackupPlan;
 
@@ -19,10 +24,18 @@ namespace PPBackup.Gui.Models
             executableBackupPlan.Events.HasErrors += (o, e) => HasErrors = e.HasErrors;
             executableBackupPlan.Events.CanExecute += (o, e) => CanExecute = e.CanExecute;
 
-            ExecutePlanCommand = ReactiveCommand.CreateFromTask(executableBackupPlan.Execution.ExecuteAsync);
+            ExecutePlanCommand = executePlanCommand;
+            EditPlanCommand = editPlanCommand;
+            RemovePlanCommand = removePlanCommand;
         }
 
-        public ReactiveCommand<Unit, Unit> ExecutePlanCommand { get; }
+        public ReactiveCommand<BackupPlanViewModel, Unit> ExecutePlanCommand { get; }
+        public ReactiveCommand<BackupPlanViewModel, Unit> EditPlanCommand { get; }
+        public ReactiveCommand<BackupPlanViewModel, Unit> RemovePlanCommand { get; }
+
+        public IPlanExecution Execution => executableBackupPlan.Execution;
+
+        public IEnumerable<BackupStep> Steps => executableBackupPlan.BackupPlan.Steps;
 
         public string? Name => executableBackupPlan.BackupPlan.Name;
 

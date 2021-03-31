@@ -24,13 +24,10 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="White" />
         </Style>
-        <Style Selector="Window">
-            <Setter Property="Background" Value="#151515" />
-        </Style>
     </Window.Styles>
 
     <Window.DataTemplates>
-        <DataTemplate DataType="{x:Type models:BackupPlanModel}">
+        <DataTemplate DataType="{x:Type vm:BackupPlanViewModel}">
             <views:BackupPlanView />
         </DataTemplate>
     </Window.DataTemplates>
