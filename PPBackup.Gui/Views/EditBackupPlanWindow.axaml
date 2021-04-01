@@ -3,9 +3,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:PPBackup.Gui.ViewModels"
+        xmlns:views="using:PPBackup.Gui.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PPBackup.Gui.Views.EditBackupPlanWindow"
-        Height="600" MinHeight="400" Width="800" MinWidth="600"
+        Height="800" MinHeight="400" Width="1000" MinWidth="600"
         WindowStartupLocation="CenterOwner"
         Title="Edit backup plan">
 
@@ -13,26 +14,28 @@
         <Style Selector="TextBlock.dialogControl">
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="20,20,20,20" />
+            <Setter Property="Margin" Value="0,0,0,20" />
         </Style>
         <Style Selector="Label.dialogControl">
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,10,20" />
+        </Style>
+        <Style Selector="Window > Grid">
             <Setter Property="Margin" Value="10,10,10,10" />
         </Style>
         <Style Selector="ListBox">
-            <Setter Property="Margin" Value="10,10,10,10" />
+            <Setter Property="Margin" Value="0,0,0,20" />
         </Style>
     </Window.Styles>
 
-
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,2*,1*,Auto">
         <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
             <Label Classes="dialogControl" Grid.Column="0">Name:</Label>
             <TextBlock Classes="dialogControl" Grid.Column="1" Text="{Binding Name}" />
         </Grid>
 
-        <ListBox Grid.Row="1" Items="{Binding Steps}">
+        <ListBox Grid.Row="1" Items="{Binding Steps}" SelectedItem="{Binding SelectedItem}">
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="vm:EditBackupStepViewModel">
                     <TextBlock Text="{Binding Caption}" />
@@ -40,13 +43,21 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Classes="dialogButton" Command="{Binding CloseCommand}" Content="Save">
+        <ContentControl Grid.Row="2" Content="{Binding SelectedItem}">
+            <ContentControl.DataTemplates>
+                <DataTemplate DataType="vm:EditBackupStepViewModel">
+                    <views:EditGeneralStepView />
+                </DataTemplate>
+            </ContentControl.DataTemplates>
+        </ContentControl>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Classes="dialogButton" Command="{Binding CloseCommand}" Content="OK" IsDefault="True">
                 <Button.CommandParameter>
                     <x:Boolean>True</x:Boolean>
                 </Button.CommandParameter>
             </Button>
-            <Button Classes="dialogButton" Command="{Binding CloseCommand}" Content="Cancel">
+            <Button Classes="dialogButton" Command="{Binding CloseCommand}" Content="Cancel" IsCancel="True">
                 <Button.CommandParameter>
                     <x:Boolean>False</x:Boolean>
                 </Button.CommandParameter>

@@ -1,5 +1,6 @@
 ﻿using ReactiveUI;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace PPBackup.Gui.ViewModels
 {
@@ -12,6 +13,7 @@ namespace PPBackup.Gui.ViewModels
             CloseCommand = ReactiveCommand.Create<bool, bool>(save => save);
 
             InitializeFromBasicModel(backupPlanViewModel);
+            SelectedItem = Steps.FirstOrDefault();
         }
 
         public ObservableCollection<EditBackupStepViewModel> Steps { get; } = new();
@@ -21,6 +23,13 @@ namespace PPBackup.Gui.ViewModels
         {
             get => name;
             set => this.RaiseAndSetIfChanged(ref name, value);
+        }
+
+        private EditBackupStepViewModel? selectedItem;
+        public EditBackupStepViewModel? SelectedItem
+        {
+            get => selectedItem;
+            set => this.RaiseAndSetIfChanged(ref selectedItem, value);
         }
 
         private void InitializeFromBasicModel(BackupPlanViewModel baseModel)
