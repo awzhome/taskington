@@ -37,19 +37,15 @@
 
         <ListBox Grid.Row="1" Items="{Binding Steps}" SelectedItem="{Binding SelectedItem}">
             <ListBox.ItemTemplate>
-                <DataTemplate DataType="vm:EditBackupStepViewModel">
+                <DataTemplate>
                     <TextBlock Text="{Binding Caption}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <ContentControl Grid.Row="2" Content="{Binding SelectedItem}">
-            <ContentControl.DataTemplates>
-                <DataTemplate DataType="vm:EditBackupStepViewModel">
-                    <views:EditGeneralStepView />
-                </DataTemplate>
-            </ContentControl.DataTemplates>
-        </ContentControl>
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ContentControl Content="{Binding SelectedItem}" />
+        </ScrollViewer>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Classes="dialogButton" Command="{Binding CloseCommand}" Content="OK" IsDefault="True">

@@ -16,7 +16,7 @@ namespace PPBackup.Gui.ViewModels
             SelectedItem = Steps.FirstOrDefault();
         }
 
-        public ObservableCollection<EditBackupStepViewModel> Steps { get; } = new();
+        public ObservableCollection<EditStepViewModelBase> Steps { get; } = new();
 
         private string? name;
         public string? Name
@@ -25,8 +25,8 @@ namespace PPBackup.Gui.ViewModels
             set => this.RaiseAndSetIfChanged(ref name, value);
         }
 
-        private EditBackupStepViewModel? selectedItem;
-        public EditBackupStepViewModel? SelectedItem
+        private EditStepViewModelBase? selectedItem;
+        public EditStepViewModelBase? SelectedItem
         {
             get => selectedItem;
             set => this.RaiseAndSetIfChanged(ref selectedItem, value);
@@ -38,7 +38,7 @@ namespace PPBackup.Gui.ViewModels
 
             foreach (var step in baseModel.Steps)
             {
-                Steps.Add(new EditBackupStepViewModel(step));
+                Steps.Add(EditStepViewModelFactory.Create(step));
             }
         }
     }

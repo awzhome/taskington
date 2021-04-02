@@ -4,9 +4,9 @@ using System.Text;
 
 namespace PPBackup.Gui.ViewModels
 {
-    public class EditBackupStepViewModel : ViewModelBase
+    public class EditStepViewModelBase : ViewModelBase
     {
-        public EditBackupStepViewModel(BackupStep step)
+        public EditStepViewModelBase(BackupStep step)
         {
             InitializeFromBasicModel(step);
         }
