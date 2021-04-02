@@ -24,6 +24,10 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="White" />
         </Style>
+        <Style Selector="TextBlock.footer">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Padding" Value="5,5,5,5" />
+        </Style>
     </Window.Styles>
 
     <Window.DataTemplates>
@@ -32,7 +36,7 @@
         </DataTemplate>
     </Window.DataTemplates>
 
-    <Grid RowDefinitions="Auto,*" Margin="0,20,0,0">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="0,20,0,0">
         <Grid Grid.Row="0">
             <Image Classes="ppLogo" Source="/Assets/PerspectivesPictured.png" />
             <TextBlock Classes="ppLogoText">Backup</TextBlock>
@@ -47,5 +51,7 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </ScrollViewer>
+        
+        <TextBlock Grid.Row="2" Classes="footer" Text="Copyright © 2020-2021 Andreas Weizel" />
     </Grid>
 </Window>
