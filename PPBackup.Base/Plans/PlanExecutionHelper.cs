@@ -21,6 +21,9 @@ namespace PPBackup.Base.Plans
 
         public bool CanExecute(BackupPlan plan)
         {
+#if SYS_OPS_DRYRUN
+            return true;
+#else
             var placeholders = new Placeholders();
             systemOperations.LoadSystemPlaceholders(placeholders);
 
@@ -29,6 +32,7 @@ namespace PPBackup.Base.Plans
                 !stepTypes.Select(type => serviceProvider.Get<IStepExecution>(s => s.Type == type)
                     ?.CanExecuteSupportedSteps(plan.Steps, placeholders))
                 .Any(result => !(result ?? true));
+#endif
         }
 
         public async Task ExecuteAsync(BackupPlan plan, PlanExecutionEvents events)

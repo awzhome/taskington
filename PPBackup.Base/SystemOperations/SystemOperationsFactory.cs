@@ -4,8 +4,11 @@
     {
         public static ISystemOperations CreateSystemOperations()
         {
+#if SYS_OPS_DRYRUN
+            return new DryRunSystemOperations();
+#else
             return new WindowsSystemOperations();
-            //return new DryRunSystemOperations();
+#endif
         }
     }
 }
