@@ -38,7 +38,7 @@ namespace PPBackup.Gui.ViewModels
 
             foreach (var step in baseModel.Steps)
             {
-                Steps.Add(EditStepViewModelFactory.Create(step));
+                Steps.Add(step.ToViewModel());
             }
         }
     }
