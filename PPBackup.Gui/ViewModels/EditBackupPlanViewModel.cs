@@ -29,6 +29,8 @@ namespace PPBackup.Gui.ViewModels
 
         public ObservableCollection<EditStepViewModelBase> Steps { get; } = new();
 
+        public NewStepTemplates NewStepTemplates { get; } = new();
+
         private string? name;
         public string? Name
         {

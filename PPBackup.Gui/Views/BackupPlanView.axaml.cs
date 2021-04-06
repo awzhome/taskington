@@ -16,9 +16,10 @@ namespace PPBackup.Gui.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        public void CardMenuClicked(object sender, RoutedEventArgs args)
+        private void OpenButtonMenu(object sender, RoutedEventArgs args)
         {
-            this.Get<ContextMenu>("CardContextMenu").Open(sender as Control);
+            var senderControl = sender as Control;
+            senderControl?.ContextMenu?.Open(senderControl);
         }
     }
 }

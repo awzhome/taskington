@@ -5,6 +5,7 @@ using ReactiveUI;
 using Avalonia.ReactiveUI;
 using PPBackup.Gui.ViewModels;
 using System;
+using Avalonia.Interactivity;
 
 namespace PPBackup.Gui.Views
 {
@@ -23,6 +24,12 @@ namespace PPBackup.Gui.Views
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
+        }
+
+        public void OpenButtonMenu(object sender, RoutedEventArgs args)
+        {
+            var senderControl = sender as Control;
+            senderControl?.ContextMenu?.Open(senderControl);
         }
     }
 }

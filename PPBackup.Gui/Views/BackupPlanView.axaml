@@ -62,9 +62,9 @@
                     </StackPanel>
                 </StackPanel>
 
-                <Button Grid.Column="2" Classes="cardMenu" VerticalAlignment="Top" i:Attached.Icon="fas fa-ellipsis-v" Click="CardMenuClicked">
+                <Button Grid.Column="2" Classes="cardMenu" VerticalAlignment="Top" i:Attached.Icon="fas fa-ellipsis-v" Click="OpenButtonMenu">
                     <Button.ContextMenu>
-                        <ContextMenu Name="CardContextMenu">
+                        <ContextMenu>
                             <MenuItem Header="Edit" Command="{Binding EditPlanCommand}" CommandParameter="{Binding}" />
                             <MenuItem Header="Delete" Command="{Binding RemovePlanCommand}" CommandParameter="{Binding}" />
                         </ContextMenu>

@@ -53,7 +53,19 @@
             </ListBox>
 
             <StackPanel Grid.Column="1" Classes="listActions" Orientation="Vertical">
-                <Button i:Attached.Icon="fas fa-plus" />
+                <Button i:Attached.Icon="fas fa-plus" Click="OpenButtonMenu">
+                    <Button.ContextMenu>
+                        <ContextMenu Items="{Binding NewStepTemplates.List}">
+                            <ContextMenu.Styles>
+                                <Style Selector="MenuItem">
+                                    <Setter Property="Header" Value="{Binding Caption}"/>
+                                    <!--<Setter Property="Command" Value="{Binding Command}"/>
+                                    <Setter Property="CommandParameter" Value="{Binding CommandParameter}"/>-->
+                                </Style>
+                            </ContextMenu.Styles>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
                 <Button i:Attached.Icon="fas fa-trash-alt" Command="{Binding RemoveStepCommand}" />
                 <Button i:Attached.Icon="fas fa-arrow-up" Command="{Binding MoveStepUpCommand}" />
                 <Button i:Attached.Icon="fas fa-arrow-down" Command="{Binding MoveStepDownCommand}" />
