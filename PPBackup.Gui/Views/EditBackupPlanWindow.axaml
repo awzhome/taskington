@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:PPBackup.Gui.ViewModels"
         xmlns:views="using:PPBackup.Gui.Views"
+        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PPBackup.Gui.Views.EditBackupPlanWindow"
         Height="800" MinHeight="400" Width="1000" MinWidth="600"
@@ -27,6 +28,13 @@
         <Style Selector="ListBox">
             <Setter Property="Margin" Value="0,0,0,20" />
         </Style>
+        <Style Selector="StackPanel.listActions">
+            <Setter Property="Margin" Value="5,0,0,0" />
+        </Style>
+        <Style Selector="StackPanel.listActions > Button">
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Width" Value="32" />
+        </Style>
     </Window.Styles>
 
     <Grid RowDefinitions="Auto,2*,1*,Auto">
@@ -35,13 +43,22 @@
             <TextBlock Classes="dialogControl" Grid.Column="1" Text="{Binding Name}" />
         </Grid>
 
-        <ListBox Grid.Row="1" Items="{Binding Steps}" SelectedItem="{Binding SelectedItem}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Caption}" />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+            <ListBox Grid.Column="0" Items="{Binding Steps}" SelectedItem="{Binding SelectedItem}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Caption}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel Grid.Column="1" Classes="listActions" Orientation="Vertical">
+                <Button i:Attached.Icon="fas fa-plus" />
+                <Button i:Attached.Icon="fas fa-trash-alt" Command="{Binding RemoveStepCommand}" />
+                <Button i:Attached.Icon="fas fa-arrow-up" Command="{Binding MoveStepUpCommand}" />
+                <Button i:Attached.Icon="fas fa-arrow-down" Command="{Binding MoveStepDownCommand}" />
+            </StackPanel>
+        </Grid>
 
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <ContentControl Content="{Binding SelectedItem}" />
