@@ -25,7 +25,7 @@ namespace PPBackup.Gui.ViewModels
             {
                 new()
                 {
-                    Caption = "Add file sync",
+                    Caption = "Synchronize file",
                     Creator = () => new BackupStep("sync")
                     {
                         DefaultProperty = "file"
@@ -33,7 +33,7 @@ namespace PPBackup.Gui.ViewModels
                 },
                 new()
                 {
-                    Caption = "Add directory sync",
+                    Caption = "Synchronize directory",
                     Creator = () => new BackupStep("sync")
                     {
                         DefaultProperty = "dir"
@@ -41,7 +41,7 @@ namespace PPBackup.Gui.ViewModels
                 },
                 new()
                 {
-                    Caption = "Add sub-directory sync",
+                    Caption = "Synchronize sub-directories",
                     Creator = () => new BackupStep("sync")
                     {
                         DefaultProperty = "sub-dirs"
