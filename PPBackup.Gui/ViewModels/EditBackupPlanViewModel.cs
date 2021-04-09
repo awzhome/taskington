@@ -8,6 +8,7 @@ namespace PPBackup.Gui.ViewModels
     public class EditBackupPlanViewModel : ViewModelBase
     {
         public ReactiveCommand<bool, bool> CloseCommand { get; }
+        public ReactiveCommand<NewStepTemplate, Unit> AddStepCommand { get; }
         public ReactiveCommand<Unit, Unit> RemoveStepCommand { get; }
         public ReactiveCommand<Unit, Unit> MoveStepUpCommand { get; }
         public ReactiveCommand<Unit, Unit> MoveStepDownCommand { get; }
@@ -16,6 +17,7 @@ namespace PPBackup.Gui.ViewModels
         {
             CloseCommand = ReactiveCommand.Create<bool, bool>(save => save);
 
+            AddStepCommand = ReactiveCommand.Create<NewStepTemplate>(AddStep);
             RemoveStepCommand = ReactiveCommand.Create(RemoveStep,
                 this.WhenAnyValue(x => x.SelectedItem, (EditStepViewModelBase? selectedItem) => selectedItem != null));
             MoveStepUpCommand = ReactiveCommand.Create(MoveStepUp,
@@ -44,8 +46,13 @@ namespace PPBackup.Gui.ViewModels
             get => selectedItem;
             set
             {
-                selectedItem = value;
+                selectedItem = null;
                 this.RaisePropertyChanged();
+                if (value != null)
+                {
+                    selectedItem = value;
+                    this.RaisePropertyChanged();
+                }
             }
         }
 
@@ -56,6 +63,16 @@ namespace PPBackup.Gui.ViewModels
             foreach (var step in baseModel.Steps)
             {
                 Steps.Add(step.ToViewModel());
+            }
+        }
+
+        private void AddStep(NewStepTemplate template)
+        {
+            var newStep = template?.Creator?.Invoke()?.ToViewModel();
+            if (newStep != null)
+            {
+                Steps.Add(newStep);
+                SelectedItem = newStep;
             }
         }
 
@@ -88,7 +105,6 @@ namespace PPBackup.Gui.ViewModels
                 if (selectedIndex > 0)
                 {
                     Steps.Move(selectedIndex, selectedIndex - 1);
-                    SelectedItem = null;
                     SelectedItem = Steps[selectedIndex - 1];
                 }
             }
@@ -102,7 +118,6 @@ namespace PPBackup.Gui.ViewModels
                 if (selectedIndex < Steps.Count - 1)
                 {
                     Steps.Move(selectedIndex, selectedIndex + 1);
-                    SelectedItem = null;
                     SelectedItem = Steps[selectedIndex + 1];
                 }
             }
