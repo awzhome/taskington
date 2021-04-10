@@ -12,8 +12,7 @@
         Title="Edit backup plan">
 
     <Window.Styles>
-        <Style Selector="TextBlock.dialogControl">
-            <Setter Property="HorizontalAlignment" Value="Left" />
+        <Style Selector="TextBox.dialogControl">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="0,0,0,20" />
         </Style>
@@ -40,7 +39,7 @@
     <Grid RowDefinitions="Auto,2*,1*,Auto">
         <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
             <Label Classes="dialogControl" Grid.Column="0">Name:</Label>
-            <TextBlock Classes="dialogControl" Grid.Column="1" Text="{Binding Name}" />
+            <TextBox Classes="dialogControl" Grid.Column="1" Text="{Binding Name}" />
         </Grid>
 
         <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
