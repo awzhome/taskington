@@ -1,16 +1,95 @@
 ﻿using PPBackup.Base.Steps;
-using System;
+using ReactiveUI;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace PPBackup.Gui.ViewModels
 {
+    public class SyncTypeEntry
+    {
+        public string? Type { get; set; }
+        public string? Caption { get; set; }
+
+    }
+
     public class EditSyncStepViewModel : EditStepViewModelBase
     {
+        public ReactiveCommand<Unit, Unit> SelectFromCommand { get; }
+        public ReactiveCommand<Unit, Unit> SelectToCommand { get; }
+
+        public Interaction<Unit, string>? OpenFolderDialogInteraction { get; set; }
+
         public EditSyncStepViewModel(BackupStep step) : base(step)
         {
+            SelectFromCommand = ReactiveCommand.CreateFromTask(OpenSelectFromDialogAsync);
+            SelectToCommand = ReactiveCommand.CreateFromTask(OpenSelectToDialogAsync);
+
+            InitializeFromBasicModel(step);
+        }
+
+        public List<SyncTypeEntry> SyncTypes { get; } = new()
+        {
+            new SyncTypeEntry() { Type = "file", Caption = "file" },
+            new SyncTypeEntry() { Type = "dir", Caption = "directory" },
+            new SyncTypeEntry() { Type = "sub-dirs", Caption = "sub-directories" }
+        };
+
+        private SyncTypeEntry? selectedType;
+        public SyncTypeEntry? SelectedType
+        {
+            get => selectedType;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref selectedType, value);
+            }
+        }
+
+        public string? from;
+        public string? From
+        {
+            get => from;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref from, value);
+            }
+        }
+
+        public string? to;
+        public string? To
+        {
+            get => to;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref to, value);
+            }
+        }
+
+        private void InitializeFromBasicModel(BackupStep step)
+        {
+            SelectedType = SyncTypes.FirstOrDefault(entry => entry.Type == step.DefaultProperty);
+            From = step["from"];
+            To = step["to"];
+        }
+
+        private async Task OpenSelectFromDialogAsync()
+        {
+            if (OpenFolderDialogInteraction != null)
+            {
+                var selectedPath = await OpenFolderDialogInteraction.Handle(Unit.Default);
+                From = selectedPath;
+            }
+        }
+
+        private async Task OpenSelectToDialogAsync()
+        {
+            if (OpenFolderDialogInteraction != null)
+            {
+                var selectedPath = await OpenFolderDialogInteraction.Handle(Unit.Default);
+                To = selectedPath;
+            }
         }
     }
 }

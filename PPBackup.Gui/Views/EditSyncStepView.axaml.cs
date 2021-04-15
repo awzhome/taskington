@@ -1,10 +1,10 @@
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using PPBackup.Gui.ViewModels;
 
 namespace PPBackup.Gui.Views
 {
-    public class EditSyncStepView : UserControl
+    public class EditSyncStepView : ReactiveUserControl<EditSyncStepViewModel>
     {
         public EditSyncStepView()
         {

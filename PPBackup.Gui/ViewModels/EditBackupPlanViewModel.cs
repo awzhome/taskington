@@ -12,6 +12,7 @@ namespace PPBackup.Gui.ViewModels
         public ReactiveCommand<Unit, Unit> RemoveStepCommand { get; }
         public ReactiveCommand<Unit, Unit> MoveStepUpCommand { get; }
         public ReactiveCommand<Unit, Unit> MoveStepDownCommand { get; }
+        public Interaction<Unit, string> OpenFolderDialog { get; }
 
         public EditBackupPlanViewModel(BackupPlanViewModel backupPlanViewModel)
         {
@@ -24,6 +25,8 @@ namespace PPBackup.Gui.ViewModels
                 this.WhenAnyValue(x => x.SelectedItem, selectedItem => Steps.FirstOrDefault() != selectedItem));
             MoveStepDownCommand = ReactiveCommand.Create(MoveStepDown,
                 this.WhenAnyValue(x => x.SelectedItem, selectedItem => Steps.LastOrDefault() != selectedItem));
+
+            OpenFolderDialog = new();
 
             InitializeFromBasicModel(backupPlanViewModel);
             SelectedItem = Steps.FirstOrDefault();
@@ -62,13 +65,13 @@ namespace PPBackup.Gui.ViewModels
 
             foreach (var step in baseModel.Steps)
             {
-                Steps.Add(step.ToViewModel());
+                Steps.Add(step.ToViewModel(this));
             }
         }
 
         private void AddStep(NewStepTemplate template)
         {
-            var newStep = template?.Creator?.Invoke()?.ToViewModel();
+            var newStep = template?.Creator?.Invoke()?.ToViewModel(this);
             if (newStep != null)
             {
                 Steps.Add(newStep);
