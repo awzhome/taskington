@@ -18,7 +18,7 @@ DefaultDirName={localappdata}\{#APP_NAME}
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 OutputBaseFilename=ppbackup-setup-win64-{#APP_FULL_VERSION}
-OutputDir=build\artifacts
+OutputDir=output
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 Compression=lzma
@@ -32,7 +32,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "build\publish-win64\*"; DestDir: "{app}"; Flags: ignoreversion
+Source: "output\publish-win64\*"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_FILE}"

@@ -4,12 +4,11 @@ on:
   push:
     branches:
       - master
-      - release
       - ghaction
+      - nukebuild
   pull_request:
     branches:
       - master
-      - release
   workflow_dispatch:
 
 jobs:
@@ -24,23 +23,19 @@ jobs:
         with:
           dotnet-version: 5.0.x
 
-      - name: Install build tools
+      - name: Check .NET Core version
         run: |
           dotnet --version
-          dotnet tool restore
-
-      - name: Update project version
-        run: dotnet fake build -t UpdateVersion-CI $env:GITHUB_RUN_NUMBER preview
 
       - name: Build
-        run: dotnet fake build
+        run: ./build win64
 
       - name: Test
-        run: dotnet test PPBackup.Base.Tests\PPBackup.Base.Tests.csproj
+        run: ./build test
 
       - name: Archive artifacts
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/release'
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/nukebuild'
         uses: actions/upload-artifact@v2
         with:
           name: Windows x64 Installer
-          path: build/artifacts/ppbackup-setup-win64-*.exe
+          path: output/ppbackup-setup-win64-*.exe
