@@ -2,28 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-class SemVersion : IComparable<SemVersion>
+using static Nuke.Common.IO.TextTasks;
+using static Nuke.Common.Tools.Git.GitTasks;
+
+class BuildVersion : IComparable<BuildVersion>
 {
     public int Major { get; set; }
-    public int? Minor { get; set; }
-    public int? Patch { get; set; }
+    public int Minor { get; set; }
+    public int Patch { get; set; }
     public int? Revision { get; set; }
+    public int? GuessedRevision { get; set; }
     public string Tag { get; set; }
     public bool IsDevMark { get; set; } = false;
 
-    public int CompareTo(SemVersion other)
+    public int CompareTo(BuildVersion other)
     {
+        if (!Revision.HasValue && !other.Revision.HasValue)
+        {
+            if (!IsDevMark && other.IsDevMark)
+            {
+                return -1;
+            }
+            else if (IsDevMark && !other.IsDevMark)
+            {
+                return 1;
+            }
+        }
+
         int majorCompare = Major.CompareTo(other.Major);
         if (majorCompare != 0)
             return majorCompare;
 
-        int minorCompare = CompareNullableInt(Minor, other.Minor);
+        int minorCompare = Minor.CompareTo(other.Minor);
         if (minorCompare != 0)
             return minorCompare;
 
-        int patchCompare = CompareNullableInt(Patch, other.Patch);
+        int patchCompare = Patch.CompareTo(other.Patch);
         if (patchCompare != 0)
             return patchCompare;
 
@@ -51,13 +68,20 @@ class SemVersion : IComparable<SemVersion>
 
         return 0;
     }
+
+    public static BuildVersion DefaultInitial => new() { Minor = 1, IsDevMark = true };
 }
 
 static class GitTagParser
 {
-    public static SemVersion Parse(string gitTag)
+    public static BuildVersion Parse(string gitTag)
     {
-        SemVersion resultVersion = new();
+        BuildVersion resultVersion = new();
+
+        if (gitTag.StartsWith("fatal"))
+        {
+            return BuildVersion.DefaultInitial;
+        }
 
         /*
          * git describe tag formats:
@@ -119,21 +143,18 @@ static class GitTagParser
     }
 }
 
-static class SemVersionFormatter
+static class SemVersionFormatterExtensions
 {
-    public static string FormatAsSemVer(SemVersion version)
+    public static string AsString(this BuildVersion version)
     {
         StringBuilder sb = new();
         sb.Append(version.Major);
-        if (version.Minor.HasValue)
+        sb.Append('.');
+        sb.Append(version.Minor);
+        if (version.Patch != 0)
         {
             sb.Append('.');
-            sb.Append(version.Minor.Value);
-        }
-        if (version.Patch.HasValue)
-        {
-            sb.Append('.');
-            sb.Append(version.Patch.Value);
+            sb.Append(version.Patch);
         }
         if (version.Tag != null)
         {
@@ -146,22 +167,78 @@ static class SemVersionFormatter
             }
         }
 
-        // DEBUG
-        if (version.IsDevMark)
-        {
-            sb.Append(" (dev mark)");
-        }
-
         return sb.ToString();
     }
 
-    public static string FormatAsAssemblyVersion(SemVersion version)
+    public static string AsAssemblyVersion(this BuildVersion version)
     {
-        return $"{version.Major}.{version.Minor ?? 0}.{version.Patch ?? 0}.{version.Revision ?? 0}";
+        return $"{version.Major}.{version.Minor}.{version.Patch}.{version.Revision ?? 0}";
     }
+}
+
+class BranchVersioning
+{
+    public string Tag { get; set; }
+    public bool? IncrementPatch { get; set; }
 }
 
 static class Versioning
 {
+    public static void WriteVersionToFile(string template, string version, params string[] files)
+    {
+        foreach (var file in files)
+        {
+            string origText = ReadAllText(file, Encoding.UTF8);
+            string newText = Regex.Replace(origText,
+                template.Replace("$$$", "(.*)"),
+                template.Replace("$$$", version));
+            WriteAllText(file, newText, Encoding.UTF8);
+        }
+    }
 
+    public static BuildVersion ProjectVersion(Func<string, BranchVersioning> branchConfig, string commit = "HEAD")
+    {
+        string currentBranch = GitCurrentBranch();
+        var currentVersion =
+            Git($"describe --first-parent {commit}", null, null, default(int?), false, false, false)
+            .Select(o => GitTagParser.Parse(o.Text)).OrderByDescending(tag => tag).FirstOrDefault();
+        var branchVersioning = branchConfig(currentBranch) ?? new();
+
+        Console.WriteLine($"currentBranch = {currentBranch ?? "(null)"}");
+        Console.WriteLine($"currentVersion.Revision = {currentVersion.Revision?.ToString() ?? "(null)"}");
+        Console.WriteLine($"currentVersion.Tag = {currentVersion.Tag?.ToString() ?? "(null)"}");
+        Console.WriteLine($"currentVersion.Patch = {currentVersion.Patch.ToString() ?? "(null)"}");
+
+        if (currentVersion.Revision.HasValue)
+        {
+            currentVersion.Tag ??= branchVersioning.Tag ?? currentBranch;
+
+            if (!currentVersion.IsDevMark)
+            {
+                if (branchVersioning.IncrementPatch == true)
+                {
+                    currentVersion.Patch = currentVersion.Patch + 1;
+                }
+                else
+                {
+                    currentVersion.Minor = currentVersion.Minor + 1;
+                }
+            }
+        }
+
+        if (!currentVersion.Revision.HasValue && (!commit.EndsWith("~1")))
+        {
+            var prevCommitVersion = ProjectVersion(branchConfig, $"{commit}~1");
+            if (prevCommitVersion.Revision.HasValue
+                && (currentVersion.Major == prevCommitVersion.Major)
+                && (currentVersion.Minor == prevCommitVersion.Minor)
+                && (currentVersion.Patch == prevCommitVersion.Patch)
+                && (currentVersion.Tag == prevCommitVersion.Tag))
+            {
+                currentVersion.GuessedRevision = prevCommitVersion.Revision + 1;
+            }
+        }
+
+        return currentVersion;
+    }
 }

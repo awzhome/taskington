@@ -15,6 +15,7 @@ using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.InnoSetup.InnoSetupTasks;
+using static Versioning;
 
 [CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]
@@ -30,15 +31,24 @@ class Build : NukeBuild
 
     AbsolutePath OutputDirectory => RootDirectory / "output";
 
+    Func<string, BranchVersioning> BranchVersioningConfig => b => b switch
+    {
+        "master" => new() { Tag = "preview", IncrementPatch = false },
+        _ => new()
+    };
+
     Target builddebug => _ => _
         .Executes(() =>
         {
             string gittag;
-            SemVersion version;
+            BuildVersion version;
 
             gittag = "dev-3.0-rc-23-abdcefg";
             version = GitTagParser.Parse(gittag);
-            Console.WriteLine($"{gittag} -> {SemVersionFormatter.FormatAsSemVer(version)} | {SemVersionFormatter.FormatAsAssemblyVersion(version)}");
+            Console.WriteLine($"{gittag} -> {version.AsString()} | {version.AsAssemblyVersion()}");
+
+            version = ProjectVersion(BranchVersioningConfig, "63446b8");
+            Console.WriteLine($"Project version is {version.AsString()} | {version.AsAssemblyVersion()}");
         });
 
     Target clean => _ => _
