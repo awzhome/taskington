@@ -13,14 +13,15 @@ class BuildVersion : IComparable<BuildVersion>
     public int Major { get; set; }
     public int Minor { get; set; }
     public int Patch { get; set; }
-    public int? Revision { get; set; }
-    public int? GuessedRevision { get; set; }
+    public int Revision { get; set; }
+    public int AssemblyRevision { get; set; }
     public string Tag { get; set; }
     public bool IsDevMark { get; set; } = false;
+    public string BasedOnGitTag { get; set; }
 
     public int CompareTo(BuildVersion other)
     {
-        if (!Revision.HasValue && !other.Revision.HasValue)
+        if ((Revision == 0) && (other.Revision == 0))
         {
             if (!IsDevMark && other.IsDevMark)
             {
@@ -44,7 +45,7 @@ class BuildVersion : IComparable<BuildVersion>
         if (patchCompare != 0)
             return patchCompare;
 
-        int revisionCompare = CompareNullableInt(Revision, other.Revision);
+        int revisionCompare = Revision.CompareTo(other.Revision);
         if (revisionCompare != 0)
             return revisionCompare;
 
@@ -56,19 +57,6 @@ class BuildVersion : IComparable<BuildVersion>
         return 0;
     }
 
-    private int CompareNullableInt(int? my, int? other)
-    {
-        if (my.HasValue && !other.HasValue)
-            return 1;
-        else if (!my.HasValue && other.HasValue)
-            return -1;
-        else if (my.HasValue && other.HasValue)
-            if (my.Value == other.Value)
-                return my.Value.CompareTo(other.Value);
-
-        return 0;
-    }
-
     public static BuildVersion DefaultInitial => new() { Minor = 1, IsDevMark = true };
 }
 
@@ -76,12 +64,12 @@ static class GitTagParser
 {
     public static BuildVersion Parse(string gitTag)
     {
-        BuildVersion resultVersion = new();
-
-        if (gitTag.StartsWith("fatal"))
+        if ((gitTag == null) || gitTag.StartsWith("fatal"))
         {
-            return BuildVersion.DefaultInitial;
+            return null;
         }
+
+        BuildVersion resultVersion = new();
 
         /*
          * git describe tag formats:
@@ -91,10 +79,16 @@ static class GitTagParser
          * v2.0-sometag-30-g41e086cb (tag with semver-tag and number of commits after the tag)
          */
         var parts = gitTag.Split('-');
+        if (parts.Length > 0)
+        {
+            resultVersion.BasedOnGitTag = parts[0];
+        }
+
         if ((parts.Length > 1) && (parts[0] == "dev"))
         {
             resultVersion.IsDevMark = true;
             parts = parts[1..];
+            resultVersion.BasedOnGitTag += "-" + parts[0];
         }
 
         if (parts.Length > 0)
@@ -130,6 +124,7 @@ static class GitTagParser
         if ((parts.Length == 2) || (parts.Length == 4))
         {
             resultVersion.Tag = parts[1];
+            resultVersion.BasedOnGitTag += "-" + parts[1];
         }
         if (parts.Length > 2)
         {
@@ -138,6 +133,8 @@ static class GitTagParser
                 resultVersion.Revision = revisionNum;
             }
         }
+
+        resultVersion.AssemblyRevision = resultVersion.Revision;
 
         return resultVersion;
     }
@@ -160,10 +157,10 @@ static class SemVersionFormatterExtensions
         {
             sb.Append('-');
             sb.Append(version.Tag);
-            if (version.Revision.HasValue)
+            if (version.Revision != 0)
             {
                 sb.Append('.');
-                sb.Append(version.Revision.Value);
+                sb.Append(version.Revision);
             }
         }
 
@@ -172,14 +169,14 @@ static class SemVersionFormatterExtensions
 
     public static string AsAssemblyVersion(this BuildVersion version)
     {
-        return $"{version.Major}.{version.Minor}.{version.Patch}.{version.Revision ?? 0}";
+        return $"{version.Major}.{version.Minor}.{version.Patch}.{version.AssemblyRevision}";
     }
 }
 
 class BranchVersioning
 {
     public string Tag { get; set; }
-    public bool? IncrementPatch { get; set; }
+    public bool IncrementPatch { get; set; } = true;
 }
 
 static class Versioning
@@ -196,26 +193,26 @@ static class Versioning
         }
     }
 
-    public static BuildVersion ProjectVersion(Func<string, BranchVersioning> branchConfig, string commit = "HEAD")
+    public static BuildVersion ProjectVersion(Func<string, BranchVersioning> branchConfig)
     {
         string currentBranch = GitCurrentBranch();
-        var currentVersion =
-            Git($"describe --first-parent {commit}", null, null, default(int?), false, false, false)
-            .Select(o => GitTagParser.Parse(o.Text)).OrderByDescending(tag => tag).FirstOrDefault();
         var branchVersioning = branchConfig(currentBranch) ?? new();
+        var currentVersion = GitDescribe(new[] { "dev-*", "v*" });
 
-        Console.WriteLine($"currentBranch = {currentBranch ?? "(null)"}");
-        Console.WriteLine($"currentVersion.Revision = {currentVersion.Revision?.ToString() ?? "(null)"}");
-        Console.WriteLine($"currentVersion.Tag = {currentVersion.Tag?.ToString() ?? "(null)"}");
-        Console.WriteLine($"currentVersion.Patch = {currentVersion.Patch.ToString() ?? "(null)"}");
+        var correctedMatchPatterns = branchVersioning.IncrementPatch ?
+                new[] { "dev-[0-9999]", "v[0-9999]", "dev-[0-9999].[0-9999]", "v[0-9999].[0-9999]", "dev-[0-9999].[0-9999].[0-9999]", "v[0-9999].[0-9999].[0-9999]", } :
+                new[] { "dev-[0-9999]", "v[0-9999]", "dev-[0-9999].[0-9999]", "v[0-9999].[0-9999]", "dev-[0-9999].[0-9999].0", "v[0-9999].[0-9999].0" };
+        var correctedVersion = GitDescribe(correctedMatchPatterns);
 
-        if (currentVersion.Revision.HasValue)
+        if (currentVersion.Revision != 0)
         {
+            currentVersion = correctedVersion;
+
             currentVersion.Tag ??= branchVersioning.Tag ?? currentBranch;
 
             if (!currentVersion.IsDevMark)
             {
-                if (branchVersioning.IncrementPatch == true)
+                if (branchVersioning.IncrementPatch)
                 {
                     currentVersion.Patch = currentVersion.Patch + 1;
                 }
@@ -225,20 +222,36 @@ static class Versioning
                 }
             }
         }
-
-        if (!currentVersion.Revision.HasValue && (!commit.EndsWith("~1")))
+        else
         {
-            var prevCommitVersion = ProjectVersion(branchConfig, $"{commit}~1");
-            if (prevCommitVersion.Revision.HasValue
-                && (currentVersion.Major == prevCommitVersion.Major)
-                && (currentVersion.Minor == prevCommitVersion.Minor)
-                && (currentVersion.Patch == prevCommitVersion.Patch)
-                && (currentVersion.Tag == prevCommitVersion.Tag))
+            var versionWithoutCurrentTag = GitDescribe(correctedMatchPatterns, new[] { currentVersion.BasedOnGitTag });
+
+            if ((versionWithoutCurrentTag.Major == currentVersion.Major)
+                && (versionWithoutCurrentTag.Minor == currentVersion.Minor)
+                && (versionWithoutCurrentTag.Patch == currentVersion.Patch))
             {
-                currentVersion.GuessedRevision = prevCommitVersion.Revision + 1;
+                currentVersion.AssemblyRevision = versionWithoutCurrentTag.Revision + 1;
             }
+
         }
 
         return currentVersion;
+    }
+
+    private static BuildVersion GitDescribe(string[] matches = null, string[] excludes = null)
+    {
+        string matchParam = "";
+        if (matches != null)
+        {
+            matchParam += string.Join(' ', matches.Select(m => $"--match \"{m}\""));
+        }
+        string excludeParam = "";
+        if (excludes != null)
+        {
+            excludeParam += string.Join(' ', excludes.Select(e => $"--exclude \"{e}\""));
+        }
+        return GitTagParser.Parse(
+            Git($"describe --first-parent {matchParam} {excludeParam}", null, null, default(int?), false, false, false)
+                .Select(o => o.Text).FirstOrDefault());
     }
 }

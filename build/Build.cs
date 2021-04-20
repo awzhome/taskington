@@ -47,7 +47,7 @@ class Build : NukeBuild
             version = GitTagParser.Parse(gittag);
             Console.WriteLine($"{gittag} -> {version.AsString()} | {version.AsAssemblyVersion()}");
 
-            version = ProjectVersion(BranchVersioningConfig, "63446b8");
+            version = ProjectVersion(BranchVersioningConfig);
             Console.WriteLine($"Project version is {version.AsString()} | {version.AsAssemblyVersion()}");
         });
 
