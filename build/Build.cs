@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.CI;
@@ -16,6 +17,7 @@ using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.InnoSetup.InnoSetupTasks;
 using static Versioning;
+using static Utilities;
 
 [CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]
@@ -37,18 +39,27 @@ class Build : NukeBuild
         _ => new()
     };
 
-    Target builddebug => _ => _
+    Target show_version => _ => _
         .Executes(() =>
         {
-            string gittag;
-            BuildVersion version;
+            var version = ProjectVersion(BranchVersioningConfig);
+            Console.WriteLine($"Project version is {version.AsString()} (Assembly version: {version.AsAssemblyVersion()})");
+        });
 
-            gittag = "dev-3.0-rc-23-abdcefg";
-            version = GitTagParser.Parse(gittag);
-            Console.WriteLine($"{gittag} -> {version.AsString()} | {version.AsAssemblyVersion()}");
+    Target versionize => _ => _
+        .DependsOn(show_version)
+        .Executes(() =>
+        {
+            var version = ProjectVersion(BranchVersioningConfig);
 
-            version = ProjectVersion(BranchVersioningConfig);
-            Console.WriteLine($"Project version is {version.AsString()} | {version.AsAssemblyVersion()}");
+            WriteVersionToFiles("#define APP_VERSION \"$$$\"", version.AsAssemblyVersion(), WorkingDirectory / "ppbackup.iss");
+            WriteVersionToFiles("#define APP_FULL_VERSION \"$$$\"", version.AsString(), WorkingDirectory / "ppbackup.iss");
+
+            var projectFiles = FindFiles("PPBackup*.csproj").Concat(FindFiles("PPBackup*.fsproj"));
+            WriteVersionToFiles("<Version>$$$</Version>", version.AsString(), projectFiles);
+            WriteVersionToFiles("<AssemblyVersion>$$$</AssemblyVersion>", version.AsAssemblyVersion(), projectFiles);
+            WriteVersionToFiles("<FileVersion>$$$</FileVersion>", version.AsAssemblyVersion(), projectFiles);
+
         });
 
     Target clean => _ => _

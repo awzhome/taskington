@@ -181,7 +181,12 @@ class BranchVersioning
 
 static class Versioning
 {
-    public static void WriteVersionToFile(string template, string version, params string[] files)
+    public static void WriteVersionToFiles(string template, string version, params string[] files)
+    {
+        WriteVersionToFiles(template, version, (IEnumerable<string>) files);
+    }
+
+    public static void WriteVersionToFiles(string template, string version, IEnumerable<string> files)
     {
         foreach (var file in files)
         {

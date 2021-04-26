@@ -64,13 +64,14 @@
           "items": {
             "type": "string",
             "enum": [
-              "builddebug",
               "clean",
               "compile",
               "installer_win64",
               "publish_win64",
               "restore",
+              "show_version",
               "test",
+              "versionize",
               "win64"
             ]
           }
@@ -85,13 +86,14 @@
           "items": {
             "type": "string",
             "enum": [
-              "builddebug",
               "clean",
               "compile",
               "installer_win64",
               "publish_win64",
               "restore",
+              "show_version",
               "test",
+              "versionize",
               "win64"
             ]
           }
