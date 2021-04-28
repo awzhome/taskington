@@ -87,7 +87,7 @@ class Build : NukeBuild
         });
 
     Target publish_win64 => _ => _
-        .DependsOn(restore)
+        .DependsOn(restore, versionize)
         .Executes(() =>
         {
             DotNetPublish(s => s
