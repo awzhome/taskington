@@ -33,7 +33,7 @@ class Build : NukeBuild
 
     AbsolutePath OutputDirectory => RootDirectory / "output";
 
-    Func<string, BranchVersioning> BranchVersioningConfig => b => b switch
+    BranchConfig BranchVersioningConfig => b => b switch
     {
         "master" => new() { Tag = "preview", IncrementPatch = false },
         _ => new()

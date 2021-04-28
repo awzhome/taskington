@@ -179,6 +179,8 @@ class BranchVersioning
     public bool IncrementPatch { get; set; } = true;
 }
 
+delegate BranchVersioning BranchConfig(string branchName);
+
 static class Versioning
 {
     public static void WriteVersionToFiles(string template, string version, params string[] files)
@@ -198,7 +200,7 @@ static class Versioning
         }
     }
 
-    public static BuildVersion ProjectVersion(Func<string, BranchVersioning> branchConfig)
+    public static BuildVersion ProjectVersion(BranchConfig branchConfig)
     {
         string currentBranch = GitCurrentBranch();
         var branchVersioning = branchConfig(currentBranch) ?? new();
@@ -208,6 +210,14 @@ static class Versioning
                 new[] { "dev-[0-9999]", "v[0-9999]", "dev-[0-9999].[0-9999]", "v[0-9999].[0-9999]", "dev-[0-9999].[0-9999].[0-9999]", "v[0-9999].[0-9999].[0-9999]", } :
                 new[] { "dev-[0-9999]", "v[0-9999]", "dev-[0-9999].[0-9999]", "v[0-9999].[0-9999]", "dev-[0-9999].[0-9999].0", "v[0-9999].[0-9999].0" };
         var correctedVersion = GitDescribe(correctedMatchPatterns);
+
+        if (!GitHasCleanWorkingCopy())
+        {
+            currentVersion.Revision++;
+            currentVersion.AssemblyRevision++;
+            correctedVersion.Revision++;
+            correctedVersion.AssemblyRevision++;
+        }
 
         if (currentVersion.Revision != 0)
         {
