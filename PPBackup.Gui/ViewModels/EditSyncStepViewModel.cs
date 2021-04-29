@@ -21,6 +21,7 @@ namespace PPBackup.Gui.ViewModels
         public ReactiveCommand<Unit, Unit> SelectToCommand { get; }
 
         public Interaction<Unit, string>? OpenFolderDialogInteraction { get; set; }
+        public Interaction<Unit, string?>? OpenFileDialogInteraction { get; set; }
 
         public EditSyncStepViewModel(BackupStep step) : base(step)
         {
@@ -76,10 +77,27 @@ namespace PPBackup.Gui.ViewModels
 
         private async Task OpenSelectFromDialogAsync()
         {
-            if (OpenFolderDialogInteraction != null)
+            if (selectedType?.Type == "file")
             {
-                var selectedPath = await OpenFolderDialogInteraction.Handle(Unit.Default);
-                From = selectedPath;
+                if (OpenFileDialogInteraction != null)
+                {
+                    var selectedFile = await OpenFileDialogInteraction.Handle(Unit.Default);
+                    if (!string.IsNullOrEmpty(selectedFile))
+                    {
+                        From = selectedFile;
+                    }
+                }
+            }
+            else
+            {
+                if (OpenFolderDialogInteraction != null)
+                {
+                    var selectedPath = await OpenFolderDialogInteraction.Handle(Unit.Default);
+                    if (!string.IsNullOrEmpty(selectedPath))
+                    {
+                        From = selectedPath;
+                    }
+                }
             }
         }
 
@@ -88,7 +106,10 @@ namespace PPBackup.Gui.ViewModels
             if (OpenFolderDialogInteraction != null)
             {
                 var selectedPath = await OpenFolderDialogInteraction.Handle(Unit.Default);
-                To = selectedPath;
+                if (!string.IsNullOrEmpty(selectedPath))
+                {
+                    To = selectedPath;
+                }
             }
         }
     }

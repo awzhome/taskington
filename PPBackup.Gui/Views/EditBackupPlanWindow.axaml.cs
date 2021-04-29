@@ -8,6 +8,7 @@ using System;
 using Avalonia.Interactivity;
 using System.Threading.Tasks;
 using System.Reactive;
+using System.Linq;
 
 namespace PPBackup.Gui.Views
 {
@@ -22,6 +23,7 @@ namespace PPBackup.Gui.Views
 
             this.WhenActivated(d => d(ViewModel.CloseCommand.Subscribe(save => Close(save))));
             this.WhenActivated(d => d(ViewModel.OpenFolderDialog.RegisterHandler(OpenFolderDialogAsync)));
+            this.WhenActivated(d => d(ViewModel.OpenFileDialog.RegisterHandler(OpenFileDialogAsync)));
         }
 
         private void InitializeComponent()
@@ -44,6 +46,18 @@ namespace PPBackup.Gui.Views
 
             var result = await dialog.ShowAsync(this);
             interaction.SetOutput(result);
+        }
+
+        private async Task OpenFileDialogAsync(InteractionContext<Unit, string?> interaction)
+        {
+            var dialog = new OpenFileDialog
+            {
+                Title = "Select file",
+                AllowMultiple = false
+            };
+
+            var result = await dialog.ShowAsync(this);
+            interaction.SetOutput(result?.FirstOrDefault());
         }
     }
 }

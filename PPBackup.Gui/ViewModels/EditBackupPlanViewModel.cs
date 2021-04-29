@@ -13,6 +13,7 @@ namespace PPBackup.Gui.ViewModels
         public ReactiveCommand<Unit, Unit> MoveStepUpCommand { get; }
         public ReactiveCommand<Unit, Unit> MoveStepDownCommand { get; }
         public Interaction<Unit, string> OpenFolderDialog { get; }
+        public Interaction<Unit, string?> OpenFileDialog { get; }
 
         public EditBackupPlanViewModel(BackupPlanViewModel backupPlanViewModel)
         {
@@ -27,6 +28,7 @@ namespace PPBackup.Gui.ViewModels
                 this.WhenAnyValue(x => x.SelectedItem, selectedItem => Steps.LastOrDefault() != selectedItem));
 
             OpenFolderDialog = new();
+            OpenFileDialog = new();
 
             InitializeFromBasicModel(backupPlanViewModel);
             SelectedItem = Steps.FirstOrDefault();
