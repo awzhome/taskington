@@ -17,9 +17,10 @@ namespace PPBackup.Base
             binder
                 .Bind(applicationEvents)
                 .Bind<IApplicationEvents>(applicationEvents)
-                .Bind<IStreamReaderProvider, ScriptFileConfigurationProvider>()
+                .Bind<IStreamReaderProvider, YamlFileConfigurationProvider>()
                 .Bind<ConfigurationManager>()
                 .Bind<ScriptConfigurationReader>()
+                .Bind<YamlConfigurationReader>()
                 .Bind(SystemOperationsFactory.CreateSystemOperations)
                 .Bind<IStepExecution, SyncStepExecution>()
                 .Bind<PlanExecutionHelper>()

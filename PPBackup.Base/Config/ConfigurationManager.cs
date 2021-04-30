@@ -18,18 +18,18 @@ namespace PPBackup.Base.Config
         private readonly IAppServiceProvider serviceProvider;
         private readonly ApplicationEvents applicationEvents;
         private readonly List<ExecutableBackupPlan> executablePlans;
-        private readonly ScriptConfigurationReader scriptConfigurationReader;
+        private readonly YamlConfigurationReader configurationReader;
 
         public ConfigurationManager(
             IAppServiceProvider serviceProvider,
             ApplicationEvents applicationEvents,
             List<ExecutableBackupPlan> executablePlans,
-            ScriptConfigurationReader scriptConfigurationReader)
+            YamlConfigurationReader configurationReader)
         {
             this.serviceProvider = serviceProvider;
             this.applicationEvents = applicationEvents;
             this.executablePlans = executablePlans;
-            this.scriptConfigurationReader = scriptConfigurationReader;
+            this.configurationReader = configurationReader;
 
             applicationEvents.ConfigurationChanged += OnConfigurationChanged;
         }
@@ -86,7 +86,7 @@ namespace PPBackup.Base.Config
 
         private void ReadConfiguration()
         {
-            var backupPlans = scriptConfigurationReader.Read();
+            var backupPlans = configurationReader.Read();
 
             foreach (var plan in backupPlans)
             {

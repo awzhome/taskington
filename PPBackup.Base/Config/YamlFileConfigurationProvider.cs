@@ -5,6 +5,9 @@ namespace PPBackup.Base.Config
 {
     public class YamlFileConfigurationProvider : IStreamReaderProvider, IStreamWriterProvider
     {
+        static string AppRoamingPath =>
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ppbackup");
+
         public void ReadConfigurationStreams(Action<TextReader> configReader)
         {
             using var reader = new StreamReader(DetermineFileName());
@@ -20,7 +23,7 @@ namespace PPBackup.Base.Config
         private static string DetermineFileName()
         {
             string fileName = "ppbackup.yml";
-            string userFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), fileName);
+            string userFilePath = Path.Combine(AppRoamingPath, fileName);
             string workDirFilePath = Path.Combine(Environment.CurrentDirectory, fileName);
 
             if (File.Exists(workDirFilePath))
