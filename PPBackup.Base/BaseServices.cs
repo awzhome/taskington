@@ -12,21 +12,20 @@ namespace PPBackup.Base
         public static void Bind(IAppServiceBinder binder)
         {
             ApplicationEvents applicationEvents = new();
-            List<ExecutableBackupPlan> executablePlans = new();
 
             binder
                 .Bind(applicationEvents)
                 .Bind<IApplicationEvents>(applicationEvents)
                 .Bind<IStreamReaderProvider, YamlFileConfigurationProvider>()
+                .Bind<IStreamWriterProvider, YamlFileConfigurationProvider>()
                 .Bind<ConfigurationManager>()
                 .Bind<ScriptConfigurationReader>()
                 .Bind<YamlConfigurationReader>()
+                .Bind<YamlConfigurationWriter>()
                 .Bind(SystemOperationsFactory.CreateSystemOperations)
                 .Bind<IStepExecution, SyncStepExecution>()
                 .Bind<PlanExecutionHelper>()
-                .Bind<IPlanExecutionCreator, ManualPlanExecution.Creator>()
-                .Bind(executablePlans)
-                .Bind<IEnumerable<ExecutableBackupPlan>>(executablePlans);
+                .Bind<IPlanExecutionCreator, ManualPlanExecution.Creator>();
         }
     }
 }

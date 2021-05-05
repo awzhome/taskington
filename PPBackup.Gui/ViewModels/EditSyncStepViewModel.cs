@@ -33,39 +33,30 @@ namespace PPBackup.Gui.ViewModels
 
         public List<SyncTypeEntry> SyncTypes { get; } = new()
         {
-            new SyncTypeEntry() { Type = "file", Caption = "file" },
-            new SyncTypeEntry() { Type = "dir", Caption = "directory" },
-            new SyncTypeEntry() { Type = "sub-dirs", Caption = "sub-directories" }
+            new() { Type = "file", Caption = "file" },
+            new() { Type = "dir", Caption = "directory" },
+            new() { Type = "sub-dirs", Caption = "sub-directories" }
         };
 
         private SyncTypeEntry? selectedType;
         public SyncTypeEntry? SelectedType
         {
             get => selectedType;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref selectedType, value);
-            }
+            set => this.RaiseAndSetIfChanged(ref selectedType, value);
         }
 
         public string? from;
         public string? From
         {
             get => from;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref from, value);
-            }
+            set => this.RaiseAndSetIfChanged(ref from, value);
         }
 
         public string? to;
         public string? To
         {
             get => to;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref to, value);
-            }
+            set => this.RaiseAndSetIfChanged(ref to, value);
         }
 
         private void InitializeFromBasicModel(BackupStep step)
@@ -73,6 +64,14 @@ namespace PPBackup.Gui.ViewModels
             SelectedType = SyncTypes.FirstOrDefault(entry => entry.Type == step.DefaultProperty);
             From = step["from"];
             To = step["to"];
+        }
+
+        public override BackupStep ConvertToStep()
+        {
+            var step = base.ConvertToStep();
+            step["from"] = from;
+            step["to"] = to;
+            return step;
         }
 
         private async Task OpenSelectFromDialogAsync()

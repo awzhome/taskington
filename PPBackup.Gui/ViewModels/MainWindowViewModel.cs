@@ -1,5 +1,6 @@
 using Avalonia.Threading;
 using PPBackup.Base;
+using PPBackup.Base.Config;
 using PPBackup.Base.Plans;
 using ReactiveUI;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace PPBackup.Gui.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly Application application;
-        private readonly IEnumerable<ExecutableBackupPlan> executableBackupPlans;
+        private readonly ConfigurationManager configurationManager;
         public ObservableCollection<BackupPlanViewModel> BackupPlans { get; }
 
         public ReactiveCommand<BackupPlanViewModel, Unit> ExecutePlanCommand { get; }
@@ -21,10 +22,10 @@ namespace PPBackup.Gui.ViewModels
         public ReactiveCommand<BackupPlanViewModel, Unit> EditPlanCommand { get; }
         public ReactiveCommand<BackupPlanViewModel, Unit> RemovePlanCommand { get; }
 
-        public MainWindowViewModel(Application application, IEnumerable<ExecutableBackupPlan> executableBackupPlans, IApplicationEvents applicationEvents)
+        public MainWindowViewModel(Application application, ConfigurationManager configurationManager, IApplicationEvents applicationEvents)
         {
             this.application = application;
-            this.executableBackupPlans = executableBackupPlans;
+            this.configurationManager = configurationManager;
 
             BackupPlans = new ObservableCollection<BackupPlanViewModel>();
             applicationEvents.ConfigurationReloaded += (sender, e) =>
@@ -44,7 +45,7 @@ namespace PPBackup.Gui.ViewModels
             Dispatcher.UIThread.Post(() =>
             {
                 BackupPlans.Clear();
-                foreach (var plan in executableBackupPlans)
+                foreach (var plan in configurationManager.ExecutablePlans)
                 {
                     BackupPlans.Add(new BackupPlanViewModel(plan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand));
                 }
@@ -61,6 +62,17 @@ namespace PPBackup.Gui.ViewModels
         {
             var editPlanViewModel = new EditBackupPlanViewModel(backupPlanViewModel);
             var shouldSave = await ShowPlanEditDialog.Handle(editPlanViewModel);
+            if (shouldSave)
+            {
+                var newExecutablePlan = configurationManager.ReplacePlan(backupPlanViewModel.ExecutablePlan, editPlanViewModel.ConvertToPlan());
+                int existingIndex = BackupPlans.IndexOf(backupPlanViewModel);
+                if (existingIndex >= 0)
+                {
+                    BackupPlans[existingIndex] = new BackupPlanViewModel(newExecutablePlan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand);
+                    newExecutablePlan.Execution.NotifyInitialStates();
+                }
+                configurationManager.SaveConfiguration();
+            }
         }
 
         private void RemovePlan(BackupPlanViewModel plan)

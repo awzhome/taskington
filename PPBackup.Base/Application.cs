@@ -1,4 +1,5 @@
-﻿using PPBackup.Base.Plans;
+﻿using PPBackup.Base.Config;
+using PPBackup.Base.Plans;
 using PPBackup.Base.Service;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace PPBackup.Base
 
         public void NotifyInitialStates()
         {
-            foreach (var execution in services.Get<List<ExecutableBackupPlan>>().Select(executablePlan => executablePlan.Execution))
+            foreach (var execution in services.Get<ConfigurationManager>().ExecutablePlans.Select(executablePlan => executablePlan.Execution))
             {
                 execution.NotifyInitialStates();
             }

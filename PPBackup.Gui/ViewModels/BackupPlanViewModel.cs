@@ -33,6 +33,8 @@ namespace PPBackup.Gui.ViewModels
         public ReactiveCommand<BackupPlanViewModel, Unit> EditPlanCommand { get; }
         public ReactiveCommand<BackupPlanViewModel, Unit> RemovePlanCommand { get; }
 
+        public ExecutableBackupPlan ExecutablePlan => executableBackupPlan;
+
         public IPlanExecution Execution => executableBackupPlan.Execution;
 
         public IEnumerable<BackupStep> Steps => executableBackupPlan.BackupPlan.Steps;

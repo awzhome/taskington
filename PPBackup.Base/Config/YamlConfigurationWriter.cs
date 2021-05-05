@@ -26,7 +26,6 @@ namespace PPBackup.Base.Config
                         var mappings = new List<KeyValuePair<YamlNode, YamlNode>>
                         {
                         StringMapping("plan", plan.Name),
-                        StringMapping("run", plan.RunType)
                         };
                         mappings.AddRange(plan.Properties.Select(keyValue => StringMapping(keyValue.Key, keyValue.Value)));
                         mappings.Add(Mapping("steps", new YamlSequenceNode(

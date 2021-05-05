@@ -8,7 +8,13 @@ namespace PPBackup.Base.Plans
     {
         public const string OnSelectionRunType = "selection";
 
-        public BackupPlan(string type)
+        public BackupPlan(string type) : base()
+        {
+            RunType = type;
+        }
+        
+        public BackupPlan(string type, IEnumerable<KeyValuePair<string, string>> initialProperties)
+            : base(initialProperties)
         {
             RunType = type;
         }

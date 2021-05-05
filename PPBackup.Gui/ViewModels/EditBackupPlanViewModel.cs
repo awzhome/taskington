@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using PPBackup.Base.Plans;
+using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
@@ -7,6 +8,8 @@ namespace PPBackup.Gui.ViewModels
 {
     public class EditBackupPlanViewModel : ViewModelBase
     {
+        private readonly BackupPlan plan;
+
         public ReactiveCommand<bool, bool> CloseCommand { get; }
         public ReactiveCommand<NewStepTemplate, Unit> AddStepCommand { get; }
         public ReactiveCommand<Unit, Unit> RemoveStepCommand { get; }
@@ -17,6 +20,8 @@ namespace PPBackup.Gui.ViewModels
 
         public EditBackupPlanViewModel(BackupPlanViewModel backupPlanViewModel)
         {
+            plan = backupPlanViewModel.ExecutablePlan.BackupPlan;
+
             CloseCommand = ReactiveCommand.Create<bool, bool>(save => save);
 
             AddStepCommand = ReactiveCommand.Create<NewStepTemplate>(AddStep);
@@ -30,7 +35,7 @@ namespace PPBackup.Gui.ViewModels
             OpenFolderDialog = new();
             OpenFileDialog = new();
 
-            InitializeFromBasicModel(backupPlanViewModel);
+            InitializeFromBasicModel();
             SelectedItem = Steps.FirstOrDefault();
         }
 
@@ -43,6 +48,13 @@ namespace PPBackup.Gui.ViewModels
         {
             get => name;
             set => this.RaiseAndSetIfChanged(ref name, value);
+        }
+
+        private string? runType;
+        public string? RunType
+        {
+            get => runType;
+            set => this.RaiseAndSetIfChanged(ref runType, value);
         }
 
         private EditStepViewModelBase? selectedItem;
@@ -61,14 +73,26 @@ namespace PPBackup.Gui.ViewModels
             }
         }
 
-        private void InitializeFromBasicModel(BackupPlanViewModel baseModel)
+        private void InitializeFromBasicModel()
         {
-            name = baseModel.Name;
+            name = plan.Name;
+            runType = plan.RunType;
 
-            foreach (var step in baseModel.Steps)
+            foreach (var step in plan.Steps)
             {
                 Steps.Add(step.ToViewModel(this));
             }
+        }
+
+        public BackupPlan ConvertToPlan()
+        {
+            BackupPlan newPlan = new(runType ?? BackupPlan.OnSelectionRunType, plan.Properties)
+            {
+                Name = name,
+                Steps = Steps.Select(step => step.ConvertToStep())
+            };
+
+            return newPlan;
         }
 
         private void AddStep(NewStepTemplate template)

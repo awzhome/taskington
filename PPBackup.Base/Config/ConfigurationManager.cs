@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace PPBackup.Base.Config
 {
-    class ConfigurationManager : IAutoInitializable
+    public class ConfigurationManager : IAutoInitializable
     {
         private static readonly object configurationLock = new();
 
@@ -17,22 +17,25 @@ namespace PPBackup.Base.Config
 
         private readonly IAppServiceProvider serviceProvider;
         private readonly ApplicationEvents applicationEvents;
-        private readonly List<ExecutableBackupPlan> executablePlans;
         private readonly YamlConfigurationReader configurationReader;
+        private readonly YamlConfigurationWriter configurationWriter;
 
         public ConfigurationManager(
             IAppServiceProvider serviceProvider,
             ApplicationEvents applicationEvents,
-            List<ExecutableBackupPlan> executablePlans,
-            YamlConfigurationReader configurationReader)
+            YamlConfigurationReader configurationReader,
+            YamlConfigurationWriter configurationWriter)
         {
             this.serviceProvider = serviceProvider;
             this.applicationEvents = applicationEvents;
-            this.executablePlans = executablePlans;
             this.configurationReader = configurationReader;
+            this.configurationWriter = configurationWriter;
 
             applicationEvents.ConfigurationChanged += OnConfigurationChanged;
         }
+
+        private readonly List<ExecutableBackupPlan> executablePlans = new();
+        public IEnumerable<ExecutableBackupPlan> ExecutablePlans => executablePlans;
 
         public void Initialize()
         {
@@ -86,41 +89,47 @@ namespace PPBackup.Base.Config
 
         private void ReadConfiguration()
         {
-            var backupPlans = configurationReader.Read();
+            executablePlans.AddRange(configurationReader.Read().Select(CreateExecutablePlan));
+        }
 
-            foreach (var plan in backupPlans)
+        private ExecutableBackupPlan CreateExecutablePlan(BackupPlan plan)
+        {
+            if (plan.Steps.OfType<InvalidBackupStep>().Any())
             {
-                var events = new PlanExecutionEvents(plan);
-
-                if (plan.Steps.OfType<InvalidBackupStep>().Any())
+                var events = CreatePlanExecutionEvents(plan);
+                return new ExecutableBackupPlan(
+                    plan,
+                    new InvalidPlanExecution(events, "Plan contains invalid steps."),
+                    events);
+            }
+            else
+            {
+                var planExecutionCreator = serviceProvider.Get<IPlanExecutionCreator>(
+                    execution => execution.RunType == plan.RunType);
+                if (planExecutionCreator == null)
                 {
-                    executablePlans.Add(new ExecutableBackupPlan(
+                    var events = CreatePlanExecutionEvents(plan);
+                    return new ExecutableBackupPlan(
                         plan,
-                        new InvalidPlanExecution(events, "Plan contains invalid steps."),
-                        events));
+                        new InvalidPlanExecution(events, $"Unknown backup plan run type '{plan.RunType}'"),
+                        events);
                 }
                 else
                 {
-                    var planExecutionCreator = serviceProvider.Get<IPlanExecutionCreator>(
-                        execution => execution.RunType == plan.RunType);
-                    if (planExecutionCreator == null)
-                    {
-                        executablePlans.Add(new ExecutableBackupPlan(
-                            plan,
-                            new InvalidPlanExecution(events, $"Unknown backup plan run type '{plan.RunType}'"),
-                            events));
-                    }
-                    else
-                    {
-                        executablePlans.Add(new ExecutableBackupPlan(
-                            plan,
-                            planExecutionCreator.Create(plan, events),
-                            events));
-                    }
+                    var events = CreatePlanExecutionEvents(plan);
+                    return new ExecutableBackupPlan(
+                         plan,
+                         planExecutionCreator.Create(plan, events),
+                         events);
                 }
-
-                events.IsRunning += OnPlanIsRunningUpdated;
             }
+        }
+
+        private PlanExecutionEvents CreatePlanExecutionEvents(BackupPlan plan)
+        {
+            var events = new PlanExecutionEvents(plan);
+            events.IsRunning += OnPlanIsRunningUpdated;
+            return events;
         }
 
         private void OnPlanIsRunningUpdated(object? sender, PlanIsRunningUpdatedEventArgs e)
@@ -150,6 +159,54 @@ namespace PPBackup.Base.Config
                     applicationEvents.OnConfigurationReloaded();
                 }
             }
+        }
+
+        public void SaveConfiguration()
+        {
+            configurationWriter.Write(executablePlans.Select(ep => ep.BackupPlan));
+        }
+
+        public ExecutableBackupPlan InsertPlan(int index, BackupPlan newPlan)
+        {
+            var newExecutablePlan = CreateExecutablePlan(newPlan);
+            if (index > -1)
+            {
+                executablePlans.Insert(index, newExecutablePlan);
+            }
+            else
+            {
+                executablePlans.Add(newExecutablePlan);
+            }
+
+            return newExecutablePlan;
+        }
+
+        public void RemovePlan(ExecutableBackupPlan executablePlan)
+        {
+            int index = executablePlans.IndexOf(executablePlan);
+            if (index > -1)
+            {
+                (executablePlan.Execution as IDisposable)?.Dispose();
+                executablePlans.RemoveAt(index);
+            }
+        }
+
+        public ExecutableBackupPlan ReplacePlan(ExecutableBackupPlan executablePlan, BackupPlan newPlan)
+        {
+            var newExecutablePlan = CreateExecutablePlan(newPlan);
+            int index = executablePlans.IndexOf(executablePlan);
+            if (index > -1)
+            {
+                (executablePlan.Execution as IDisposable)?.Dispose();
+                executablePlans.RemoveAt(index);
+                executablePlans.Insert(index, newExecutablePlan);
+            }
+            else
+            {
+                executablePlans.Add(newExecutablePlan);
+            }
+
+            return newExecutablePlan;
         }
     }
 }
