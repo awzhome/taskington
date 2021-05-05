@@ -20,7 +20,7 @@ namespace PPBackup.Base.Config
 
         public IEnumerable<BackupPlan> Read()
         {
-            List<BackupPlan> plans = new List<BackupPlan>();
+            List<BackupPlan> plans = new();
 
             configurationProvider.ReadConfigurationStreams(reader =>
             {
@@ -29,11 +29,11 @@ namespace PPBackup.Base.Config
                 {
                     yamlStream.Load(reader);
 
-                    if (yamlStream.Documents[0].RootNode is YamlSequenceNode root)
+                    if ((yamlStream.Documents.Count > 0) && yamlStream.Documents[0].RootNode is YamlSequenceNode root)
                     {
                         foreach (var planEntry in root.Children.OfType<YamlMappingNode>())
                         {
-                            List<BackupStep> steps = new List<BackupStep>();
+                            List<BackupStep> steps = new();
                             var planType = (GetChildNode(planEntry.Children, "on") as YamlScalarNode)?.Value ?? BackupPlan.OnSelectionRunType;
                             var plan = new BackupPlan(planType)
                             {
