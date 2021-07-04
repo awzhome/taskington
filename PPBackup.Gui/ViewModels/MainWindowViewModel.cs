@@ -75,9 +75,11 @@ namespace PPBackup.Gui.ViewModels
             }
         }
 
-        private void RemovePlan(BackupPlanViewModel plan)
+        private void RemovePlan(BackupPlanViewModel backupPlanViewModel)
         {
-            // TODO
+            BackupPlans.Remove(backupPlanViewModel);
+            configurationManager.RemovePlan(backupPlanViewModel.ExecutablePlan);
+            configurationManager.SaveConfiguration();
         }
     }
 }

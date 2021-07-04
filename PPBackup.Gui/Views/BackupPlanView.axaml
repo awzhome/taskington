@@ -66,7 +66,7 @@
                     <Button.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Edit" Command="{Binding EditPlanCommand}" CommandParameter="{Binding}" />
-                            <MenuItem Header="Delete" Command="{Binding RemovePlanCommand}" CommandParameter="{Binding}" />
+                            <MenuItem Header="Remove" Command="{Binding RemovePlanCommand}" CommandParameter="{Binding}" />
                         </ContextMenu>
                     </Button.ContextMenu>
                 </Button>
