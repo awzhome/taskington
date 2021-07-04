@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPBackup.Base", "PPBackup.Base\PPBackup.Base.csproj", "{FE025C2F-0DEF-4533-AF68-F841E9042178}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskington.Base", "Taskington.Base\Taskington.Base.csproj", "{FE025C2F-0DEF-4533-AF68-F841E9042178}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5D18743A-0EB4-452D-9A52-D94CDEE3759E}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,16 +12,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.github\workflows\ci.yml = .github\workflows\ci.yml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPBackup.Base.Tests", "PPBackup.Base.Tests\PPBackup.Base.Tests.csproj", "{0D5F7529-F557-4701-B327-D3A2D1C9270C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskington.Base.Tests", "Taskington.Base.Tests\Taskington.Base.Tests.csproj", "{0D5F7529-F557-4701-B327-D3A2D1C9270C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{FE025C2F-0DEF-4533-AF68-F841E9042178} = {FE025C2F-0DEF-4533-AF68-F841E9042178}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPBackup.WinApp", "PPBackup.WinApp\PPBackup.WinApp.csproj", "{29F3E57A-5A7A-4098-9E41-6C85D6DD77EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskington.WinApp", "Taskington.WinApp\Taskington.WinApp.csproj", "{29F3E57A-5A7A-4098-9E41-6C85D6DD77EA}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "PPBackup.Console", "PPBackup.Console\PPBackup.Console.fsproj", "{C39E7CDE-9C95-4D43-98C1-505EF9728A6E}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Taskington.Console", "Taskington.Console\Taskington.Console.fsproj", "{C39E7CDE-9C95-4D43-98C1-505EF9728A6E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PPBackup.Gui", "PPBackup.Gui\PPBackup.Gui.csproj", "{92CFEBA2-6378-4DC1-9E1B-2CB7F53C72B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskington.Gui", "Taskington.Gui\Taskington.Gui.csproj", "{92CFEBA2-6378-4DC1-9E1B-2CB7F53C72B6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{04E341BA-3340-4B5D-9655-F282EB2213FC}"
 EndProject

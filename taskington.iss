@@ -1,9 +1,9 @@
-#define APP_NAME "PPBackup"
-#define APP_VERSION "0.1"
-#define APP_FULL_VERSION "0.1"
+﻿#define APP_NAME "Taskington"
+#define APP_VERSION "0.1.0.99"
+#define APP_FULL_VERSION "0.1-preview.99"
 #define APP_PUBLISHER "Andreas Weizel"
-#define APP_URL "https://github.com/awzhome/pp-backup"
-#define APP_EXE_FILE "ppbackup-ui.exe"
+#define APP_URL "https://github.com/awzhome/taskington"
+#define APP_EXE_FILE "taskington-gui.exe"
 
 [Setup]
 AppId={{D32AB7B1-334D-43A1-9A7C-EE692FCA7A8A}
@@ -17,7 +17,7 @@ AppUpdatesURL={#APP_URL}
 DefaultDirName={localappdata}\{#APP_NAME}
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
-OutputBaseFilename=ppbackup-setup-win64-{#APP_FULL_VERSION}
+OutputBaseFilename=taskington-setup-win64-{#APP_FULL_VERSION}
 OutputDir=output
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64

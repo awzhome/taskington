@@ -52,10 +52,11 @@ class Build : NukeBuild
         {
             var version = ProjectVersion(BranchVersioningConfig);
 
-            WriteVersionToFiles("#define APP_VERSION \"$$$\"", version.AsAssemblyVersion(), WorkingDirectory / "ppbackup.iss");
-            WriteVersionToFiles("#define APP_FULL_VERSION \"$$$\"", version.AsString(), WorkingDirectory / "ppbackup.iss");
+            var innoSetupScript = WorkingDirectory / "taskington.iss";
+            WriteVersionToFiles("#define APP_VERSION \"$$$\"", version.AsAssemblyVersion(), innoSetupScript);
+            WriteVersionToFiles("#define APP_FULL_VERSION \"$$$\"", version.AsString(), innoSetupScript);
 
-            var projectFiles = FindFiles("PPBackup*.csproj").Concat(FindFiles("PPBackup*.fsproj"));
+            var projectFiles = FindFiles("Taskington*.csproj").Concat(FindFiles("Taskington*.fsproj"));
             WriteVersionToFiles("<Version>$$$</Version>", version.AsString(), projectFiles);
             WriteVersionToFiles("<AssemblyVersion>$$$</AssemblyVersion>", version.AsAssemblyVersion(), projectFiles);
             WriteVersionToFiles("<FileVersion>$$$</FileVersion>", version.AsAssemblyVersion(), projectFiles);
@@ -91,7 +92,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetPublish(s => s
-                .SetProject("PPBackup.Gui")
+                .SetProject("Taskington.Gui")
                 .SetConfiguration(Configuration.Release)
                 .EnableSelfContained()
                 .SetPublishTrimmed(true)
@@ -104,7 +105,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             InnoSetup(s => s
-                .SetScriptFile("ppbackup.iss")
+                .SetScriptFile("taskington.iss")
                 .SetProcessToolPath(((AbsolutePath) SpecialFolder(SpecialFolders.ProgramFilesX86)) / "Inno Setup 6" / "ISCC.exe")
                 .SetOutputDir(OutputDirectory));
         });
@@ -113,7 +114,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetTest(s => s
-                .SetProjectFile("PPBackup.Base.Tests")
+                .SetProjectFile("Taskington.Base.Tests")
             );
         });
 

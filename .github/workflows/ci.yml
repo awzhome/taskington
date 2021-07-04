@@ -40,4 +40,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Windows x64 Installer
-          path: output/ppbackup-setup-win64-*.exe
+          path: output/taskington-setup-win64-*.exe
