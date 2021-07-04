@@ -5,6 +5,7 @@
 		xmlns:views="using:PPBackup.Gui.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PPBackup.Gui.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
@@ -43,15 +44,26 @@
         </Grid>
 
         <ScrollViewer Grid.Row="1" Margin="50,50,50,0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <ItemsControl Items="{Binding BackupPlans}" HorizontalAlignment="Center">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel MinWidth="400" Orientation="Vertical" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+            <StackPanel Orientation="Vertical">
+                <ItemsControl Items="{Binding BackupPlans}" HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel MinWidth="400" Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <StackPanel HorizontalAlignment="Center" MinWidth="400">
+                    <Button Margin="20,0,20,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding AddPlanCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <i:Icon Value="fas fa-plus" />
+                            <TextBlock Margin="10,0,0,0">Add new plan</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
         </ScrollViewer>
-        
+
         <TextBlock Grid.Row="2" Classes="footer" Text="Copyright © 2020-2021 Andreas Weizel" />
     </Grid>
 </Window>

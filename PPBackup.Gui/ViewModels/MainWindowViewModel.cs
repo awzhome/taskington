@@ -17,6 +17,7 @@ namespace PPBackup.Gui.ViewModels
         private readonly ConfigurationManager configurationManager;
         public ObservableCollection<BackupPlanViewModel> BackupPlans { get; }
 
+        public ReactiveCommand<Unit, Unit> AddPlanCommand { get; }
         public ReactiveCommand<BackupPlanViewModel, Unit> ExecutePlanCommand { get; }
         public Interaction<EditBackupPlanViewModel, bool> ShowPlanEditDialog { get; }
         public ReactiveCommand<BackupPlanViewModel, Unit> EditPlanCommand { get; }
@@ -34,6 +35,7 @@ namespace PPBackup.Gui.ViewModels
             };
             UpdatePlanViewModels();
 
+            AddPlanCommand = ReactiveCommand.CreateFromTask(AddPlanAsync);
             ExecutePlanCommand = ReactiveCommand.CreateFromTask<BackupPlanViewModel>(ExecutePlanAsync);
             ShowPlanEditDialog = new();
             EditPlanCommand = ReactiveCommand.CreateFromTask<BackupPlanViewModel>(EditPlanAsync);
@@ -47,15 +49,29 @@ namespace PPBackup.Gui.ViewModels
                 BackupPlans.Clear();
                 foreach (var plan in configurationManager.ExecutablePlans)
                 {
-                    BackupPlans.Add(new BackupPlanViewModel(plan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand));
+                    BackupPlans.Add(CreatePlanViewModel(plan));
                 }
                 application.NotifyInitialStates();
             });
         }
 
+        private BackupPlanViewModel CreatePlanViewModel(ExecutableBackupPlan executablePlan) =>
+            new(executablePlan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand);
+
         private async Task ExecutePlanAsync(BackupPlanViewModel backupPlanViewModel)
         {
             await backupPlanViewModel.Execution.ExecuteAsync();
+        }
+
+        private async Task AddPlanAsync()
+        {
+            var newPlan = new BackupPlan(BackupPlan.OnSelectionRunType) { Name = "New plan" };
+            var newExecutablePlan = configurationManager.InsertPlan(BackupPlans.Count, newPlan);
+            configurationManager.SaveConfiguration();
+            var newPlanViewModel = CreatePlanViewModel(newExecutablePlan);
+            BackupPlans.Add(newPlanViewModel);
+            newExecutablePlan.Execution.NotifyInitialStates();
+            await EditPlanAsync(newPlanViewModel);
         }
 
         private async Task EditPlanAsync(BackupPlanViewModel backupPlanViewModel)
