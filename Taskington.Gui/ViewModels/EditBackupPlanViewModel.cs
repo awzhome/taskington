@@ -8,7 +8,7 @@ namespace Taskington.Gui.ViewModels
 {
     public class EditBackupPlanViewModel : ViewModelBase
     {
-        private readonly BackupPlan plan;
+        private readonly Plan plan;
 
         public ReactiveCommand<bool, bool> CloseCommand { get; }
         public ReactiveCommand<NewStepTemplate, Unit> AddStepCommand { get; }
@@ -20,7 +20,7 @@ namespace Taskington.Gui.ViewModels
 
         public EditBackupPlanViewModel(BackupPlanViewModel backupPlanViewModel)
         {
-            plan = backupPlanViewModel.ExecutablePlan.BackupPlan;
+            plan = backupPlanViewModel.ExecutablePlan.Plan;
 
             CloseCommand = ReactiveCommand.Create<bool, bool>(save => save);
 
@@ -84,9 +84,9 @@ namespace Taskington.Gui.ViewModels
             }
         }
 
-        public BackupPlan ConvertToPlan()
+        public Plan ConvertToPlan()
         {
-            BackupPlan newPlan = new(runType ?? BackupPlan.OnSelectionRunType, plan.Properties)
+            Plan newPlan = new(runType ?? Plan.OnSelectionRunType, plan.Properties)
             {
                 Name = name,
                 Steps = Steps.Select(step => step.ConvertToStep())

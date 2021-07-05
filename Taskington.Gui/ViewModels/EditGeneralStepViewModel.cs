@@ -10,7 +10,7 @@ namespace Taskington.Gui.ViewModels
 {
     public class EditGeneralStepViewModel : EditStepViewModelBase
     {
-        public EditGeneralStepViewModel(BackupStep step) : base(step)
+        public EditGeneralStepViewModel(PlanStep step) : base(step)
         {
             InitializeFromBasicModel(step);
         }
@@ -22,7 +22,7 @@ namespace Taskington.Gui.ViewModels
             set => this.RaiseAndSetIfChanged(ref readableProperties, value);
         }
 
-        private void InitializeFromBasicModel(BackupStep baseModel)
+        private void InitializeFromBasicModel(PlanStep baseModel)
         {
             StringBuilder sb = new();
             sb.Append($"{baseModel.StepType} {baseModel.DefaultProperty}{Environment.NewLine}");

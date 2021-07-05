@@ -18,8 +18,8 @@ plan ""Test Plan 1"" on selection somekey somevalue
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("somevalue", plan["somekey"]);
                     Assert.Null(plan["plan"]);
@@ -39,8 +39,8 @@ plan ""Test Plan 1""
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("somevalue", plan["somekey"]);
                     Assert.Null(plan["plan"]);
@@ -61,8 +61,8 @@ plan ""Test Plan 1""
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("somevalue", plan["somekey"]);
                     Assert.Null(plan["plan"]);
@@ -81,8 +81,8 @@ plan ""Test Plan 1"" on selection somekey
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Null(plan["somekey"]);
                     Assert.Null(plan["plan"]);
@@ -101,8 +101,8 @@ plan ""Test Plan 1"" on selection ""somevalue""
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Null(plan["somekey"]);
                     Assert.Null(plan["plan"]);
@@ -121,8 +121,8 @@ plan ""Test Plan 1"" on selection ""somekey"" somevalue
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Null(plan["somekey"]);
                     Assert.Null(plan["plan"]);
@@ -145,8 +145,8 @@ sync file from path5/path6/file7 to path8/path9/file0
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("somevalue", plan["somekey"]);
                     Assert.Null(plan["plan"]);
@@ -187,8 +187,8 @@ sync file
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("somevalue", plan["somekey"]);
                     Assert.Null(plan["plan"]);
@@ -222,7 +222,7 @@ sync dir from path1/path2 to path3/path4
             var configReader = new ScriptConfigurationReader(new StringConfigurationProvider(script));
             Assert.Collection(configReader.Read(), plan =>
             {
-                Assert.IsType<BackupPlan>(plan);
+                Assert.IsType<Plan>(plan);
                 Assert.Equal("SOMETHINGUNKNOWN", plan.RunType);
                 Assert.Equal("Test Plan", plan.Name);
                 Assert.Collection(plan.Steps,
@@ -249,8 +249,8 @@ SOMETHINGUNKNOWN bla
             var configReader = new ScriptConfigurationReader(new StringConfigurationProvider(script));
             Assert.Collection(configReader.Read(), plan =>
             {
-                Assert.IsType<BackupPlan>(plan);
-                Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                Assert.IsType<Plan>(plan);
+                Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                 Assert.Equal("Test Plan", plan.Name);
                 Assert.Collection(plan.Steps,
                     step =>
@@ -273,8 +273,8 @@ plan 'Test Plan 1' on selection somekey ""some value""
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("some value", plan["somekey"]);
                     Assert.Null(plan["plan"]);
@@ -304,8 +304,8 @@ plan ""Test Plan 1"" on selection somekey """"
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("", plan["somekey"]);
                     Assert.Null(plan["plan"]);
@@ -326,8 +326,8 @@ sync dir from path1/path2 to ""${Some Placeholder}/path4""
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Null(plan["plan"]);
                     Assert.Null(plan["on"]);
@@ -355,8 +355,8 @@ sync dir from path1/path2 to ${Some Placeholder}/path4
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Null(plan["plan"]);
                     Assert.Null(plan["on"]);

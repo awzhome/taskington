@@ -16,26 +16,26 @@ namespace Taskington.Base.Config
             this.configurationProvider = configurationProvider;
         }
 
-        public IEnumerable<BackupPlan> Read()
+        public IEnumerable<Plan> Read()
         {
-            List<BackupPlan> plans = new List<BackupPlan>();
+            List<Plan> plans = new List<Plan>();
 
             configurationProvider.ReadConfigurationStreams(reader =>
             {
-                List<BackupStep> steps = new();
-                BackupPlan backupPlan = new(BackupPlan.OnSelectionRunType)
+                List<PlanStep> steps = new();
+                Plan plan = new(Plan.OnSelectionRunType)
                 {
                     Steps = steps
                 };
 
                 bool beginOfFile = true;
                 bool isFirstCollection = true;
-                BackupStep? lastStep = null;
+                PlanStep? lastStep = null;
                 foreach ((var key, var value, var newCollection) in ParseStream(reader))
                 {
                     if (beginOfFile && !newCollection)
                     {
-                        throw new InvalidOperationException("Faulty backup plan configuration.");
+                        throw new InvalidOperationException("Faulty plan configuration.");
                     }
 
                     if (!beginOfFile && newCollection)
@@ -49,22 +49,22 @@ namespace Taskington.Base.Config
                         {
                             if (key == "plan")
                             {
-                                backupPlan.Name = value;
+                                plan.Name = value;
                             }
                             else
                             {
-                                throw new InvalidOperationException("Faulty backup plan configuration.");
+                                throw new InvalidOperationException("Faulty plan configuration.");
                             }
                         }
                         else
                         {
                             if (key == "on")
                             {
-                                backupPlan.RunType = value;
+                                plan.RunType = value;
                             }
                             else
                             {
-                                backupPlan[key] = value;
+                                plan[key] = value;
                             }
                         }
                     }
@@ -72,7 +72,7 @@ namespace Taskington.Base.Config
                     {
                         if (newCollection)
                         {
-                            lastStep = new BackupStep(key)
+                            lastStep = new PlanStep(key)
                             {
                                 DefaultProperty = value
                             };
@@ -87,7 +87,7 @@ namespace Taskington.Base.Config
                     beginOfFile = false;
                 }
 
-                plans.Add(backupPlan);
+                plans.Add(plan);
             });
 
             return plans;

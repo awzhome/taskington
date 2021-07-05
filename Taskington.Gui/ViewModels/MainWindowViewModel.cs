@@ -55,7 +55,7 @@ namespace Taskington.Gui.ViewModels
             });
         }
 
-        private BackupPlanViewModel CreatePlanViewModel(ExecutableBackupPlan executablePlan) =>
+        private BackupPlanViewModel CreatePlanViewModel(ExecutablePlan executablePlan) =>
             new(executablePlan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand);
 
         private async Task ExecutePlanAsync(BackupPlanViewModel backupPlanViewModel)
@@ -65,7 +65,7 @@ namespace Taskington.Gui.ViewModels
 
         private async Task AddPlanAsync()
         {
-            var newPlan = new BackupPlan(BackupPlan.OnSelectionRunType) { Name = "New plan" };
+            var newPlan = new Plan(Plan.OnSelectionRunType) { Name = "New plan" };
             var newExecutablePlan = configurationManager.InsertPlan(BackupPlans.Count, newPlan);
             configurationManager.SaveConfiguration();
             var newPlanViewModel = CreatePlanViewModel(newExecutablePlan);

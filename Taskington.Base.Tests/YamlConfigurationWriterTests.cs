@@ -35,19 +35,19 @@ namespace Taskington.Base.Tests
             var configWriter = new YamlConfigurationWriter(configProvider);
             var plans = new[]
             {
-                new BackupPlan("selection")
+                new Plan("selection")
                 {
                     Name = "Test Plan 1",
                     ["somekey"] = "somevalue",
-                    Steps = new List<BackupStep>(new[]
+                    Steps = new List<PlanStep>(new[]
                     {
-                        new BackupStep("sync")
+                        new PlanStep("sync")
                         {
                             DefaultProperty = "dir",
                             ["from"] = "path1/path2",
                             ["to"] = "path3/path4"
                         },
-                        new BackupStep("sync")
+                        new PlanStep("sync")
                         {
                             DefaultProperty = "file",
                             ["from"] = "path5/path6/file7",
@@ -55,12 +55,12 @@ namespace Taskington.Base.Tests
                         }
                     })
                 },
-                new BackupPlan("automatically")
+                new Plan("automatically")
                 {
                     Name = "Test Plan 2",
-                    Steps = new List<BackupStep>(new[]
+                    Steps = new List<PlanStep>(new[]
                     {
-                        new BackupStep("sync")
+                        new PlanStep("sync")
                         {
                             DefaultProperty = "dir",
                             ["from"] = "path11/path12",
@@ -88,11 +88,11 @@ namespace Taskington.Base.Tests
             var configWriter = new YamlConfigurationWriter(configProvider);
             var plans = new[]
             {
-                new BackupPlan("selection")
+                new Plan("selection")
                 {
                     Name = "Test Plan 1",
                     ["somekey"] = "somevalue",
-                    Steps = new List<BackupStep>()
+                    Steps = new List<PlanStep>()
                 }
             };
 
@@ -109,7 +109,7 @@ namespace Taskington.Base.Tests
 
             var configProvider = new StringConfigurationProvider();
             var configWriter = new YamlConfigurationWriter(configProvider);
-            var plans = Enumerable.Empty<BackupPlan>();
+            var plans = Enumerable.Empty<Plan>();
 
             configWriter.Write(plans);
             Assert.Equal(yaml, configProvider.Content);

@@ -10,7 +10,7 @@ namespace Taskington.Gui.ViewModels
     public class NewStepTemplate
     {
         public string? Caption { get; set; }
-        public Func<BackupStep>? Creator { get; set; }
+        public Func<PlanStep>? Creator { get; set; }
     }
 
     public class NewStepTemplates
@@ -26,7 +26,7 @@ namespace Taskington.Gui.ViewModels
                 new()
                 {
                     Caption = "Synchronize file",
-                    Creator = () => new BackupStep("sync")
+                    Creator = () => new PlanStep("sync")
                     {
                         DefaultProperty = "file"
                     }
@@ -34,7 +34,7 @@ namespace Taskington.Gui.ViewModels
                 new()
                 {
                     Caption = "Synchronize directory",
-                    Creator = () => new BackupStep("sync")
+                    Creator = () => new PlanStep("sync")
                     {
                         DefaultProperty = "dir"
                     }
@@ -42,7 +42,7 @@ namespace Taskington.Gui.ViewModels
                 new()
                 {
                     Caption = "Synchronize sub-directories",
-                    Creator = () => new BackupStep("sync")
+                    Creator = () => new PlanStep("sync")
                     {
                         DefaultProperty = "sub-dirs"
                     }

@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Taskington.Base.Steps
 {
-    public class BackupStep : Model.Model
+    public class PlanStep : Model.Model
     {
-        public BackupStep(string type) : base()
+        public PlanStep(string type) : base()
         {
             StepType = type;
         }
 
-        public BackupStep(string type, IEnumerable<KeyValuePair<string, string>> initialProperties)
+        public PlanStep(string type, IEnumerable<KeyValuePair<string, string>> initialProperties)
             : base(initialProperties)
         {
             StepType = type;

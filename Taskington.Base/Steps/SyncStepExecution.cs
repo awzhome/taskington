@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Taskington.Base.SystemOperations;
@@ -16,7 +16,7 @@ namespace Taskington.Base.Steps
 
         public string Type => "sync";
 
-        private IEnumerable<string> GetRelevantPathsOfStep(BackupStep step)
+        private IEnumerable<string> GetRelevantPathsOfStep(PlanStep step)
         {
             var from = step["from"];
             if (from != null)
@@ -30,16 +30,16 @@ namespace Taskington.Base.Steps
             }
         }
 
-        public bool CanExecuteSupportedSteps(IEnumerable<BackupStep> backupSteps, Placeholders placeholders)
+        public bool CanExecuteSupportedSteps(IEnumerable<PlanStep> steps, Placeholders placeholders)
         {
-            return !backupSteps
+            return !steps
                 .Where(step => step.StepType == Type)
                 .SelectMany(GetRelevantPathsOfStep)
                 .SelectMany(placeholders.ExtractPlaceholders)
                 .Any(result => result.Placeholder.StartsWith("drive:") && result.Resolved == null);
         }
 
-        public void Execute(BackupStep step, Placeholders placeholders, StepExecutionEvents status)
+        public void Execute(PlanStep step, Placeholders placeholders, StepExecutionEvents status)
         {
             var syncStep = new SyncStep(step, placeholders);
             if (syncStep.From != null && syncStep.To != null)

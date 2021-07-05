@@ -12,7 +12,7 @@ namespace Taskington.Base.Config
 
         protected override IEnumerable<string> GetFileNames()
         {
-            return Directory.GetFiles(GetConfigDirectory(), "*.ppbackup");
+            return Directory.GetFiles(GetConfigDirectory(), "*.taskington");
         }
 
         protected override string GetConfigDirectory()
@@ -21,6 +21,6 @@ namespace Taskington.Base.Config
             return Directory.Exists(localConfig) ? localConfig : AppRoamingPath;
         }
 
-        protected override string WatchedFilesFilter => "*.ppbackup";
+        protected override string WatchedFilesFilter => "*.taskington";
     }
 }

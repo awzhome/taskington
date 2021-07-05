@@ -9,9 +9,9 @@ namespace Taskington.Gui.ViewModels
 {
     public class BackupPlanViewModel : NotifiableObject
     {
-        private readonly ExecutableBackupPlan executableBackupPlan;
+        private readonly ExecutablePlan executableBackupPlan;
 
-        public BackupPlanViewModel(ExecutableBackupPlan executableBackupPlan,
+        public BackupPlanViewModel(ExecutablePlan executableBackupPlan,
             ReactiveCommand<BackupPlanViewModel, Unit> executePlanCommand,
             ReactiveCommand<BackupPlanViewModel, Unit> editPlanCommand,
             ReactiveCommand<BackupPlanViewModel, Unit> removePlanCommand)
@@ -33,13 +33,13 @@ namespace Taskington.Gui.ViewModels
         public ReactiveCommand<BackupPlanViewModel, Unit> EditPlanCommand { get; }
         public ReactiveCommand<BackupPlanViewModel, Unit> RemovePlanCommand { get; }
 
-        public ExecutableBackupPlan ExecutablePlan => executableBackupPlan;
+        public ExecutablePlan ExecutablePlan => executableBackupPlan;
 
         public IPlanExecution Execution => executableBackupPlan.Execution;
 
-        public IEnumerable<BackupStep> Steps => executableBackupPlan.BackupPlan.Steps;
+        public IEnumerable<PlanStep> Steps => executableBackupPlan.Plan.Steps;
 
-        public string? Name => executableBackupPlan.BackupPlan.Name;
+        public string? Name => executableBackupPlan.Plan.Name;
 
         private bool isRunning;
         public bool IsRunning

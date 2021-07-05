@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,7 +19,7 @@ namespace Taskington.Base.Plans
             this.systemOperations = systemOperations;
         }
 
-        public bool CanExecute(BackupPlan plan)
+        public bool CanExecute(Plan plan)
         {
 #if SYS_OPS_DRYRUN
             return true;
@@ -35,7 +35,7 @@ namespace Taskington.Base.Plans
 #endif
         }
 
-        public async Task ExecuteAsync(BackupPlan plan, PlanExecutionEvents events)
+        public async Task ExecuteAsync(Plan plan, PlanExecutionEvents events)
         {
             await Task.Run(() =>
             {

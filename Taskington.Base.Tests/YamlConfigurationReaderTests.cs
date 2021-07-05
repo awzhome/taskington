@@ -33,8 +33,8 @@ namespace Taskington.Base.Tests
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan 1", plan.Name);
                     Assert.Equal("somevalue", plan["somekey"]);
                     Assert.Null(plan["plan"]);
@@ -56,7 +56,7 @@ namespace Taskington.Base.Tests
                 },
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
+                    Assert.IsType<Plan>(plan);
                     Assert.Equal("start", plan.RunType);
                     Assert.Equal("Test Plan 2", plan.Name);
                     Assert.Collection(plan.Steps,
@@ -84,7 +84,7 @@ namespace Taskington.Base.Tests
             var configReader = new YamlConfigurationReader(new StringConfigurationProvider(yaml));
             Assert.Collection(configReader.Read(), plan =>
             {
-                Assert.IsType<BackupPlan>(plan);
+                Assert.IsType<Plan>(plan);
                 Assert.Equal("SOMETHINGUNKNOWN", plan.RunType);
                 Assert.Equal("Test Plan", plan.Name);
                 Assert.Collection(plan.Steps,
@@ -112,8 +112,8 @@ namespace Taskington.Base.Tests
             var configReader = new YamlConfigurationReader(new StringConfigurationProvider(yaml));
             Assert.Collection(configReader.Read(), plan =>
             {
-                Assert.IsType<BackupPlan>(plan);
-                Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                Assert.IsType<Plan>(plan);
+                Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                 Assert.Equal("Test Plan", plan.Name);
                 Assert.Collection(plan.Steps,
                     step =>
@@ -156,8 +156,8 @@ steps:
             Assert.Collection(configReader.Read(),
                 plan =>
                 {
-                    Assert.IsType<BackupPlan>(plan);
-                    Assert.Equal(BackupPlan.OnSelectionRunType, plan.RunType);
+                    Assert.IsType<Plan>(plan);
+                    Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
                     Assert.Equal("Test Plan", plan.Name);
                     Assert.Null(plan["somekey"]);
                 });

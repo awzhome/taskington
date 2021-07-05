@@ -17,9 +17,9 @@ namespace Taskington.Base.Config
             this.configurationProvider = configurationProvider;
         }
 
-        public IEnumerable<BackupPlan> Read()
+        public IEnumerable<Plan> Read()
         {
-            List<BackupPlan> plans = new();
+            List<Plan> plans = new();
 
             configurationProvider.ReadConfigurationStreams(reader =>
             {
@@ -32,9 +32,9 @@ namespace Taskington.Base.Config
                     {
                         foreach (var planEntry in root.Children.OfType<YamlMappingNode>())
                         {
-                            List<BackupStep> steps = new();
-                            var planType = (GetChildNode(planEntry.Children, "on") as YamlScalarNode)?.Value ?? BackupPlan.OnSelectionRunType;
-                            var plan = new BackupPlan(planType)
+                            List<PlanStep> steps = new();
+                            var planType = (GetChildNode(planEntry.Children, "on") as YamlScalarNode)?.Value ?? Plan.OnSelectionRunType;
+                            var plan = new Plan(planType)
                             {
                                 Steps = steps
                             };
@@ -73,7 +73,7 @@ namespace Taskington.Base.Config
 
                                         if (stepType != null)
                                         {
-                                            var step = new BackupStep(stepType);
+                                            var step = new PlanStep(stepType);
 
                                             bool firstProperty = true;
                                             foreach (var stepProperty in stepEntry.Children)
@@ -100,7 +100,7 @@ namespace Taskington.Base.Config
                                         }
                                         else
                                         {
-                                            steps.Add(new InvalidBackupStep("Step has no type."));
+                                            steps.Add(new InvalidPlanStep("Step has no type."));
                                         }
                                     }
                                 }
@@ -112,7 +112,7 @@ namespace Taskington.Base.Config
                 }
                 catch (Exception ex) when (ex is SyntaxErrorException || ex is SemanticErrorException)
                 {
-                    throw new InvalidOperationException("Faulty backup plan configuration.", ex);
+                    throw new InvalidOperationException("Faulty plan configuration.", ex);
                 }
             });
 

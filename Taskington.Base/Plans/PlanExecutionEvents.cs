@@ -1,66 +1,66 @@
-﻿using System;
+using System;
 
 namespace Taskington.Base.Plans
 {
     public class PlanProgressUpdatedEventArgs
     {
-        public PlanProgressUpdatedEventArgs(BackupPlan backupPlan, int progress)
+        public PlanProgressUpdatedEventArgs(Plan plan, int progress)
         {
-            BackupPlan = backupPlan;
+            Plan = plan;
             Progress = progress;
         }
 
-        public BackupPlan BackupPlan { get; }
+        public Plan Plan { get; }
         public int Progress { get; }
     }
 
     public class PlanStatusTextUpdatedEventArgs
     {
-        public PlanStatusTextUpdatedEventArgs(BackupPlan backupPlan, string statusText)
+        public PlanStatusTextUpdatedEventArgs(Plan plan, string statusText)
         {
-            BackupPlan = backupPlan;
+            Plan = plan;
             StatusText = statusText;
         }
 
-        public BackupPlan BackupPlan { get; }
+        public Plan Plan { get; }
         public string StatusText { get; }
     }
 
     public class PlanCanExecuteUpdatedEventArgs
     {
-        public PlanCanExecuteUpdatedEventArgs(BackupPlan backupPlan, bool canExecute)
+        public PlanCanExecuteUpdatedEventArgs(Plan plan, bool canExecute)
         {
-            BackupPlan = backupPlan;
+            Plan = plan;
             CanExecute = canExecute;
         }
 
-        public BackupPlan BackupPlan { get; }
+        public Plan Plan { get; }
         public bool CanExecute { get; }
     }
 
     public class PlanHasErrorsUpdatedEventArgs
     {
-        public PlanHasErrorsUpdatedEventArgs(BackupPlan backupPlan, bool hasErrors, string statusText = "")
+        public PlanHasErrorsUpdatedEventArgs(Plan plan, bool hasErrors, string statusText = "")
         {
-            BackupPlan = backupPlan;
+            Plan = plan;
             HasErrors = hasErrors;
             StatusText = statusText;
         }
 
-        public BackupPlan BackupPlan { get; }
+        public Plan Plan { get; }
         public bool HasErrors { get; }
         public string StatusText { get; }
     }
 
     public class PlanIsRunningUpdatedEventArgs
     {
-        public PlanIsRunningUpdatedEventArgs(BackupPlan backupPlan, bool isRunning)
+        public PlanIsRunningUpdatedEventArgs(Plan plan, bool isRunning)
         {
-            BackupPlan = backupPlan;
+            Plan = plan;
             IsRunning = isRunning;
         }
 
-        public BackupPlan BackupPlan { get; }
+        public Plan Plan { get; }
         public bool IsRunning { get; }
     }
 
@@ -75,18 +75,18 @@ namespace Taskington.Base.Plans
 
     public class PlanExecutionEvents : IPlanExecutionEvents
     {
-        private readonly BackupPlan backupPlan;
+        private readonly Plan plan;
 
-        public PlanExecutionEvents(BackupPlan backupPlan)
+        public PlanExecutionEvents(Plan plan)
         {
-            this.backupPlan = backupPlan;
+            this.plan = plan;
         }
 
         public event EventHandler<PlanProgressUpdatedEventArgs>? Progress;
 
         public PlanExecutionEvents OnProgress(int progress)
         {
-            Progress?.Invoke(this, new PlanProgressUpdatedEventArgs(backupPlan, progress));
+            Progress?.Invoke(this, new PlanProgressUpdatedEventArgs(plan, progress));
             return this;
         }
 
@@ -94,7 +94,7 @@ namespace Taskington.Base.Plans
 
         public PlanExecutionEvents OnStatusText(string statusText)
         {
-            StatusText?.Invoke(this, new PlanStatusTextUpdatedEventArgs(backupPlan, statusText));
+            StatusText?.Invoke(this, new PlanStatusTextUpdatedEventArgs(plan, statusText));
             return this;
         }
 
@@ -102,7 +102,7 @@ namespace Taskington.Base.Plans
 
         public PlanExecutionEvents OnCanExecute(bool canExecute)
         {
-            CanExecute?.Invoke(this, new PlanCanExecuteUpdatedEventArgs(backupPlan, canExecute));
+            CanExecute?.Invoke(this, new PlanCanExecuteUpdatedEventArgs(plan, canExecute));
             return this;
         }
 
@@ -110,7 +110,7 @@ namespace Taskington.Base.Plans
 
         public PlanExecutionEvents OnHasErrors(bool hasErrors, string statusText = "")
         {
-            HasErrors?.Invoke(this, new PlanHasErrorsUpdatedEventArgs(backupPlan, hasErrors, statusText));
+            HasErrors?.Invoke(this, new PlanHasErrorsUpdatedEventArgs(plan, hasErrors, statusText));
             return this;
         }
 
@@ -118,7 +118,7 @@ namespace Taskington.Base.Plans
 
         public PlanExecutionEvents OnIsRunning(bool isRunning)
         {
-            IsRunning?.Invoke(this, new PlanIsRunningUpdatedEventArgs(backupPlan, isRunning));
+            IsRunning?.Invoke(this, new PlanIsRunningUpdatedEventArgs(plan, isRunning));
             return this;
         }
     }

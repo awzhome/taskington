@@ -23,7 +23,7 @@ namespace Taskington.Gui.ViewModels
         public Interaction<Unit, string>? OpenFolderDialogInteraction { get; set; }
         public Interaction<Unit, string?>? OpenFileDialogInteraction { get; set; }
 
-        public EditSyncStepViewModel(BackupStep step) : base(step)
+        public EditSyncStepViewModel(PlanStep step) : base(step)
         {
             SelectFromCommand = ReactiveCommand.CreateFromTask(OpenSelectFromDialogAsync);
             SelectToCommand = ReactiveCommand.CreateFromTask(OpenSelectToDialogAsync);
@@ -59,14 +59,14 @@ namespace Taskington.Gui.ViewModels
             set => this.RaiseAndSetIfChanged(ref to, value);
         }
 
-        private void InitializeFromBasicModel(BackupStep step)
+        private void InitializeFromBasicModel(PlanStep step)
         {
             SelectedType = SyncTypes.FirstOrDefault(entry => entry.Type == step.DefaultProperty);
             From = step["from"];
             To = step["to"];
         }
 
-        public override BackupStep ConvertToStep()
+        public override PlanStep ConvertToStep()
         {
             var step = base.ConvertToStep();
             step["from"] = from;

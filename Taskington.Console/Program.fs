@@ -1,4 +1,4 @@
-﻿open System
+open System
 open PPBackup.Console
 open Taskington.Base
 open Taskington.Base.Plans
@@ -8,7 +8,7 @@ let main argv =
     let application = Application()
     application.Start()
 
-    let executablePlans = application.ServiceProvider.Get<seq<ExecutableBackupPlan>>()
+    let executablePlans = application.ServiceProvider.Get<seq<ExecutablePlan>>()
 
     let mutable cursorPos = UI.getCursorPos()
     let mutable planName = ""
@@ -37,7 +37,7 @@ let main argv =
         plan.Events.IsRunning.AddHandler (fun o e ->
             if e.IsRunning then
                 initProgress()
-                planName <- e.BackupPlan.Name
+                planName <- e.Plan.Name
             isRunning <- e.IsRunning)
         plan.Events.Progress.AddHandler (fun o e ->
             progress <- e.Progress
@@ -52,7 +52,7 @@ let main argv =
 
     UI.menu "PPBackup" (executablePlans
         |> Seq.map(fun plan ->
-            (plan.BackupPlan.Name, fun() ->
+            (plan.Plan.Name, fun() ->
                 cursorPos <- UI.getCursorPos()
                 plan.Execution.ExecuteAsync().Wait()
             )))

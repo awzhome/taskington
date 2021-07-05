@@ -6,9 +6,9 @@ namespace Taskington.WinApp.ViewModel
 {
     class BackupPlanViewModel : NotifiableObject
     {
-        private readonly ExecutableBackupPlan executableBackupPlan;
+        private readonly ExecutablePlan executableBackupPlan;
 
-        public BackupPlanViewModel(ExecutableBackupPlan executableBackupPlan)
+        public BackupPlanViewModel(ExecutablePlan executableBackupPlan)
         {
             this.executableBackupPlan = executableBackupPlan;
 
@@ -23,7 +23,7 @@ namespace Taskington.WinApp.ViewModel
 
         public RelayCommand ExecutePlanCommand { get; }
 
-        public string Name => executableBackupPlan.BackupPlan.Name;
+        public string Name => executableBackupPlan.Plan.Name;
 
         private bool isRunning;
         public bool IsRunning

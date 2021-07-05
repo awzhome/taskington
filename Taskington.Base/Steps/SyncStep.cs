@@ -1,4 +1,4 @@
-﻿using Taskington.Base.SystemOperations;
+using Taskington.Base.SystemOperations;
 
 namespace Taskington.Base.Steps
 {
@@ -13,15 +13,15 @@ namespace Taskington.Base.Steps
     {
         private readonly Placeholders placeholders;
 
-        public SyncStep(BackupStep step, Placeholders placeholders)
+        public SyncStep(PlanStep step, Placeholders placeholders)
         {
-            BackupStep = step;
+            PlanStep = step;
             this.placeholders = placeholders;
         }
 
-        public BackupStep BackupStep { get; private set; }
+        public PlanStep PlanStep { get; private set; }
 
-        public SynchronizedObject SynchronizedObject => BackupStep.DefaultProperty switch
+        public SynchronizedObject SynchronizedObject => PlanStep.DefaultProperty switch
         {
             "dir" => SynchronizedObject.Directory,
             "sub-dirs" => SynchronizedObject.SubDirectories,
@@ -45,10 +45,10 @@ namespace Taskington.Base.Steps
             }
         }
 
-        public string? From => placeholders.ResolvePlaceholders(BackupStep["from"]);
-        public string? To => placeholders.ResolvePlaceholders(BackupStep["to"]);
-        public string? File => placeholders.ResolvePlaceholders(BackupStep["name"]);
-        public string? Between => placeholders.ResolvePlaceholders(BackupStep["between"]);
-        public string? And => placeholders.ResolvePlaceholders(BackupStep["and"]);
+        public string? From => placeholders.ResolvePlaceholders(PlanStep["from"]);
+        public string? To => placeholders.ResolvePlaceholders(PlanStep["to"]);
+        public string? File => placeholders.ResolvePlaceholders(PlanStep["name"]);
+        public string? Between => placeholders.ResolvePlaceholders(PlanStep["between"]);
+        public string? And => placeholders.ResolvePlaceholders(PlanStep["and"]);
     }
 }

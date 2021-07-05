@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 namespace Taskington.Base.Config
@@ -6,7 +6,7 @@ namespace Taskington.Base.Config
     public class YamlFileConfigurationProvider : IStreamReaderProvider, IStreamWriterProvider
     {
         static string AppRoamingPath =>
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ppbackup");
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "taskington");
 
         public void ReadConfigurationStreams(Action<TextReader> configReader)
         {
@@ -22,7 +22,7 @@ namespace Taskington.Base.Config
 
         private static string DetermineFileName()
         {
-            string fileName = "ppbackup.yml";
+            string fileName = "taskington.yml";
             string userFilePath = Path.Combine(AppRoamingPath, fileName);
             string workDirFilePath = Path.Combine(Environment.CurrentDirectory, fileName);
 
@@ -35,7 +35,7 @@ namespace Taskington.Base.Config
                 return userFilePath;
             }
 
-            throw new FileNotFoundException("No backup configuration file found.");
+            throw new FileNotFoundException("No configuration file found.");
         }
     }
 }

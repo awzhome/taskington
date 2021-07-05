@@ -13,7 +13,7 @@ namespace Taskington.Base.Config
 
         private bool isInitialized = false;
         private bool reloadDelayed = false;
-        private readonly HashSet<BackupPlan> runningPlans = new();
+        private readonly HashSet<Plan> runningPlans = new();
 
         private readonly IAppServiceProvider serviceProvider;
         private readonly ApplicationEvents applicationEvents;
@@ -34,8 +34,8 @@ namespace Taskington.Base.Config
             applicationEvents.ConfigurationChanged += OnConfigurationChanged;
         }
 
-        private readonly List<ExecutableBackupPlan> executablePlans = new();
-        public IEnumerable<ExecutableBackupPlan> ExecutablePlans => executablePlans;
+        private readonly List<ExecutablePlan> executablePlans = new();
+        public IEnumerable<ExecutablePlan> ExecutablePlans => executablePlans;
 
         public void Initialize()
         {
@@ -92,12 +92,12 @@ namespace Taskington.Base.Config
             executablePlans.AddRange(configurationReader.Read().Select(CreateExecutablePlan));
         }
 
-        private ExecutableBackupPlan CreateExecutablePlan(BackupPlan plan)
+        private ExecutablePlan CreateExecutablePlan(Plan plan)
         {
-            if (plan.Steps.OfType<InvalidBackupStep>().Any())
+            if (plan.Steps.OfType<InvalidPlanStep>().Any())
             {
                 var events = CreatePlanExecutionEvents(plan);
-                return new ExecutableBackupPlan(
+                return new ExecutablePlan(
                     plan,
                     new InvalidPlanExecution(events, "Plan contains invalid steps."),
                     events);
@@ -109,15 +109,15 @@ namespace Taskington.Base.Config
                 if (planExecutionCreator == null)
                 {
                     var events = CreatePlanExecutionEvents(plan);
-                    return new ExecutableBackupPlan(
+                    return new ExecutablePlan(
                         plan,
-                        new InvalidPlanExecution(events, $"Unknown backup plan run type '{plan.RunType}'"),
+                        new InvalidPlanExecution(events, $"Unknown plan run type '{plan.RunType}'"),
                         events);
                 }
                 else
                 {
                     var events = CreatePlanExecutionEvents(plan);
-                    return new ExecutableBackupPlan(
+                    return new ExecutablePlan(
                          plan,
                          planExecutionCreator.Create(plan, events),
                          events);
@@ -125,7 +125,7 @@ namespace Taskington.Base.Config
             }
         }
 
-        private PlanExecutionEvents CreatePlanExecutionEvents(BackupPlan plan)
+        private PlanExecutionEvents CreatePlanExecutionEvents(Plan plan)
         {
             var events = new PlanExecutionEvents(plan);
             events.IsRunning += OnPlanIsRunningUpdated;
@@ -138,7 +138,7 @@ namespace Taskington.Base.Config
             {
                 lock (configurationLock)
                 {
-                    runningPlans.Add(e.BackupPlan);
+                    runningPlans.Add(e.Plan);
                 }
             }
             else
@@ -146,7 +146,7 @@ namespace Taskington.Base.Config
                 bool configReloaded = false;
                 lock (configurationLock)
                 {
-                    runningPlans.Remove(e.BackupPlan);
+                    runningPlans.Remove(e.Plan);
                     if (runningPlans.Count == 0 && reloadDelayed)
                     {
                         applicationEvents.OnConfigurationReloadDelayed(false);
@@ -163,10 +163,10 @@ namespace Taskington.Base.Config
 
         public void SaveConfiguration()
         {
-            configurationWriter.Write(executablePlans.Select(ep => ep.BackupPlan));
+            configurationWriter.Write(executablePlans.Select(ep => ep.Plan));
         }
 
-        public ExecutableBackupPlan InsertPlan(int index, BackupPlan newPlan)
+        public ExecutablePlan InsertPlan(int index, Plan newPlan)
         {
             var newExecutablePlan = CreateExecutablePlan(newPlan);
             if (index > -1)
@@ -181,7 +181,7 @@ namespace Taskington.Base.Config
             return newExecutablePlan;
         }
 
-        public void RemovePlan(ExecutableBackupPlan executablePlan)
+        public void RemovePlan(ExecutablePlan executablePlan)
         {
             int index = executablePlans.IndexOf(executablePlan);
             if (index > -1)
@@ -191,7 +191,7 @@ namespace Taskington.Base.Config
             }
         }
 
-        public ExecutableBackupPlan ReplacePlan(ExecutableBackupPlan executablePlan, BackupPlan newPlan)
+        public ExecutablePlan ReplacePlan(ExecutablePlan executablePlan, Plan newPlan)
         {
             var newExecutablePlan = CreateExecutablePlan(newPlan);
             int index = executablePlans.IndexOf(executablePlan);

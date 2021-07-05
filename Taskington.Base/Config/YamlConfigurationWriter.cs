@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Taskington.Base.Plans;
 using YamlDotNet.RepresentationModel;
@@ -15,7 +15,7 @@ namespace Taskington.Base.Config
             this.configWriterProvider = configWriterProvider;
         }
 
-        public void Write(IEnumerable<BackupPlan> plans)
+        public void Write(IEnumerable<Plan> plans)
         {
             configWriterProvider.WriteConfigurationStreams(writer =>
             {

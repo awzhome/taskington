@@ -7,9 +7,9 @@ namespace Taskington.Gui.ViewModels
 {
     public class EditStepViewModelBase : ViewModelBase
     {
-        private readonly BackupStep step;
+        private readonly PlanStep step;
 
-        public EditStepViewModelBase(BackupStep step)
+        public EditStepViewModelBase(PlanStep step)
         {
             this.step = step;
             InitializeFromBasicModel();
@@ -50,7 +50,7 @@ namespace Taskington.Gui.ViewModels
             Caption = sb.ToString();
         }
 
-        public virtual BackupStep ConvertToStep()
+        public virtual PlanStep ConvertToStep()
         {
             return new(stepType!, step.Properties)
             {

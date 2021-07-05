@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -10,7 +10,7 @@ namespace Taskington.Base.Config
         private readonly ApplicationEvents events;
 
         protected static string AppRoamingPath =>
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ppbackup");
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "taskington");
 
         public WatchingFileReaderProvider(ApplicationEvents events)
         {
