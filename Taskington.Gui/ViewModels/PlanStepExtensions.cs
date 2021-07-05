@@ -2,9 +2,9 @@ using Taskington.Base.Steps;
 
 namespace Taskington.Gui.ViewModels
 {
-    public static class BackupStepExtensions
+    public static class PlanStepExtensions
     {
-        public static EditStepViewModelBase ToViewModel(this PlanStep step, EditBackupPlanViewModel parentModel) => step switch
+        public static EditStepViewModelBase ToViewModel(this PlanStep step, EditPlanViewModel parentModel) => step switch
         {
             { StepType: "sync" } => new EditSyncStepViewModel(step)
             {

@@ -12,9 +12,9 @@ using System.Linq;
 
 namespace Taskington.Gui.Views
 {
-    public class EditBackupPlanWindow : ReactiveWindow<EditBackupPlanViewModel>
+    public class EditPlanWindow : ReactiveWindow<EditPlanViewModel>
     {
-        public EditBackupPlanWindow()
+        public EditPlanWindow()
         {
             InitializeComponent();
 #if DEBUG

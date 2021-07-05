@@ -15,20 +15,20 @@ namespace Taskington.Gui.ViewModels
     {
         private readonly Application application;
         private readonly ConfigurationManager configurationManager;
-        public ObservableCollection<BackupPlanViewModel> BackupPlans { get; }
+        public ObservableCollection<PlanViewModel> Plans { get; }
 
         public ReactiveCommand<Unit, Unit> AddPlanCommand { get; }
-        public ReactiveCommand<BackupPlanViewModel, Unit> ExecutePlanCommand { get; }
-        public Interaction<EditBackupPlanViewModel, bool> ShowPlanEditDialog { get; }
-        public ReactiveCommand<BackupPlanViewModel, Unit> EditPlanCommand { get; }
-        public ReactiveCommand<BackupPlanViewModel, Unit> RemovePlanCommand { get; }
+        public ReactiveCommand<PlanViewModel, Unit> ExecutePlanCommand { get; }
+        public Interaction<EditPlanViewModel, bool> ShowPlanEditDialog { get; }
+        public ReactiveCommand<PlanViewModel, Unit> EditPlanCommand { get; }
+        public ReactiveCommand<PlanViewModel, Unit> RemovePlanCommand { get; }
 
         public MainWindowViewModel(Application application, ConfigurationManager configurationManager, IApplicationEvents applicationEvents)
         {
             this.application = application;
             this.configurationManager = configurationManager;
 
-            BackupPlans = new ObservableCollection<BackupPlanViewModel>();
+            Plans = new ObservableCollection<PlanViewModel>();
             applicationEvents.ConfigurationReloaded += (sender, e) =>
             {
                 UpdatePlanViewModels();
@@ -36,65 +36,65 @@ namespace Taskington.Gui.ViewModels
             UpdatePlanViewModels();
 
             AddPlanCommand = ReactiveCommand.CreateFromTask(AddPlanAsync);
-            ExecutePlanCommand = ReactiveCommand.CreateFromTask<BackupPlanViewModel>(ExecutePlanAsync);
+            ExecutePlanCommand = ReactiveCommand.CreateFromTask<PlanViewModel>(ExecutePlanAsync);
             ShowPlanEditDialog = new();
-            EditPlanCommand = ReactiveCommand.CreateFromTask<BackupPlanViewModel>(EditPlanAsync);
-            RemovePlanCommand = ReactiveCommand.Create<BackupPlanViewModel>(RemovePlan);
+            EditPlanCommand = ReactiveCommand.CreateFromTask<PlanViewModel>(EditPlanAsync);
+            RemovePlanCommand = ReactiveCommand.Create<PlanViewModel>(RemovePlan);
         }
 
         private void UpdatePlanViewModels()
         {
             Dispatcher.UIThread.Post(() =>
             {
-                BackupPlans.Clear();
+                Plans.Clear();
                 foreach (var plan in configurationManager.ExecutablePlans)
                 {
-                    BackupPlans.Add(CreatePlanViewModel(plan));
+                    Plans.Add(CreatePlanViewModel(plan));
                 }
                 application.NotifyInitialStates();
             });
         }
 
-        private BackupPlanViewModel CreatePlanViewModel(ExecutablePlan executablePlan) =>
+        private PlanViewModel CreatePlanViewModel(ExecutablePlan executablePlan) =>
             new(executablePlan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand);
 
-        private async Task ExecutePlanAsync(BackupPlanViewModel backupPlanViewModel)
+        private async Task ExecutePlanAsync(PlanViewModel planViewModel)
         {
-            await backupPlanViewModel.Execution.ExecuteAsync();
+            await planViewModel.Execution.ExecuteAsync();
         }
 
         private async Task AddPlanAsync()
         {
             var newPlan = new Plan(Plan.OnSelectionRunType) { Name = "New plan" };
-            var newExecutablePlan = configurationManager.InsertPlan(BackupPlans.Count, newPlan);
+            var newExecutablePlan = configurationManager.InsertPlan(Plans.Count, newPlan);
             configurationManager.SaveConfiguration();
             var newPlanViewModel = CreatePlanViewModel(newExecutablePlan);
-            BackupPlans.Add(newPlanViewModel);
+            Plans.Add(newPlanViewModel);
             newExecutablePlan.Execution.NotifyInitialStates();
             await EditPlanAsync(newPlanViewModel);
         }
 
-        private async Task EditPlanAsync(BackupPlanViewModel backupPlanViewModel)
+        private async Task EditPlanAsync(PlanViewModel planViewModel)
         {
-            var editPlanViewModel = new EditBackupPlanViewModel(backupPlanViewModel);
+            var editPlanViewModel = new EditPlanViewModel(planViewModel);
             var shouldSave = await ShowPlanEditDialog.Handle(editPlanViewModel);
             if (shouldSave)
             {
-                var newExecutablePlan = configurationManager.ReplacePlan(backupPlanViewModel.ExecutablePlan, editPlanViewModel.ConvertToPlan());
-                int existingIndex = BackupPlans.IndexOf(backupPlanViewModel);
+                var newExecutablePlan = configurationManager.ReplacePlan(planViewModel.ExecutablePlan, editPlanViewModel.ConvertToPlan());
+                int existingIndex = Plans.IndexOf(planViewModel);
                 if (existingIndex >= 0)
                 {
-                    BackupPlans[existingIndex] = new BackupPlanViewModel(newExecutablePlan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand);
+                    Plans[existingIndex] = new PlanViewModel(newExecutablePlan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand);
                     newExecutablePlan.Execution.NotifyInitialStates();
                 }
                 configurationManager.SaveConfiguration();
             }
         }
 
-        private void RemovePlan(BackupPlanViewModel backupPlanViewModel)
+        private void RemovePlan(PlanViewModel planViewModel)
         {
-            BackupPlans.Remove(backupPlanViewModel);
-            configurationManager.RemovePlan(backupPlanViewModel.ExecutablePlan);
+            Plans.Remove(planViewModel);
+            configurationManager.RemovePlan(planViewModel.ExecutablePlan);
             configurationManager.SaveConfiguration();
         }
     }

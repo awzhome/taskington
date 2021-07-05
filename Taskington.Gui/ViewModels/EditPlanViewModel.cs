@@ -6,7 +6,7 @@ using Taskington.Base.Plans;
 
 namespace Taskington.Gui.ViewModels
 {
-    public class EditBackupPlanViewModel : ViewModelBase
+    public class EditPlanViewModel : ViewModelBase
     {
         private readonly Plan plan;
 
@@ -18,9 +18,9 @@ namespace Taskington.Gui.ViewModels
         public Interaction<Unit, string> OpenFolderDialog { get; }
         public Interaction<Unit, string?> OpenFileDialog { get; }
 
-        public EditBackupPlanViewModel(BackupPlanViewModel backupPlanViewModel)
+        public EditPlanViewModel(PlanViewModel planViewModel)
         {
-            plan = backupPlanViewModel.ExecutablePlan.Plan;
+            plan = planViewModel.ExecutablePlan.Plan;
 
             CloseCommand = ReactiveCommand.Create<bool, bool>(save => save);
 

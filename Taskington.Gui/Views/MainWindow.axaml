@@ -11,7 +11,7 @@
         Icon="/Assets/avalonia-logo.ico"
 		Height="800" Width="600" MinWidth="600"
 		WindowStartupLocation="CenterScreen"
-        Title="Perspectives Pictured Backup">
+        Title="Taskington">
 
     <Window.Styles>
         <Style Selector="Image.ppLogo">
@@ -32,20 +32,19 @@
     </Window.Styles>
 
     <Window.DataTemplates>
-        <DataTemplate DataType="{x:Type vm:BackupPlanViewModel}">
-            <views:BackupPlanView />
+        <DataTemplate DataType="{x:Type vm:PlanViewModel}">
+            <views:PlanView />
         </DataTemplate>
     </Window.DataTemplates>
 
     <Grid RowDefinitions="Auto,*,Auto" Margin="0,20,0,0">
         <Grid Grid.Row="0">
             <Image Classes="ppLogo" Source="/Assets/PerspectivesPictured.png" />
-            <TextBlock Classes="ppLogoText">Backup</TextBlock>
         </Grid>
 
         <ScrollViewer Grid.Row="1" Margin="50,50,50,0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical">
-                <ItemsControl Items="{Binding BackupPlans}" HorizontalAlignment="Center">
+                <ItemsControl Items="{Binding Plans}" HorizontalAlignment="Center">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel MinWidth="400" Orientation="Vertical" />

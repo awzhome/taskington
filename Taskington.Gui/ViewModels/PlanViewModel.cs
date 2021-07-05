@@ -7,39 +7,39 @@ using Taskington.Base.Steps;
 
 namespace Taskington.Gui.ViewModels
 {
-    public class BackupPlanViewModel : NotifiableObject
+    public class PlanViewModel : NotifiableObject
     {
-        private readonly ExecutablePlan executableBackupPlan;
+        private readonly ExecutablePlan executablePlan;
 
-        public BackupPlanViewModel(ExecutablePlan executableBackupPlan,
-            ReactiveCommand<BackupPlanViewModel, Unit> executePlanCommand,
-            ReactiveCommand<BackupPlanViewModel, Unit> editPlanCommand,
-            ReactiveCommand<BackupPlanViewModel, Unit> removePlanCommand)
+        public PlanViewModel(ExecutablePlan executablePlan,
+            ReactiveCommand<PlanViewModel, Unit> executePlanCommand,
+            ReactiveCommand<PlanViewModel, Unit> editPlanCommand,
+            ReactiveCommand<PlanViewModel, Unit> removePlanCommand)
         {
-            this.executableBackupPlan = executableBackupPlan;
+            this.executablePlan = executablePlan;
 
-            executableBackupPlan.Events.IsRunning += (o, e) => IsRunning = e.IsRunning;
-            executableBackupPlan.Events.Progress += (o, e) => Progress = e.Progress;
-            executableBackupPlan.Events.StatusText += (o, e) => StatusText = e.StatusText;
-            executableBackupPlan.Events.HasErrors += (o, e) => HasErrors = e.HasErrors;
-            executableBackupPlan.Events.CanExecute += (o, e) => CanExecute = e.CanExecute;
+            executablePlan.Events.IsRunning += (o, e) => IsRunning = e.IsRunning;
+            executablePlan.Events.Progress += (o, e) => Progress = e.Progress;
+            executablePlan.Events.StatusText += (o, e) => StatusText = e.StatusText;
+            executablePlan.Events.HasErrors += (o, e) => HasErrors = e.HasErrors;
+            executablePlan.Events.CanExecute += (o, e) => CanExecute = e.CanExecute;
 
             ExecutePlanCommand = executePlanCommand;
             EditPlanCommand = editPlanCommand;
             RemovePlanCommand = removePlanCommand;
         }
 
-        public ReactiveCommand<BackupPlanViewModel, Unit> ExecutePlanCommand { get; }
-        public ReactiveCommand<BackupPlanViewModel, Unit> EditPlanCommand { get; }
-        public ReactiveCommand<BackupPlanViewModel, Unit> RemovePlanCommand { get; }
+        public ReactiveCommand<PlanViewModel, Unit> ExecutePlanCommand { get; }
+        public ReactiveCommand<PlanViewModel, Unit> EditPlanCommand { get; }
+        public ReactiveCommand<PlanViewModel, Unit> RemovePlanCommand { get; }
 
-        public ExecutablePlan ExecutablePlan => executableBackupPlan;
+        public ExecutablePlan ExecutablePlan => executablePlan;
 
-        public IPlanExecution Execution => executableBackupPlan.Execution;
+        public IPlanExecution Execution => executablePlan.Execution;
 
-        public IEnumerable<PlanStep> Steps => executableBackupPlan.Plan.Steps;
+        public IEnumerable<PlanStep> Steps => executablePlan.Plan.Steps;
 
-        public string? Name => executableBackupPlan.Plan.Name;
+        public string? Name => executablePlan.Plan.Name;
 
         private bool isRunning;
         public bool IsRunning

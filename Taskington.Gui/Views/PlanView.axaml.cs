@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace Taskington.Gui.Views
 {
-    public class BackupPlanView : UserControl
+    public class PlanView : UserControl
     {
-        public BackupPlanView()
+        public PlanView()
         {
             InitializeComponent();
         }

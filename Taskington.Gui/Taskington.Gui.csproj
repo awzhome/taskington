@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
@@ -7,7 +7,7 @@
     <PackageId>Taskington.Gui</PackageId>
     <Authors>Andreas Weizel</Authors>
     <Company>Andreas Weizel</Company>
-    <Product>PPBackup</Product>
+    <Product>Taskington</Product>
     <Description>Taskington GUI Frontend</Description>
     <Copyright>Copyright (c) 2021 Andreas Weizel</Copyright>
     <AssemblyVersion>0.1.0.99</AssemblyVersion>
@@ -31,5 +31,13 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Views\EditPlanWindow.axaml.cs">
+      <DependentUpon>EditPlanWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\PlanView.axaml.cs">
+      <DependentUpon>PlanView.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
