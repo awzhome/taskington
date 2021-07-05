@@ -14,7 +14,7 @@ namespace PPBackup.Base.Tests
         {
             string yaml =
 @"- plan: Test Plan 1
-  run: manually
+  on: selection
   somekey: somevalue
   steps:
   - sync: dir
@@ -24,7 +24,7 @@ namespace PPBackup.Base.Tests
     from: path5/path6/file7
     to: path8/path9/file0
 - plan: Test Plan 2
-  run: automatically
+  on: automatically
   steps:
   - sync: dir
     from: path11/path12
@@ -35,7 +35,7 @@ namespace PPBackup.Base.Tests
             var configWriter = new YamlConfigurationWriter(configProvider);
             var plans = new[]
             {
-                new BackupPlan("manually")
+                new BackupPlan("selection")
                 {
                     Name = "Test Plan 1",
                     ["somekey"] = "somevalue",
@@ -79,7 +79,7 @@ namespace PPBackup.Base.Tests
         {
             string yaml =
     @"- plan: Test Plan 1
-  run: manually
+  on: selection
   somekey: somevalue
   steps: []
 ";
@@ -88,7 +88,7 @@ namespace PPBackup.Base.Tests
             var configWriter = new YamlConfigurationWriter(configProvider);
             var plans = new[]
             {
-                new BackupPlan("manually")
+                new BackupPlan("selection")
                 {
                     Name = "Test Plan 1",
                     ["somekey"] = "somevalue",
