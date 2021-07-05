@@ -1,8 +1,8 @@
-﻿using PPBackup.Base.Steps;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Taskington.Base.Steps;
 
-namespace PPBackup.Base.Plans
+namespace Taskington.Base.Plans
 {
     public class BackupPlan : Model.Model
     {
@@ -12,7 +12,7 @@ namespace PPBackup.Base.Plans
         {
             RunType = type;
         }
-        
+
         public BackupPlan(string type, IEnumerable<KeyValuePair<string, string>> initialProperties)
             : base(initialProperties)
         {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PPBackup.Base.Steps
+namespace Taskington.Base.Steps
 {
     public class BackupStep : Model.Model
     {

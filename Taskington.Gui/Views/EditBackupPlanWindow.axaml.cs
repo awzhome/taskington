@@ -3,14 +3,14 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using ReactiveUI;
 using Avalonia.ReactiveUI;
-using PPBackup.Gui.ViewModels;
+using Taskington.Gui.ViewModels;
 using System;
 using Avalonia.Interactivity;
 using System.Threading.Tasks;
 using System.Reactive;
 using System.Linq;
 
-namespace PPBackup.Gui.Views
+namespace Taskington.Gui.Views
 {
     public class EditBackupPlanWindow : ReactiveWindow<EditBackupPlanViewModel>
     {

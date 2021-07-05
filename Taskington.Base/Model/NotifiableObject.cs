@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace PPBackup.Base.Model
+namespace Taskington.Base.Model
 {
     public abstract class NotifiableObject : INotifyPropertyChanged
     {

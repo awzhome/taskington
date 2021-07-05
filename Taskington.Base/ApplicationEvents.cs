@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PPBackup.Base
+namespace Taskington.Base
 {
     public interface IApplicationEvents
     {

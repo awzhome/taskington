@@ -1,12 +1,12 @@
-﻿using PPBackup.Base.Steps;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Taskington.Base.Steps;
 
-namespace PPBackup.Gui.ViewModels
+namespace Taskington.Gui.ViewModels
 {
     public class EditGeneralStepViewModel : EditStepViewModelBase
     {

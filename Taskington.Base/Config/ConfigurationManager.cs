@@ -1,11 +1,11 @@
-﻿using PPBackup.Base.Plans;
-using PPBackup.Base.Service;
-using PPBackup.Base.Steps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Taskington.Base.Plans;
+using Taskington.Base.Service;
+using Taskington.Base.Steps;
 
-namespace PPBackup.Base.Config
+namespace Taskington.Base.Config
 {
     public class ConfigurationManager : IAutoInitializable
     {
@@ -147,7 +147,7 @@ namespace PPBackup.Base.Config
                 lock (configurationLock)
                 {
                     runningPlans.Remove(e.BackupPlan);
-                    if ((runningPlans.Count == 0) && reloadDelayed)
+                    if (runningPlans.Count == 0 && reloadDelayed)
                     {
                         applicationEvents.OnConfigurationReloadDelayed(false);
                         reloadDelayed = false;

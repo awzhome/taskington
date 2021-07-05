@@ -1,10 +1,10 @@
-﻿using PPBackup.Base.Plans;
 using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using Taskington.Base.Plans;
 
-namespace PPBackup.Gui.ViewModels
+namespace Taskington.Gui.ViewModels
 {
     public class EditBackupPlanViewModel : ViewModelBase
     {

@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
-namespace PPBackup.Gui.Views
+namespace Taskington.Gui.Views
 {
     public class BackupPlanView : UserControl
     {

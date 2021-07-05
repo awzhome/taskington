@@ -1,4 +1,4 @@
-﻿namespace PPBackup.Base.Service
+﻿namespace Taskington.Base.Service
 {
     public interface IAutoInitializable
     {

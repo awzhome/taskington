@@ -1,10 +1,10 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using PPBackup.Gui.ViewModels;
-using PPBackup.Gui.Views;
+using Taskington.Gui.ViewModels;
+using Taskington.Gui.Views;
 
-namespace PPBackup.Gui
+namespace Taskington.Gui
 {
     public class App : Application
     {
@@ -17,7 +17,7 @@ namespace PPBackup.Gui
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var application = new Base.Application(binder => binder.Bind<MainWindowViewModel>());
+                var application = new Taskington.Base.Application(binder => binder.Bind<MainWindowViewModel>());
                 application.Start();
 
                 var mainViewModel = application.ServiceProvider.Get<MainWindowViewModel>();

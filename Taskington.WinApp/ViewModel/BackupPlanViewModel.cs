@@ -1,7 +1,8 @@
-﻿using PPBackup.Base.Model;
-using PPBackup.Base.Plans;
+﻿using Taskington.Base.Model;
+using Taskington.Base.Plans;
+using Taskington.WinApp.ViewModel;
 
-namespace PPBackup.WinApp.ViewModel
+namespace Taskington.WinApp.ViewModel
 {
     class BackupPlanViewModel : NotifiableObject
     {

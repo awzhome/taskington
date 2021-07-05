@@ -1,6 +1,6 @@
-﻿using PPBackup.Base.Steps;
+using Taskington.Base.Steps;
 
-namespace PPBackup.Gui.ViewModels
+namespace Taskington.Gui.ViewModels
 {
     public static class BackupStepExtensions
     {

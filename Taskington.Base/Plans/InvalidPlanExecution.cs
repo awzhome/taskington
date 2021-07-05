@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace PPBackup.Base.Plans
+namespace Taskington.Base.Plans
 {
     class InvalidPlanExecution : IPlanExecution
     {

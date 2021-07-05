@@ -1,7 +1,7 @@
 ﻿open System
 open PPBackup.Console
-open PPBackup.Base
-open PPBackup.Base.Plans
+open Taskington.Base
+open Taskington.Base.Plans
 
 [<EntryPoint>]
 let main argv =

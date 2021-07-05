@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace PPBackup.Base.SystemOperations
+namespace Taskington.Base.SystemOperations
 {
     public class Placeholders
     {

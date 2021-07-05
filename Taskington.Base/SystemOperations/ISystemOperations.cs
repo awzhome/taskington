@@ -1,4 +1,4 @@
-﻿namespace PPBackup.Base.SystemOperations
+namespace Taskington.Base.SystemOperations
 {
     public interface ISystemOperations
     {

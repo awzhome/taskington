@@ -1,11 +1,11 @@
-﻿using PPBackup.Base.Model;
-using PPBackup.Base.Plans;
-using PPBackup.Base.Steps;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Reactive;
+using Taskington.Base.Model;
+using Taskington.Base.Plans;
+using Taskington.Base.Steps;
 
-namespace PPBackup.Gui.ViewModels
+namespace Taskington.Gui.ViewModels
 {
     public class BackupPlanViewModel : NotifiableObject
     {

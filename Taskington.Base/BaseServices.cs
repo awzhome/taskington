@@ -1,11 +1,10 @@
-﻿using PPBackup.Base.Config;
-using PPBackup.Base.Plans;
-using PPBackup.Base.Service;
-using PPBackup.Base.Steps;
-using PPBackup.Base.SystemOperations;
-using System.Collections.Generic;
+using Taskington.Base.Config;
+using Taskington.Base.Plans;
+using Taskington.Base.Service;
+using Taskington.Base.Steps;
+using Taskington.Base.SystemOperations;
 
-namespace PPBackup.Base
+namespace Taskington.Base
 {
     static class BaseServices
     {

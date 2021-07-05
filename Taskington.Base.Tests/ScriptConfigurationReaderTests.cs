@@ -1,9 +1,9 @@
-﻿using PPBackup.Base.Config;
-using PPBackup.Base.Plans;
 using System;
+using Taskington.Base.Config;
+using Taskington.Base.Plans;
 using Xunit;
 
-namespace PPBackup.Base.Tests
+namespace Taskington.Base.Tests
 {
     public class ScriptConfigurationReaderTests
     {

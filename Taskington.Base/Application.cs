@@ -1,11 +1,10 @@
-﻿using PPBackup.Base.Config;
-using PPBackup.Base.Plans;
-using PPBackup.Base.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Taskington.Base.Config;
+using Taskington.Base.Service;
 
-namespace PPBackup.Base
+namespace Taskington.Base
 {
     public class Application
     {

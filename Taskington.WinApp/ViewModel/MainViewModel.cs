@@ -1,11 +1,12 @@
-﻿using PPBackup.Base.Config;
-using PPBackup.Base.Model;
-using PPBackup.Base.Plans;
+﻿using Taskington.WinApp.ViewModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using Taskington.Base;
+using Taskington.Base.Config;
+using Taskington.Base.Model;
 
-namespace PPBackup.WinApp.ViewModel
+namespace Taskington.WinApp.ViewModel
 {
     class MainViewModel : NotifiableObject
     {
@@ -13,7 +14,7 @@ namespace PPBackup.WinApp.ViewModel
 
         public ObservableCollection<BackupPlanViewModel> BackupPlans { get; }
 
-        public MainViewModel(Base.Application application, ConfigurationManager configurationManager, Base.IApplicationEvents applicationEvents)
+        public MainViewModel(Base.Application application, ConfigurationManager configurationManager, IApplicationEvents applicationEvents)
         {
             this.configurationManager = configurationManager;
 
@@ -28,7 +29,7 @@ namespace PPBackup.WinApp.ViewModel
 
         private void UpdatePlanViewModels()
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
                 BackupPlans.Clear();
                 foreach (var plan in configurationManager.ExecutablePlans)

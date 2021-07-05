@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace PPBackup.Gui.Views
+namespace Taskington.Gui.Views
 {
     public class EditGeneralStepView : UserControl
     {

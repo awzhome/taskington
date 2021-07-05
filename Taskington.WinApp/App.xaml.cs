@@ -1,8 +1,8 @@
-﻿using PPBackup.WinApp.View;
-using PPBackup.WinApp.ViewModel;
+﻿using Taskington.WinApp.View;
 using System.Windows;
+using Taskington.WinApp.ViewModel;
 
-namespace PPBackup.WinApp
+namespace Taskington.WinApp
 {
     public partial class App : Application
     {
@@ -10,7 +10,7 @@ namespace PPBackup.WinApp
         {
             base.OnStartup(e);
 
-            var application = new Base.Application(binder => binder.Bind<MainViewModel>());
+            var application = new Taskington.Base.Application(binder => binder.Bind<MainViewModel>());
             application.Start();
 
             var mainViewModel = application.ServiceProvider.Get<MainViewModel>();

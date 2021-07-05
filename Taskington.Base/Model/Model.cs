@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace PPBackup.Base.Model
+namespace Taskington.Base.Model
 {
     public abstract class Model
     {

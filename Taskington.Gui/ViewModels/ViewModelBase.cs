@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PPBackup.Gui.ViewModels
+namespace Taskington.Gui.ViewModels
 {
     public class ViewModelBase : ReactiveObject
     {

@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 
-namespace PPBackup.Base.Config
+namespace Taskington.Base.Config
 {
     public class StringConfigurationProvider : IStreamReaderProvider, IStreamWriterProvider
     {

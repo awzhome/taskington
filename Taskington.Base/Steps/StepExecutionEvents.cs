@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PPBackup.Base.Steps
+namespace Taskington.Base.Steps
 {
     public class StepProgressUpdatedEventArgs
     {

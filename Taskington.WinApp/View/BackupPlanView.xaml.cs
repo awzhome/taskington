@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PPBackup.WinApp.View
+namespace Taskington.WinApp.View
 {
     /// <summary>
     /// Interaction logic for BackupPlanView.xaml

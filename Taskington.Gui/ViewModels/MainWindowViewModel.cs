@@ -1,15 +1,15 @@
 using Avalonia.Threading;
-using PPBackup.Base;
-using PPBackup.Base.Config;
-using PPBackup.Base.Plans;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Taskington.Base;
+using Taskington.Base.Config;
+using Taskington.Base.Plans;
 
-namespace PPBackup.Gui.ViewModels
+namespace Taskington.Gui.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {

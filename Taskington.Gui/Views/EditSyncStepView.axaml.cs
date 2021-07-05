@@ -1,8 +1,8 @@
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using PPBackup.Gui.ViewModels;
+using Taskington.Gui.ViewModels;
 
-namespace PPBackup.Gui.Views
+namespace Taskington.Gui.Views
 {
     public class EditSyncStepView : ReactiveUserControl<EditSyncStepViewModel>
     {

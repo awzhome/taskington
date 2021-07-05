@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace PPBackup.WinApp.ViewModel
+namespace Taskington.WinApp.ViewModel
 {
     class RelayCommand : ICommand
     {

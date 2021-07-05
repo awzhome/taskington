@@ -1,11 +1,11 @@
-﻿using PPBackup.Base.Plans;
-using PPBackup.Base.Steps;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using Taskington.Base.Plans;
+using Taskington.Base.Steps;
 
-namespace PPBackup.Base.Config
+namespace Taskington.Base.Config
 {
     public class ScriptConfigurationReader
     {

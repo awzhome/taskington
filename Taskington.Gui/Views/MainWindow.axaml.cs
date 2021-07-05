@@ -1,11 +1,11 @@
 using Avalonia;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using PPBackup.Gui.ViewModels;
+using Taskington.Gui.ViewModels;
 using ReactiveUI;
 using System.Threading.Tasks;
 
-namespace PPBackup.Gui.Views
+namespace Taskington.Gui.Views
 {
     public class MainWindow : ReactiveWindow<MainWindowViewModel>
     {

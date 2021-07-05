@@ -1,13 +1,12 @@
-﻿using PPBackup.Base.Model;
-using PPBackup.Base.Plans;
-using PPBackup.Base.Steps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Taskington.Base.Plans;
+using Taskington.Base.Steps;
 using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
-namespace PPBackup.Base.Config
+namespace Taskington.Base.Config
 {
     public class YamlConfigurationReader
     {
@@ -29,7 +28,7 @@ namespace PPBackup.Base.Config
                 {
                     yamlStream.Load(reader);
 
-                    if ((yamlStream.Documents.Count > 0) && yamlStream.Documents[0].RootNode is YamlSequenceNode root)
+                    if (yamlStream.Documents.Count > 0 && yamlStream.Documents[0].RootNode is YamlSequenceNode root)
                     {
                         foreach (var planEntry in root.Children.OfType<YamlMappingNode>())
                         {

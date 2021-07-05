@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace PPBackup.Base.Config
+namespace Taskington.Base.Config
 {
     public abstract class WatchingFileReaderProvider : IStreamReaderProvider, IDisposable
     {

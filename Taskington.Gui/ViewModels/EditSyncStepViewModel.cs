@@ -1,12 +1,12 @@
-﻿using PPBackup.Base.Steps;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Taskington.Base.Steps;
 
-namespace PPBackup.Gui.ViewModels
+namespace Taskington.Gui.ViewModels
 {
     public class SyncTypeEntry
     {

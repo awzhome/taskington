@@ -1,6 +1,6 @@
-﻿using PPBackup.Base.SystemOperations;
+﻿using Taskington.Base.SystemOperations;
 
-namespace PPBackup.Base.Steps
+namespace Taskington.Base.Steps
 {
     enum SynchronizedObject
     {

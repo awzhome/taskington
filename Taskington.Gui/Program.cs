@@ -5,7 +5,7 @@ using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.FontAwesome;
 using System;
 
-namespace PPBackup.Gui
+namespace Taskington.Gui
 {
     class Program
     {

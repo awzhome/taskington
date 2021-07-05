@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace PPBackup.Base.Config
+namespace Taskington.Base.Config
 {
     public class ScriptFileConfigurationProvider : WatchingFileReaderProvider
     {

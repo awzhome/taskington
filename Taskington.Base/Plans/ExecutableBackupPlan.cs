@@ -1,4 +1,4 @@
-﻿namespace PPBackup.Base.Plans
+﻿namespace Taskington.Base.Plans
 {
     public class ExecutableBackupPlan
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace PPBackup.Base.Config
+namespace Taskington.Base.Config
 {
     public class YamlFileConfigurationProvider : IStreamReaderProvider, IStreamWriterProvider
     {

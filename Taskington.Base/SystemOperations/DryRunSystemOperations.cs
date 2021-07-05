@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading;
 
-namespace PPBackup.Base.SystemOperations
+namespace Taskington.Base.SystemOperations
 {
     class DryRunSystemOperations : ISystemOperations
     {

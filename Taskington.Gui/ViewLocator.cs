@@ -1,9 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using PPBackup.Gui.ViewModels;
+using Taskington.Gui.ViewModels;
 using System;
 
-namespace PPBackup.Gui
+namespace Taskington.Gui
 {
     public class ViewLocator : IDataTemplate
     {
