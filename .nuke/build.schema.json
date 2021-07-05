@@ -64,15 +64,15 @@
           "items": {
             "type": "string",
             "enum": [
-              "clean",
-              "compile",
-              "installer_win64",
-              "publish_win64",
-              "restore",
-              "show_version",
-              "test",
-              "versionize",
-              "win64"
+              "Clean",
+              "Compile",
+              "InstallerWin64",
+              "PublishWin64",
+              "Restore",
+              "ShowVersion",
+              "Test",
+              "Versionize",
+              "Win64"
             ]
           }
         },
@@ -86,15 +86,15 @@
           "items": {
             "type": "string",
             "enum": [
-              "clean",
-              "compile",
-              "installer_win64",
-              "publish_win64",
-              "restore",
-              "show_version",
-              "test",
-              "versionize",
-              "win64"
+              "Clean",
+              "Compile",
+              "InstallerWin64",
+              "PublishWin64",
+              "Restore",
+              "ShowVersion",
+              "Test",
+              "Versionize",
+              "Win64"
             ]
           }
         },

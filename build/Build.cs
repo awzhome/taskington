@@ -23,7 +23,7 @@ using static Utilities;
 [ShutdownDotNetAfterServerBuild]
 class Build : NukeBuild
 {
-    public static int Main() => Execute<Build>(x => x.compile);
+    public static int Main() => Execute<Build>(x => x.Compile);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -39,15 +39,15 @@ class Build : NukeBuild
         _ => new()
     };
 
-    Target show_version => _ => _
+    Target ShowVersion => _ => _
         .Executes(() =>
         {
             var version = ProjectVersion(BranchVersioningConfig);
             Console.WriteLine($"Project version is {version.AsString()} (Assembly version: {version.AsAssemblyVersion()})");
         });
 
-    Target versionize => _ => _
-        .DependsOn(show_version)
+    Target Versionize => _ => _
+        .DependsOn(ShowVersion)
         .Executes(() =>
         {
             var version = ProjectVersion(BranchVersioningConfig);
@@ -63,22 +63,22 @@ class Build : NukeBuild
 
         });
 
-    Target clean => _ => _
-        .Before(restore)
+    Target Clean => _ => _
+        .Before(Restore)
         .Executes(() =>
         {
             EnsureCleanDirectory(OutputDirectory);
         });
 
-    Target restore => _ => _
+    Target Restore => _ => _
         .Executes(() =>
         {
             DotNetRestore(s => s
                 .SetProjectFile(Solution));
         });
 
-    Target compile => _ => _
-        .DependsOn(restore)
+    Target Compile => _ => _
+        .DependsOn(Restore)
         .Executes(() =>
         {
             DotNetBuild(s => s
@@ -87,8 +87,8 @@ class Build : NukeBuild
                 .EnableNoRestore());
         });
 
-    Target publish_win64 => _ => _
-        .DependsOn(restore, versionize)
+    Target PublishWin64 => _ => _
+        .DependsOn(Restore, Versionize)
         .Executes(() =>
         {
             DotNetPublish(s => s
@@ -100,8 +100,8 @@ class Build : NukeBuild
                 .SetOutput(OutputDirectory / "publish-win64"));
         });
 
-    Target installer_win64 => _ => _
-        .DependsOn(publish_win64)
+    Target InstallerWin64 => _ => _
+        .DependsOn(PublishWin64)
         .Executes(() =>
         {
             InnoSetup(s => s
@@ -110,7 +110,7 @@ class Build : NukeBuild
                 .SetOutputDir(OutputDirectory));
         });
 
-    Target test => _ => _
+    Target Test => _ => _
         .Executes(() =>
         {
             DotNetTest(s => s
@@ -118,6 +118,6 @@ class Build : NukeBuild
             );
         });
 
-    Target win64 => _ => _
-        .DependsOn(installer_win64);
+    Target Win64 => _ => _
+        .DependsOn(InstallerWin64);
 }
