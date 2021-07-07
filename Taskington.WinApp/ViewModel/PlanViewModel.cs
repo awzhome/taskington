@@ -1,29 +1,29 @@
-﻿using Taskington.Base.Model;
+using Taskington.Base.Model;
 using Taskington.Base.Plans;
 using Taskington.WinApp.ViewModel;
 
 namespace Taskington.WinApp.ViewModel
 {
-    class BackupPlanViewModel : NotifiableObject
+    class PlanViewModel : NotifiableObject
     {
-        private readonly ExecutablePlan executableBackupPlan;
+        private readonly ExecutablePlan executablePlan;
 
-        public BackupPlanViewModel(ExecutablePlan executableBackupPlan)
+        public PlanViewModel(ExecutablePlan executablePlan)
         {
-            this.executableBackupPlan = executableBackupPlan;
+            this.executablePlan = executablePlan;
 
-            executableBackupPlan.Events.IsRunning += (o, e) => IsRunning = e.IsRunning;
-            executableBackupPlan.Events.Progress += (o, e) => Progress = e.Progress;
-            executableBackupPlan.Events.StatusText += (o, e) => StatusText = e.StatusText;
-            executableBackupPlan.Events.HasErrors += (o, e) => HasErrors = e.HasErrors;
-            executableBackupPlan.Events.CanExecute += (o, e) => CanExecute = e.CanExecute;
+            this.executablePlan.Events.IsRunning += (o, e) => IsRunning = e.IsRunning;
+            this.executablePlan.Events.Progress += (o, e) => Progress = e.Progress;
+            this.executablePlan.Events.StatusText += (o, e) => StatusText = e.StatusText;
+            this.executablePlan.Events.HasErrors += (o, e) => HasErrors = e.HasErrors;
+            this.executablePlan.Events.CanExecute += (o, e) => CanExecute = e.CanExecute;
 
-            ExecutePlanCommand = new RelayCommand(() => executableBackupPlan.Execution.ExecuteAsync(), () => true);
+            ExecutePlanCommand = new RelayCommand(() => executablePlan.Execution.ExecuteAsync(), () => true);
         }
 
         public RelayCommand ExecutePlanCommand { get; }
 
-        public string Name => executableBackupPlan.Plan.Name;
+        public string Name => executablePlan.Plan.Name;
 
         private bool isRunning;
         public bool IsRunning

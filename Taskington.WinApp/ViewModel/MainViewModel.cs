@@ -1,4 +1,4 @@
-﻿using Taskington.WinApp.ViewModel;
+using Taskington.WinApp.ViewModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -12,13 +12,13 @@ namespace Taskington.WinApp.ViewModel
     {
         private readonly ConfigurationManager configurationManager;
 
-        public ObservableCollection<BackupPlanViewModel> BackupPlans { get; }
+        public ObservableCollection<PlanViewModel> Plans { get; }
 
         public MainViewModel(Base.Application application, ConfigurationManager configurationManager, IApplicationEvents applicationEvents)
         {
             this.configurationManager = configurationManager;
 
-            BackupPlans = new ObservableCollection<BackupPlanViewModel>();
+            Plans = new ObservableCollection<PlanViewModel>();
             applicationEvents.ConfigurationReloaded += (sender, e) =>
             {
                 UpdatePlanViewModels();
@@ -31,10 +31,10 @@ namespace Taskington.WinApp.ViewModel
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
-                BackupPlans.Clear();
+                Plans.Clear();
                 foreach (var plan in configurationManager.ExecutablePlans)
                 {
-                    BackupPlans.Add(new BackupPlanViewModel(plan));
+                    Plans.Add(new PlanViewModel(plan));
                 }
             });
         }
