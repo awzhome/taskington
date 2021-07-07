@@ -16,8 +16,9 @@ using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.InnoSetup.InnoSetupTasks;
-using static Versioning;
 using static Utilities;
+using AWZhome.GutenTag;
+using AWZhome.GutenTag.Nuke;
 
 [CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]
@@ -33,34 +34,30 @@ class Build : NukeBuild
 
     AbsolutePath OutputDirectory => RootDirectory / "output";
 
-    BranchConfig BranchVersioningConfig => b => b switch
+    BranchSpecificConfig BranchVersioningConfig => b => b switch
     {
         "master" => new() { Tag = "preview", IncrementPatch = false },
         _ => new()
     };
 
+    Versioning Versioning => new(new VersioningConfig(), BranchVersioningConfig, NukeGitAdapter.Executor);
+
     Target ShowVersion => _ => _
         .Executes(() =>
         {
-            var version = ProjectVersion(BranchVersioningConfig);
-            Console.WriteLine($"Project version is {version.AsString()} (Assembly version: {version.AsAssemblyVersion()})");
+            var version = Versioning.GetProjectVersion();
+            Console.WriteLine($"Project version is {version.AsString()} (Assembly version: {version.AsNumericVersion()})");
         });
 
     Target Versionize => _ => _
         .DependsOn(ShowVersion)
         .Executes(() =>
         {
-            var version = ProjectVersion(BranchVersioningConfig);
+            var version = Versioning.GetProjectVersion();
+            var writer = new ProjectVersionWriter(version);
 
-            var innoSetupScript = WorkingDirectory / "taskington.iss";
-            WriteVersionToFiles("#define APP_VERSION \"$$$\"", version.AsAssemblyVersion(), innoSetupScript);
-            WriteVersionToFiles("#define APP_FULL_VERSION \"$$$\"", version.AsString(), innoSetupScript);
-
-            var projectFiles = FindFiles("Taskington*.csproj").Concat(FindFiles("Taskington*.fsproj"));
-            WriteVersionToFiles("<Version>$$$</Version>", version.AsString(), projectFiles);
-            WriteVersionToFiles("<AssemblyVersion>$$$</AssemblyVersion>", version.AsAssemblyVersion(), projectFiles);
-            WriteVersionToFiles("<FileVersion>$$$</FileVersion>", version.AsAssemblyVersion(), projectFiles);
-
+            writer.WriteToInnoSetupScript(WorkingDirectory / "taskington.iss");
+            writer.WriteToVsProject(FindFiles("Taskington*.csproj").Concat(FindFiles("Taskington*.fsproj")));
         });
 
     Target Clean => _ => _
