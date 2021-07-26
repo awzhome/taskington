@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -39,7 +40,7 @@ namespace Taskington.Base.Steps
                 .Any(result => result.Placeholder.StartsWith("drive:") && result.Resolved == null);
         }
 
-        public void Execute(PlanStep step, Placeholders placeholders, StepExecutionEvents status)
+        public void Execute(PlanStep step, Placeholders placeholders, Action<int>? progressCallback, Action<string>? statusTextCallback)
         {
             var syncStep = new SyncStep(step, placeholders);
             if (syncStep.From != null && syncStep.To != null)
@@ -48,7 +49,7 @@ namespace Taskington.Base.Steps
                 {
                     case SynchronizedObject.Directory:
                         {
-                            SyncDirectory(syncStep.SyncDirection, syncStep.From, syncStep.To, status);
+                            SyncDirectory(syncStep.SyncDirection, syncStep.From, syncStep.To, statusTextCallback);
                             break;
                         }
                     case SynchronizedObject.SubDirectories:
@@ -58,16 +59,16 @@ namespace Taskington.Base.Steps
                             int dirsFinished = 0;
                             foreach (var dir in directories)
                             {
-                                SyncDirectory(syncStep.SyncDirection, dir, Path.Combine(syncStep.To, Path.GetFileName(dir)), status);
+                                SyncDirectory(syncStep.SyncDirection, dir, Path.Combine(syncStep.To, Path.GetFileName(dir)), statusTextCallback);
                                 dirsFinished++;
-                                status.Progress(dirsFinished * 100 / directoryCount);
+                                progressCallback?.Invoke(dirsFinished * 100 / directoryCount);
                             }
                             break;
                         }
                     case SynchronizedObject.File:
                         if (syncStep.File != null)
                         {
-                            status.StatusText($"Sync file '{Path.GetFileName(syncStep.File)}'");
+                            statusTextCallback?.Invoke($"Sync file '{Path.GetFileName(syncStep.File)}'");
                             systemOperations.SyncFile(syncStep.From, syncStep.To, syncStep.File);
                         }
                         break;
@@ -75,9 +76,9 @@ namespace Taskington.Base.Steps
             }
         }
 
-        private void SyncDirectory(SyncDirection syncDirection, string dir1, string dir2, StepExecutionEvents status)
+        private void SyncDirectory(SyncDirection syncDirection, string dir1, string dir2, Action<string>? statusTextCallback)
         {
-            status.StatusText($"Sync directory '{Path.GetFileName(dir1)}'");
+            statusTextCallback?.Invoke($"Sync directory '{Path.GetFileName(dir1)}'");
             systemOperations.SyncDirectory(syncDirection, dir1, dir2);
         }
     }

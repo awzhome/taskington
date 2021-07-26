@@ -2,9 +2,9 @@ using Taskington.WinApp.ViewModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
-using Taskington.Base;
 using Taskington.Base.Config;
 using Taskington.Base.Model;
+using Taskington.Base.Events;
 
 namespace Taskington.WinApp.ViewModel
 {

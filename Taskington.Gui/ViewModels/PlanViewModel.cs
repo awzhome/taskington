@@ -18,12 +18,6 @@ namespace Taskington.Gui.ViewModels
         {
             this.executablePlan = executablePlan;
 
-            executablePlan.Events.IsRunning += (o, e) => IsRunning = e.IsRunning;
-            executablePlan.Events.Progress += (o, e) => Progress = e.Progress;
-            executablePlan.Events.StatusText += (o, e) => StatusText = e.StatusText;
-            executablePlan.Events.HasErrors += (o, e) => HasErrors = e.HasErrors;
-            executablePlan.Events.CanExecute += (o, e) => CanExecute = e.CanExecute;
-
             ExecutePlanCommand = executePlanCommand;
             EditPlanCommand = editPlanCommand;
             RemovePlanCommand = removePlanCommand;
@@ -45,7 +39,7 @@ namespace Taskington.Gui.ViewModels
         public bool IsRunning
         {
             get => isRunning;
-            private set
+            set
             {
                 isRunning = value;
                 NotifyPropertyChange();
@@ -57,7 +51,7 @@ namespace Taskington.Gui.ViewModels
         public int Progress
         {
             get => progress;
-            private set
+            set
             {
                 progress = value;
                 NotifyPropertyChange();
@@ -68,7 +62,7 @@ namespace Taskington.Gui.ViewModels
         public bool HasErrors
         {
             get => hasErrors;
-            private set
+            set
             {
                 hasErrors = value;
                 NotifyPropertyChange();
@@ -79,7 +73,7 @@ namespace Taskington.Gui.ViewModels
         public string StatusText
         {
             get => statusText;
-            private set
+            set
             {
                 statusText = value;
                 NotifyPropertyChange();
@@ -90,7 +84,7 @@ namespace Taskington.Gui.ViewModels
         public bool CanExecute
         {
             get => canExecute;
-            private set
+            set
             {
                 canExecute = value;
                 NotifyPropertyChange();

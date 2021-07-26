@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Taskington.Base;
 using Taskington.Base.Config;
+using Taskington.Base.Events;
 using Taskington.Base.Plans;
 
 namespace Taskington.Gui.ViewModels

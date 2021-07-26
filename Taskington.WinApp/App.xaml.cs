@@ -1,4 +1,4 @@
-﻿using Taskington.WinApp.View;
+using Taskington.WinApp.View;
 using System.Windows;
 using Taskington.WinApp.ViewModel;
 
@@ -10,7 +10,11 @@ namespace Taskington.WinApp
         {
             base.OnStartup(e);
 
-            var application = new Taskington.Base.Application(binder => binder.Bind<MainViewModel>());
+            var application = new Taskington.Base.Application(binder =>
+            {
+                binder.Bind<MainViewModel>();
+                binder.Bind<ModelEventDispatcher>();
+            });
             application.Start();
 
             var mainViewModel = application.ServiceProvider.Get<MainViewModel>();

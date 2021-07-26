@@ -1,48 +1,51 @@
 using System.Threading.Tasks;
+using Taskington.Base.Events;
 
 namespace Taskington.Base.Plans
 {
     internal class ManualPlanExecution : IPlanExecution
     {
+        private readonly ApplicationEvents events;
         private readonly PlanExecutionHelper planExecutionHelper;
         private readonly Plan plan;
-        private readonly PlanExecutionEvents events;
 
         public class Creator : IPlanExecutionCreator
         {
+            private readonly ApplicationEvents events;
             private readonly PlanExecutionHelper planExecutionHelper;
 
-            public Creator(PlanExecutionHelper planExecutionHelper)
+            public Creator(ApplicationEvents events, PlanExecutionHelper planExecutionHelper)
             {
+                this.events = events;
                 this.planExecutionHelper = planExecutionHelper;
             }
 
             public string RunType => Plan.OnSelectionRunType;
 
-            public IPlanExecution Create(Plan plan, PlanExecutionEvents events) => new ManualPlanExecution(planExecutionHelper, plan, events);
+            public IPlanExecution Create(Plan plan) => new ManualPlanExecution(events, planExecutionHelper, plan);
         }
 
-        public ManualPlanExecution(PlanExecutionHelper planExecutionHelper, Plan plan, PlanExecutionEvents events)
+        public ManualPlanExecution(ApplicationEvents events, PlanExecutionHelper planExecutionHelper, Plan plan)
         {
+            this.events = events;
             this.planExecutionHelper = planExecutionHelper;
             this.plan = plan;
-            this.events = events;
         }
 
         public void NotifyInitialStates()
         {
             events
-                .OnCanExecute(planExecutionHelper.CanExecute(plan))
-                .OnHasErrors(false)
-                .OnIsRunning(false)
-                .OnStatusText("Not run yet");
+                .OnPlanCanExecute(plan, planExecutionHelper.CanExecute(plan))
+                .OnPlanHasErrors(plan, false)
+                .OnPlanIsRunning(plan, false)
+                .OnPlanStatusText(plan, "Not run yet");
         }
 
         public async Task ExecuteAsync()
         {
-            if (plan != null && events != null)
+            if (plan != null)
             {
-                await planExecutionHelper.ExecuteAsync(plan, events);
+                await planExecutionHelper.ExecuteAsync(plan);
             }
         }
     }

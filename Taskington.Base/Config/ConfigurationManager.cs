@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Taskington.Base.Events;
 using Taskington.Base.Plans;
 using Taskington.Base.Service;
 using Taskington.Base.Steps;
@@ -32,6 +33,7 @@ namespace Taskington.Base.Config
             this.configurationWriter = configurationWriter;
 
             applicationEvents.ConfigurationChanged += OnConfigurationChanged;
+            applicationEvents.PlanIsRunningUpdated += OnPlanIsRunningUpdated;
         }
 
         private readonly List<ExecutablePlan> executablePlans = new();
@@ -96,11 +98,9 @@ namespace Taskington.Base.Config
         {
             if (plan.Steps.OfType<InvalidPlanStep>().Any())
             {
-                var events = CreatePlanExecutionEvents(plan);
                 return new ExecutablePlan(
                     plan,
-                    new InvalidPlanExecution(events, "Plan contains invalid steps."),
-                    events);
+                    new InvalidPlanExecution(plan, applicationEvents, "Plan contains invalid steps."));
             }
             else
             {
@@ -108,28 +108,17 @@ namespace Taskington.Base.Config
                     execution => execution.RunType == plan.RunType);
                 if (planExecutionCreator == null)
                 {
-                    var events = CreatePlanExecutionEvents(plan);
                     return new ExecutablePlan(
                         plan,
-                        new InvalidPlanExecution(events, $"Unknown plan run type '{plan.RunType}'"),
-                        events);
+                        new InvalidPlanExecution(plan, applicationEvents, $"Unknown plan run type '{plan.RunType}'"));
                 }
                 else
                 {
-                    var events = CreatePlanExecutionEvents(plan);
                     return new ExecutablePlan(
                          plan,
-                         planExecutionCreator.Create(plan, events),
-                         events);
+                         planExecutionCreator.Create(plan));
                 }
             }
-        }
-
-        private PlanExecutionEvents CreatePlanExecutionEvents(Plan plan)
-        {
-            var events = new PlanExecutionEvents(plan);
-            events.IsRunning += OnPlanIsRunningUpdated;
-            return events;
         }
 
         private void OnPlanIsRunningUpdated(object? sender, PlanIsRunningUpdatedEventArgs e)

@@ -5,7 +5,7 @@ namespace Taskington.Base.Plans
     public interface IPlanExecutionCreator
     {
         string RunType { get; }
-        IPlanExecution Create(Plan plan, PlanExecutionEvents events);
+        IPlanExecution Create(Plan plan);
     }
 
     public interface IPlanExecution

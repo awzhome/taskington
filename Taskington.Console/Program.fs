@@ -2,6 +2,7 @@ open System
 open PPBackup.Console
 open Taskington.Base
 open Taskington.Base.Plans
+open Taskington.Base.Events
 
 [<EntryPoint>]
 let main argv =
@@ -9,6 +10,7 @@ let main argv =
     application.Start()
 
     let executablePlans = application.ServiceProvider.Get<seq<ExecutablePlan>>()
+    let applicationEvents = application.ServiceProvider.Get<IApplicationEvents>()
 
     let mutable cursorPos = UI.getCursorPos()
     let mutable planName = ""
@@ -34,19 +36,19 @@ let main argv =
                 printfn "%s" statusText
 
     for plan in executablePlans do
-        plan.Events.IsRunning.AddHandler (fun o e ->
+        applicationEvents.PlanIsRunningUpdated.AddHandler (fun o e ->
             if e.IsRunning then
                 initProgress()
                 planName <- e.Plan.Name
             isRunning <- e.IsRunning)
-        plan.Events.Progress.AddHandler (fun o e ->
+        applicationEvents.PlanProgressUpdated.AddHandler (fun o e ->
             progress <- e.Progress
             updateProgress())
-        plan.Events.HasErrors.AddHandler (fun o e ->
+        applicationEvents.PlanHasErrorsUpdated.AddHandler (fun o e ->
             hasErrors <- e.HasErrors
             statusText <- e.StatusText
             updateProgress())
-        plan.Events.StatusText.AddHandler (fun o e ->
+        applicationEvents.PlanStatusTextUpdated.AddHandler (fun o e ->
             statusText <- e.StatusText
             updateProgress())
 
