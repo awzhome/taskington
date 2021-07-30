@@ -76,7 +76,7 @@
         </ScrollViewer>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Classes="dialogButton" Command="{Binding CloseCommand}" Content="OK" IsDefault="True">
+            <Button Classes="dialogButton" Command="{Binding CloseCommand}" Content="Save" IsDefault="True">
                 <Button.CommandParameter>
                     <x:Boolean>True</x:Boolean>
                 </Button.CommandParameter>
