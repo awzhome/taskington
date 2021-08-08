@@ -17,16 +17,10 @@
         Title="Taskington">
 
     <Window.Styles>
-        <Style Selector="Image.ppLogo">
+        <Style Selector="Image.logo">
             <Setter Property="Margin" Value="50,0,50,0" />
             <Setter Property="MaxHeight" Value="100" />
             <Setter Property="MinWidth" Value="500" />
-        </Style>
-        <Style Selector="TextBlock.ppLogoText">
-            <Setter Property="Margin" Value="300,70,50,0" />
-            <Setter Property="FontSize" Value="28" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="Foreground" Value="White" />
         </Style>
         <Style Selector="TextBlock.footer">
             <Setter Property="FontSize" Value="12" />
@@ -53,7 +47,7 @@
 
         <Grid RowDefinitions="Auto,*,Auto" Margin="0,20,0,0">
             <Grid Grid.Row="0">
-                <Image Classes="ppLogo" Source="/Assets/TaskingtonLogo.png" />
+                <Image Classes="logo" Source="/Assets/TaskingtonLogo.png" />
             </Grid>
 
             <ScrollViewer Grid.Row="1" Margin="50,30,50,0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
