@@ -11,6 +11,9 @@
         Icon="/Assets/avalonia-logo.ico"
 		Height="800" Width="600" MinWidth="600"
 		WindowStartupLocation="CenterScreen"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
         Title="Taskington">
 
     <Window.Styles>
@@ -37,32 +40,44 @@
         </DataTemplate>
     </Window.DataTemplates>
 
-    <Grid RowDefinitions="Auto,*,Auto" Margin="0,20,0,0">
-        <Grid Grid.Row="0">
-            <Image Classes="ppLogo" Source="/Assets/TaskingtonLogo.png" />
-        </Grid>
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                     BackgroundSource="Digger"
+                     TintColor="Black"
+                     TintOpacity="1"
+                     MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
 
-        <ScrollViewer Grid.Row="1" Margin="50,30,50,0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <StackPanel Orientation="Vertical">
-                <ItemsControl Items="{Binding Plans}" HorizontalAlignment="Center">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel MinWidth="400" Orientation="Vertical" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+        <Grid RowDefinitions="Auto,*,Auto" Margin="0,20,0,0">
+            <Grid Grid.Row="0">
+                <Image Classes="ppLogo" Source="/Assets/TaskingtonLogo.png" />
+            </Grid>
 
-                <StackPanel HorizontalAlignment="Center" MinWidth="400">
-                    <Button Margin="20,0,20,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding AddPlanCommand}">
-                        <StackPanel Orientation="Horizontal">
-                            <i:Icon Value="fas fa-plus" />
-                            <TextBlock Margin="10,0,0,0">Add new plan</TextBlock>
-                        </StackPanel>
-                    </Button>
+            <ScrollViewer Grid.Row="1" Margin="50,30,50,0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <StackPanel Orientation="Vertical">
+                    <ItemsControl Items="{Binding Plans}" HorizontalAlignment="Center">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel MinWidth="400" Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+
+                    <StackPanel HorizontalAlignment="Center" MinWidth="400">
+                        <Button Margin="20,0,20,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding AddPlanCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <i:Icon Value="fas fa-plus" />
+                                <TextBlock Margin="10,0,0,0">Add new plan</TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-        </ScrollViewer>
+            </ScrollViewer>
 
-        <TextBlock Grid.Row="2" Classes="footer" Text="Copyright © 2020-2021 Andreas Weizel" />
-    </Grid>
+            <TextBlock Grid.Row="2" Classes="footer" Text="Copyright © 2020-2021 Andreas Weizel" />
+        </Grid>
+    </Panel>
 </Window>
