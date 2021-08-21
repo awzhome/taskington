@@ -16,6 +16,7 @@ AppSupportURL={#APP_URL}
 AppUpdatesURL={#APP_URL}
 DefaultDirName={localappdata}\{#APP_NAME}
 DisableProgramGroupPage=yes
+DisableWelcomePage=false
 PrivilegesRequired=lowest
 OutputBaseFilename=taskington-setup-win64-{#APP_FULL_VERSION}
 OutputDir=output
