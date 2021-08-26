@@ -36,16 +36,16 @@ class Build : NukeBuild
 
     BranchSpecificConfig BranchVersioningConfig => b => b switch
     {
-        "master" => new() { Tag = "preview", IncrementPatch = false },
+        "master" => new() { Tag = "preview", IncrementedPart = IncrementedPart.Minor },
         _ => new()
     };
 
-    Versioning Versioning => new(new VersioningConfig(), BranchVersioningConfig, NukeGitAdapter.Executor);
+    Versioning Versioning => new(BranchVersioningConfig, NukeGitAdapter.Executor);
 
     Target ShowVersion => _ => _
         .Executes(() =>
         {
-            var version = Versioning.GetProjectVersion();
+            var version = Versioning.GetVersionInfo();
             Console.WriteLine($"Project version is {version.AsString()} (Assembly version: {version.AsNumericVersion()})");
         });
 
@@ -53,8 +53,8 @@ class Build : NukeBuild
         .DependsOn(ShowVersion)
         .Executes(() =>
         {
-            var version = Versioning.GetProjectVersion();
-            var writer = new ProjectVersionWriter(version);
+            var version = Versioning.GetVersionInfo();
+            var writer = new VersionInfoWriter(version);
 
             writer.WriteToInnoSetupScript(WorkingDirectory / "taskington.iss");
             writer.WriteToVsProject(FindFiles("Taskington*.csproj").Concat(FindFiles("Taskington*.fsproj")));
