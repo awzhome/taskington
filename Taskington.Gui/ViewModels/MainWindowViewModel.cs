@@ -1,6 +1,5 @@
 using Avalonia.Threading;
 using ReactiveUI;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -16,7 +15,9 @@ namespace Taskington.Gui.ViewModels
     {
         private readonly Application application;
         private readonly ConfigurationManager configurationManager;
+
         public ObservableCollection<PlanViewModel> Plans { get; }
+        public ObservableCollection<AppMessage> AppMessages { get; }
 
         public ReactiveCommand<Unit, Unit> AddPlanCommand { get; }
         public ReactiveCommand<PlanViewModel, Unit> ExecutePlanCommand { get; }
@@ -28,6 +29,8 @@ namespace Taskington.Gui.ViewModels
         {
             this.application = application;
             this.configurationManager = configurationManager;
+
+            AppMessages = new ObservableCollection<AppMessage>();
 
             Plans = new ObservableCollection<PlanViewModel>();
             applicationEvents.ConfigurationReloaded += (sender, e) =>
@@ -41,6 +44,8 @@ namespace Taskington.Gui.ViewModels
             ShowPlanEditDialog = new();
             EditPlanCommand = ReactiveCommand.CreateFromTask<PlanViewModel>(EditPlanAsync);
             RemovePlanCommand = ReactiveCommand.Create<PlanViewModel>(RemovePlan);
+
+            AppMessages.Add(new AppMessage() { MessageType = AppMessageType.AppInfo, Text = "Copyright © 2020-2021 Andreas Weizel" });
         }
 
         private void UpdatePlanViewModels()

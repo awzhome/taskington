@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="using:Taskington.Gui.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Taskington.Gui.Views.AppMessagePanel">
+
+    <UserControl.Resources>
+        <views:MessageTypeToColorConverter x:Key="backgroundConverter">
+            <views:MessageTypeToColorConverter.AppInfo>
+                <SolidColorBrush Color="Transparent" />
+            </views:MessageTypeToColorConverter.AppInfo>
+
+            <views:MessageTypeToColorConverter.Info>
+                <SolidColorBrush Color="#000060" />
+            </views:MessageTypeToColorConverter.Info>
+
+            <views:MessageTypeToColorConverter.Warning>
+                <SolidColorBrush Color="#ffff00" />
+            </views:MessageTypeToColorConverter.Warning>
+        </views:MessageTypeToColorConverter>
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Padding" Value="5,5,5,5" />
+            <Setter Property="Background" 
+                    Value="{Binding MessageType, Converter={StaticResource backgroundConverter}}" />
+        </Style>
+    </UserControl.Styles>
+
+    <TextBlock Text="{Binding Text}" />
+</UserControl>

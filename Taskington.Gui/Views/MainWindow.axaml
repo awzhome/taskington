@@ -32,6 +32,10 @@
         <DataTemplate DataType="{x:Type vm:PlanViewModel}">
             <views:PlanView />
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:AppMessage}">
+            <views:AppMessagePanel />
+        </DataTemplate>
     </Window.DataTemplates>
 
     <Panel>
@@ -71,7 +75,13 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <TextBlock Grid.Row="2" Classes="footer" Text="Copyright © 2020-2021 Andreas Weizel" />
+            <ItemsControl Grid.Row="2" Items="{Binding AppMessages}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
         </Grid>
     </Panel>
 </Window>
