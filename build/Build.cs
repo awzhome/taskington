@@ -40,7 +40,7 @@ class Build : NukeBuild
         _ => new()
     };
 
-    Versioning Versioning => new(BranchVersioningConfig, NukeGitAdapter.Executor);
+    Versioning Versioning => new(BranchVersioningConfig, new NukeGitAdapter(new VersioningConfig()));
 
     Target ShowVersion => _ => _
         .Executes(() =>
