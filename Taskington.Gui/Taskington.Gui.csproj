@@ -33,6 +33,9 @@
     <ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Views\AppMessageView.axaml.cs">
+      <DependentUpon>AppMessageView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\EditPlanWindow.axaml.cs">
       <DependentUpon>EditPlanWindow.axaml</DependentUpon>
     </Compile>

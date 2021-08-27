@@ -45,7 +45,12 @@ namespace Taskington.Gui.ViewModels
             EditPlanCommand = ReactiveCommand.CreateFromTask<PlanViewModel>(EditPlanAsync);
             RemovePlanCommand = ReactiveCommand.Create<PlanViewModel>(RemovePlan);
 
-            AppMessages.Add(new AppMessage() { MessageType = AppMessageType.AppInfo, Text = "Copyright © 2020-2021 Andreas Weizel" });
+            AppMessages.Add(new AppMessage()
+            {
+                MessageType = AppMessageType.AppInfo,
+                LeftText = AppInfo.Copyright,
+                RightText = $"v{AppInfo.Version}"
+            });
         }
 
         private void UpdatePlanViewModels()

@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:v="using:Taskington.Gui.Views"
+             xmlns:vm="using:Taskington.Gui.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Taskington.Gui.Views.AppMessageView">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="transparentBackground" Color="Transparent" />
+        <SolidColorBrush x:Key="infoBackground" Color="#0E639C" />
+        <SolidColorBrush x:Key="warningBackground" Color="#F2BF35" />
+        <SolidColorBrush x:Key="brightText" Color="White" />
+        <SolidColorBrush x:Key="darkText" Color="Black" />
+
+        <v:DynamicConverter x:Key="backgroundConverter" Default="{StaticResource transparentBackground}">
+            <v:DynamicConverter.Mappings>
+                <v:Convert If="{x:Static vm:AppMessageType.Info}" Then="{StaticResource infoBackground}" />
+                <v:Convert If="{x:Static vm:AppMessageType.Warning}" Then="{StaticResource warningBackground}" />
+            </v:DynamicConverter.Mappings>
+        </v:DynamicConverter>
+
+        <v:DynamicConverter x:Key="foregroundConverter" Default="{StaticResource brightText}">
+            <v:DynamicConverter.Mappings>
+                <v:Convert If="{x:Static vm:AppMessageType.Warning}" Then="{StaticResource darkText}" />
+            </v:DynamicConverter.Mappings>
+        </v:DynamicConverter>
+
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <Style Selector="Grid">
+            <Setter Property="Background"
+                    Value="{Binding MessageType, Converter={StaticResource backgroundConverter}}" />
+        </Style>
+        <Style Selector="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Padding" Value="8,8,8,8" />
+            <Setter Property="Margin" Value="0,0,0,0" />
+
+            <Setter Property="Foreground"
+                    Value="{Binding MessageType, Converter={StaticResource foregroundConverter}}" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Grid.Column="0" Text="{Binding LeftText}" ToolTip.Tip="{Binding LeftText}" TextTrimming="CharacterEllipsis" TextAlignment="Left" />
+        <TextBlock Grid.Column="1" Text="{Binding RightText}" ToolTip.Tip="{Binding RightText}" TextTrimming="CharacterEllipsis" />
+    </Grid>
+</UserControl>

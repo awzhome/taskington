@@ -11,14 +11,26 @@ namespace Taskington.Gui.ViewModels
 
     public class AppMessage : NotifiableObject
     {
-        private string? text;
+        private string? leftText;
 
-        public string? Text
+        public string? LeftText
         {
-            get => text;
+            get => leftText;
             set
             {
-                text = value;
+                leftText = value;
+                NotifyPropertyChange();
+            }
+        }
+
+        private string? rightText;
+
+        public string? RightText
+        {
+            get => rightText;
+            set
+            {
+                rightText = value;
                 NotifyPropertyChange();
             }
         }
