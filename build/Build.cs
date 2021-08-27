@@ -58,6 +58,11 @@ class Build : NukeBuild
 
             writer.WriteToInnoSetupScript(WorkingDirectory / "taskington.iss");
             writer.WriteToVsProject(FindFiles("Taskington*.csproj").Concat(FindFiles("Taskington*.fsproj")));
+
+            VersionInfoWriter.WriteVersionToFiles(
+                "public static string Version = \"$$$\";", 
+                version.AsString(), 
+                WorkingDirectory / "Taskington.Gui" / "AppInfo.cs");
         });
 
     Target Clean => _ => _
