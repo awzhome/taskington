@@ -17,11 +17,9 @@ namespace Taskington.Gui
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var application = new Taskington.Base.Application(binder =>
-                {
-                    binder.Bind<MainWindowViewModel>();
-                    binder.Bind<ModelEventDispatcher>();
-                });
+                var application = new Taskington.Base.Application(
+                    binder => GuiServices.Bind(binder)
+                );
                 application.Start();
 
                 var mainViewModel = application.ServiceProvider.Get<MainWindowViewModel>();

@@ -70,7 +70,7 @@
                 <StackPanel Grid.Column="1" Classes="listActions" Orientation="Vertical">
                     <Button i:Attached.Icon="fas fa-plus" Click="OpenButtonMenu">
                         <Button.ContextMenu>
-                            <ContextMenu Items="{Binding NewStepTemplates.List}">
+                            <ContextMenu Items="{Binding NewStepTemplates}">
                                 <ContextMenu.Styles>
                                     <Style Selector="MenuItem">
                                         <Setter Property="Header" Value="{Binding Caption}"/>

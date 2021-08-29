@@ -87,7 +87,7 @@ namespace Taskington.Gui.ViewModels
 
         private async Task EditPlan(PlanViewModel planViewModel)
         {
-            var editPlanViewModel = new EditPlanViewModel(planViewModel);
+            var editPlanViewModel = new EditPlanViewModel(application.ServiceProvider, planViewModel);
             var shouldSave = await ShowPlanEditDialog.Handle(editPlanViewModel);
             if (shouldSave)
             {
