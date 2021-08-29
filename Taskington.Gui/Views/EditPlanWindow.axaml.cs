@@ -21,9 +21,9 @@ namespace Taskington.Gui.Views
             this.AttachDevTools();
 #endif
 
-            this.WhenActivated(d => d(ViewModel.CloseCommand.Subscribe(save => Close(save))));
-            this.WhenActivated(d => d(ViewModel.OpenFolderDialog.RegisterHandler(OpenFolderDialogAsync)));
-            this.WhenActivated(d => d(ViewModel.OpenFileDialog.RegisterHandler(OpenFileDialogAsync)));
+            this.WhenActivated(d => d(ViewModel!.CloseCommand.Subscribe(save => Close(save))));
+            this.WhenActivated(d => d(ViewModel!.OpenFolderDialog.RegisterHandler(OpenFolderDialogAsync)));
+            this.WhenActivated(d => d(ViewModel!.OpenFileDialog.RegisterHandler(OpenFileDialogAsync)));
         }
 
         private void InitializeComponent()

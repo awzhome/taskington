@@ -16,7 +16,7 @@ namespace Taskington.Gui.Views
             this.AttachDevTools();
 #endif
 
-            this.WhenActivated(d => d(ViewModel.ShowPlanEditDialog.RegisterHandler(ShowPlanEditDialogAsync)));
+            this.WhenActivated(d => d(ViewModel!.ShowPlanEditDialog.RegisterHandler(ShowPlanEditDialogAsync)));
         }
 
         private void InitializeComponent()
