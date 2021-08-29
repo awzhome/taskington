@@ -16,11 +16,7 @@ namespace Taskington.Gui.ViewModels
         public string? LeftText
         {
             get => leftText;
-            set
-            {
-                leftText = value;
-                NotifyPropertyChange();
-            }
+            set => SetAndNotify(ref leftText, value);
         }
 
         private string? rightText;
@@ -28,11 +24,7 @@ namespace Taskington.Gui.ViewModels
         public string? RightText
         {
             get => rightText;
-            set
-            {
-                rightText = value;
-                NotifyPropertyChange();
-            }
+            set => SetAndNotify(ref rightText, value);
         }
 
         private AppMessageType messageType;
@@ -40,11 +32,7 @@ namespace Taskington.Gui.ViewModels
         public AppMessageType MessageType
         {
             get => messageType;
-            set
-            {
-                messageType = value;
-                NotifyPropertyChange();
-            }
+            set => SetAndNotify(ref messageType, value);
         }
     }
 }
