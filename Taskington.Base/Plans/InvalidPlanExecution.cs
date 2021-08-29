@@ -23,7 +23,7 @@ namespace Taskington.Base.Plans
                 .OnPlanHasErrors(plan, true, reason);
         }
 
-        public Task ExecuteAsync()
+        public Task Execute()
         {
             return Task.CompletedTask;
         }

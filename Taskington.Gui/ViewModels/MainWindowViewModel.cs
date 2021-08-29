@@ -39,10 +39,10 @@ namespace Taskington.Gui.ViewModels
             };
             UpdatePlanViewModels();
 
-            AddPlanCommand = ReactiveCommand.CreateFromTask(AddPlanAsync);
-            ExecutePlanCommand = ReactiveCommand.CreateFromTask<PlanViewModel>(ExecutePlanAsync);
+            AddPlanCommand = ReactiveCommand.CreateFromTask(AddPlan);
+            ExecutePlanCommand = ReactiveCommand.CreateFromTask<PlanViewModel>(ExecutePlan);
             ShowPlanEditDialog = new();
-            EditPlanCommand = ReactiveCommand.CreateFromTask<PlanViewModel>(EditPlanAsync);
+            EditPlanCommand = ReactiveCommand.CreateFromTask<PlanViewModel>(EditPlan);
             RemovePlanCommand = ReactiveCommand.Create<PlanViewModel>(RemovePlan);
 
             AppMessages.Add(new AppMessage()
@@ -69,12 +69,12 @@ namespace Taskington.Gui.ViewModels
         private PlanViewModel CreatePlanViewModel(ExecutablePlan executablePlan) =>
             new(executablePlan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand);
 
-        private async Task ExecutePlanAsync(PlanViewModel planViewModel)
+        private async Task ExecutePlan(PlanViewModel planViewModel)
         {
-            await planViewModel.Execution.ExecuteAsync();
+            await planViewModel.Execution.Execute();
         }
 
-        private async Task AddPlanAsync()
+        private async Task AddPlan()
         {
             var newPlan = new Plan(Plan.OnSelectionRunType) { Name = "New plan" };
             var newExecutablePlan = configurationManager.InsertPlan(Plans.Count, newPlan);
@@ -82,10 +82,10 @@ namespace Taskington.Gui.ViewModels
             var newPlanViewModel = CreatePlanViewModel(newExecutablePlan);
             Plans.Add(newPlanViewModel);
             newExecutablePlan.Execution.NotifyInitialStates();
-            await EditPlanAsync(newPlanViewModel);
+            await EditPlan(newPlanViewModel);
         }
 
-        private async Task EditPlanAsync(PlanViewModel planViewModel)
+        private async Task EditPlan(PlanViewModel planViewModel)
         {
             var editPlanViewModel = new EditPlanViewModel(planViewModel);
             var shouldSave = await ShowPlanEditDialog.Handle(editPlanViewModel);

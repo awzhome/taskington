@@ -56,7 +56,7 @@ let main argv =
         |> Seq.map(fun plan ->
             (plan.Plan.Name, fun() ->
                 cursorPos <- UI.getCursorPos()
-                plan.Execution.ExecuteAsync().Wait()
+                plan.Execution.Execute().Wait()
             )))
 
     0

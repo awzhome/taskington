@@ -41,7 +41,7 @@ namespace Taskington.Base.Plans
                 .OnPlanStatusText(plan, "Not run yet");
         }
 
-        public async Task ExecuteAsync()
+        public async Task Execute()
         {
             if (plan != null)
             {

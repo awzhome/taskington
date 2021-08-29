@@ -11,6 +11,6 @@ namespace Taskington.Base.Plans
     public interface IPlanExecution
     {
         void NotifyInitialStates();
-        Task ExecuteAsync();
+        Task Execute();
     }
 }
