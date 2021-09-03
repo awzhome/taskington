@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Taskington.Gui.ViewModels"
 		xmlns:models="using:Taskington.Gui.Models"
-		xmlns:views="using:Taskington.Gui.Views"
+		xmlns:v="using:Taskington.Gui.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
@@ -30,11 +30,11 @@
 
     <Window.DataTemplates>
         <DataTemplate DataType="{x:Type vm:PlanViewModel}">
-            <views:PlanView />
+            <v:PlanView />
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type vm:AppMessage}">
-            <views:AppMessageView />
+            <v:AppMessageView />
         </DataTemplate>
     </Window.DataTemplates>
 

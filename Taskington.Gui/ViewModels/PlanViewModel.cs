@@ -14,18 +14,21 @@ namespace Taskington.Gui.ViewModels
         public PlanViewModel(ExecutablePlan executablePlan,
             ReactiveCommand<PlanViewModel, Unit> executePlanCommand,
             ReactiveCommand<PlanViewModel, Unit> editPlanCommand,
-            ReactiveCommand<PlanViewModel, Unit> removePlanCommand)
+            ReactiveCommand<PlanViewModel, Unit> removePlanCommand,
+            ReactiveCommand<PlanViewModel, Unit> undoPlanRemovalCommand)
         {
             this.executablePlan = executablePlan;
 
             ExecutePlanCommand = executePlanCommand;
             EditPlanCommand = editPlanCommand;
             RemovePlanCommand = removePlanCommand;
+            UndoPlanRemovalCommand = undoPlanRemovalCommand;
         }
 
         public ReactiveCommand<PlanViewModel, Unit> ExecutePlanCommand { get; }
         public ReactiveCommand<PlanViewModel, Unit> EditPlanCommand { get; }
         public ReactiveCommand<PlanViewModel, Unit> RemovePlanCommand { get; }
+        public ReactiveCommand<PlanViewModel, Unit> UndoPlanRemovalCommand { get; }
 
         public ExecutablePlan ExecutablePlan => executablePlan;
 
@@ -41,8 +44,7 @@ namespace Taskington.Gui.ViewModels
             get => isRunning;
             set
             {
-                isRunning = value;
-                NotifyPropertyChange();
+                SetAndNotify(ref isRunning, value);
                 NotifyPropertyChange(nameof(IsPlayable));
             }
         }
@@ -51,33 +53,21 @@ namespace Taskington.Gui.ViewModels
         public int Progress
         {
             get => progress;
-            set
-            {
-                progress = value;
-                NotifyPropertyChange();
-            }
+            set => SetAndNotify(ref progress, value);
         }
 
         private bool hasErrors;
         public bool HasErrors
         {
             get => hasErrors;
-            set
-            {
-                hasErrors = value;
-                NotifyPropertyChange();
-            }
+            set => SetAndNotify(ref hasErrors, value);
         }
 
         private string statusText = "";
         public string StatusText
         {
             get => statusText;
-            set
-            {
-                statusText = value;
-                NotifyPropertyChange();
-            }
+            set => SetAndNotify(ref statusText, value);
         }
 
         private bool canExecute;
@@ -86,12 +76,20 @@ namespace Taskington.Gui.ViewModels
             get => canExecute;
             set
             {
-                canExecute = value;
-                NotifyPropertyChange();
+                SetAndNotify(ref canExecute, value);
                 NotifyPropertyChange(nameof(IsPlayable));
             }
         }
 
         public bool IsPlayable => canExecute && !isRunning;
+
+        private bool isRemoved;
+        public bool IsRemoved
+        {
+            get => isRemoved;
+            set => SetAndNotify(ref isRemoved, value);
+        }
+
+        public int PreviousIndex { get; set; }
     }
 }
