@@ -30,15 +30,17 @@ WizardStyle=modern
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; Flags: unchecked
+Name: "autostart"; Description: "{cm:AutoStartProgram,{#APP_NAME}}"
 
 [Files]
-Source: "output\publish-win64\*"; DestDir: "{app}"; Flags: ignoreversion
+Source: "output\publish-win64\*"; DestDir: "{app}\{#APP_FULL_VERSION}"; Flags: ignoreversion
 
 [Icons]
-Name: "{autoprograms}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_FILE}"
-Name: "{autodesktop}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_FILE}"; Tasks: desktopicon
+Name: "{autoprograms}\{#APP_NAME}"; Filename: "{app}\{#APP_FULL_VERSION}\{#APP_EXE_FILE}"
+Name: "{autodesktop}\{#APP_NAME}"; Filename: "{app}\{#APP_FULL_VERSION}\{#APP_EXE_FILE}"; Tasks: desktopicon
+Name: "{userstartup}\{#APP_NAME}"; Filename: "{app}\{#APP_FULL_VERSION}\{#APP_EXE_FILE}"; Tasks: autostart
 
 [Run]
-Filename: "{app}\{#APP_EXE_FILE}"; Description: "{cm:LaunchProgram,{#StringChange(APP_NAME, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#APP_FULL_VERSION}\{#APP_EXE_FILE}"; Description: "{cm:LaunchProgram,{#StringChange(APP_NAME, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 

@@ -46,7 +46,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             var version = Versioning.GetVersionInfo();
-            Console.WriteLine($"Project version is {version.AsString()} (Assembly version: {version.AsNumericVersion()})");
+            Console.WriteLine($"Project version is {version.AsString()} (numeric: {version.AsNumericVersion()})");
         });
 
     Target Versionize => _ => _
