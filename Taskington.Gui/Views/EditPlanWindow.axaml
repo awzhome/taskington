@@ -7,7 +7,7 @@
         xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Taskington.Gui.Views.EditPlanWindow"
-        Height="800" MinHeight="400" Width="1000" MinWidth="600"
+        Height="800" MinHeight="600" Width="1000" MinWidth="600"
         WindowStartupLocation="CenterOwner"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent"
@@ -37,6 +37,9 @@
             <Setter Property="Height" Value="32" />
             <Setter Property="Width" Value="32" />
         </Style>
+        <Style Selector="Button.withVSeparator">
+            <Setter Property="Margin" Value="0,16,0,0"/>
+        </Style>
     </Window.Styles>
 
     <Panel>
@@ -52,7 +55,7 @@
 
         <Grid RowDefinitions="Auto,Auto,2*,1*,Auto" Margin="10,10,10,10">
             <TextBlock Grid.Row="0" HorizontalAlignment="Center">Edit plan</TextBlock>
-            
+
             <Grid Grid.Row="1" ColumnDefinitions="Auto,*" Margin="0,50,0,0">
                 <Label Classes="dialogControl" Grid.Column="0">Name:</Label>
                 <TextBox Classes="dialogControl" Grid.Column="1" Text="{Binding Name}" />
@@ -81,10 +84,10 @@
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
-                    <Button i:Attached.Icon="fas fa-copy" Command="{Binding DuplicateStepCommand}" />
-                    <Button i:Attached.Icon="fas fa-trash-alt" Command="{Binding RemoveStepCommand}" />
+                    <Button i:Attached.Icon="fas fa-copy" Classes="withVSeparator" Command="{Binding DuplicateStepCommand}" />
                     <Button i:Attached.Icon="fas fa-arrow-up" Command="{Binding MoveStepUpCommand}" />
                     <Button i:Attached.Icon="fas fa-arrow-down" Command="{Binding MoveStepDownCommand}" />
+                    <Button i:Attached.Icon="fas fa-trash-alt" Classes="withVSeparator" Command="{Binding RemoveStepCommand}" />
                 </StackPanel>
             </Grid>
 
