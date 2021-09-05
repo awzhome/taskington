@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Taskington.Base.Service
 {
@@ -27,14 +28,33 @@ namespace Taskington.Base.Service
         private readonly IServiceCollection services;
         private ServiceProvider? serviceProvider;
 
-        private readonly Action<IAppServiceBinder>? binderFunction;
         private readonly List<Action> autoInitializers = new();
 
-        internal ApplicationServices(Action<IAppServiceBinder>? binderFunction = null)
+        internal ApplicationServices()
         {
-            this.binderFunction = binderFunction;
             services = new ServiceCollection();
             Bind<IAppServiceProvider>(this);
+        }
+
+        public void BindServicesFrom(Assembly assembly)
+        {
+            foreach (var attribute in assembly.CustomAttributes.Where(
+                a => a.AttributeType == typeof(TaskingtonExtensionAttribute) && a.ConstructorArguments.Any()))
+            {
+                try
+                {
+                    var bindMethod = (attribute.ConstructorArguments.First().Value as Type)
+                        ?.GetMethod("Bind", new[] { typeof(IAppServiceBinder) });
+                    if ((bindMethod != null) && bindMethod.IsStatic)
+                    {
+                        bindMethod.Invoke(null, new[] { this });
+                    }
+                }
+                catch (Exception)
+                {
+                    // TODO Log this
+                }
+            }
         }
 
         public IAppServiceBinder Bind<T>() where T : class
@@ -67,7 +87,6 @@ namespace Taskington.Base.Service
 
         public void Start()
         {
-            binderFunction?.Invoke(this);
             serviceProvider = services.BuildServiceProvider();
             foreach (var autoInitializer in autoInitializers)
             {

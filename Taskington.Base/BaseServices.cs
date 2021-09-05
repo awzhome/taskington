@@ -5,6 +5,8 @@ using Taskington.Base.Service;
 using Taskington.Base.Steps;
 using Taskington.Base.SystemOperations;
 
+[assembly: TaskingtonExtension(typeof(Taskington.Base.BaseServices))]
+
 namespace Taskington.Base
 {
     static class BaseServices

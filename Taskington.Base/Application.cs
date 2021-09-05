@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Taskington.Base.Config;
 using Taskington.Base.Service;
 
@@ -10,14 +9,15 @@ namespace Taskington.Base
     {
         private readonly ApplicationServices services;
 
-        public Application(Action<IAppServiceBinder>? binderFunction = null)
+        public Application(params Assembly[] extensionAssemblies)
         {
-            services = new ApplicationServices(binder =>
+            services = new ApplicationServices();
+            services.BindServicesFrom(GetType().Assembly);
+            services.Bind(this);
+            foreach (var extensionAssembly in extensionAssemblies)
             {
-                BaseServices.Bind(binder);
-                binder.Bind(this);
-                binderFunction?.Invoke(binder);
-            });
+                services.BindServicesFrom(extensionAssembly);
+            }
         }
 
         public IAppServiceProvider ServiceProvider => services;

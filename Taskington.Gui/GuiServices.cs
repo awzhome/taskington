@@ -2,6 +2,8 @@ using Taskington.Base.Service;
 using Taskington.Gui.UIProviders;
 using Taskington.Gui.ViewModels;
 
+[assembly: TaskingtonExtension(typeof(Taskington.Gui.GuiServices))]
+
 namespace Taskington.Gui
 {
     static class GuiServices
