@@ -17,6 +17,7 @@ namespace Taskington.Gui.ViewModels
 
         public ReactiveCommand<bool, bool> CloseCommand { get; }
         public ReactiveCommand<NewStepTemplate, Unit> AddStepCommand { get; }
+        public ReactiveCommand<Unit, Unit> DuplicateStepCommand { get; }
         public ReactiveCommand<Unit, Unit> RemoveStepCommand { get; }
         public ReactiveCommand<Unit, Unit> MoveStepUpCommand { get; }
         public ReactiveCommand<Unit, Unit> MoveStepDownCommand { get; }
@@ -31,6 +32,7 @@ namespace Taskington.Gui.ViewModels
             CloseCommand = ReactiveCommand.Create<bool, bool>(save => save);
 
             AddStepCommand = ReactiveCommand.Create<NewStepTemplate>(AddStep);
+            DuplicateStepCommand = ReactiveCommand.Create(DuplicateStep);
             RemoveStepCommand = ReactiveCommand.Create(RemoveStep);
             MoveStepUpCommand = ReactiveCommand.Create(MoveStepUp);
             MoveStepDownCommand = ReactiveCommand.Create(MoveStepDown);
@@ -114,11 +116,20 @@ namespace Taskington.Gui.ViewModels
             if (newStep != null)
             {
                 var stepEditModel = CreateEditStepViewModel(newStep);
-                if (stepEditModel != null)
-                {
-                    Steps.Add(stepEditModel);
-                    SelectedItem = stepEditModel;
-                }
+                Steps.Add(stepEditModel);
+                SelectedItem = stepEditModel;
+            }
+        }
+
+        private void DuplicateStep()
+        {
+            if (SelectedItem != null)
+            {
+                var newStep = SelectedItem.ConvertToStep();
+                int selectedIndex = Steps.IndexOf(SelectedItem);
+                var stepEditModel = CreateEditStepViewModel(newStep);
+                Steps.Insert(selectedIndex + 1, stepEditModel);
+                SelectedItem = stepEditModel;
             }
         }
 

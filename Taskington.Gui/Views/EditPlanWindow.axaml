@@ -81,6 +81,7 @@
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
+                    <Button i:Attached.Icon="fas fa-copy" Command="{Binding DuplicateStepCommand}" />
                     <Button i:Attached.Icon="fas fa-trash-alt" Command="{Binding RemoveStepCommand}" />
                     <Button i:Attached.Icon="fas fa-arrow-up" Command="{Binding MoveStepUpCommand}" />
                     <Button i:Attached.Icon="fas fa-arrow-down" Command="{Binding MoveStepDownCommand}" />
