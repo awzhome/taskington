@@ -45,7 +45,7 @@
         <StackPanel Classes="cardPanel" Orientation="Vertical">
             <Grid ColumnDefinitions="Auto,*,Auto" IsVisible="{Binding !IsRemoved}">
                 <Button Grid.Column="0" Classes="icon" Command="{Binding ExecutePlanCommand}" CommandParameter="{Binding}" VerticalAlignment="Top"
-                        IsEnabled="{Binding IsPlayable}" i:Attached.Icon="fas fa-play">
+                        IsEnabled="{Binding IsPlayable}" i:Attached.Icon="fas fa-play" ToolTip.Tip="Run" >
                 </Button>
 
                 <StackPanel Grid.Column="1" Margin="20,0,0,0" Orientation="Vertical">
@@ -62,7 +62,7 @@
                     </StackPanel>
                 </StackPanel>
 
-                <Button Grid.Column="2" Classes="cardMenu icon" VerticalAlignment="Top" i:Attached.Icon="fas fa-ellipsis-v" Click="OpenButtonMenu">
+                <Button Grid.Column="2" Classes="cardMenu icon" VerticalAlignment="Top" i:Attached.Icon="fas fa-ellipsis-v" ToolTip.Tip="Plan actions"  Click="OpenButtonMenu">
                     <Button.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Edit" Command="{Binding EditPlanCommand}" CommandParameter="{Binding}" />

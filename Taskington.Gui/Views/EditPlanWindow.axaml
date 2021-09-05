@@ -71,7 +71,7 @@
                 </ListBox>
 
                 <StackPanel Grid.Column="1" Classes="listActions" Orientation="Vertical">
-                    <Button i:Attached.Icon="fas fa-plus" Click="OpenButtonMenu">
+                    <Button i:Attached.Icon="fas fa-plus" Click="OpenButtonMenu" ToolTip.Tip="Add step" >
                         <Button.ContextMenu>
                             <ContextMenu Items="{Binding NewStepTemplates}">
                                 <ContextMenu.Styles>
@@ -84,10 +84,10 @@
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
-                    <Button i:Attached.Icon="fas fa-copy" Classes="withVSeparator" Command="{Binding DuplicateStepCommand}" />
-                    <Button i:Attached.Icon="fas fa-arrow-up" Command="{Binding MoveStepUpCommand}" />
-                    <Button i:Attached.Icon="fas fa-arrow-down" Command="{Binding MoveStepDownCommand}" />
-                    <Button i:Attached.Icon="fas fa-trash-alt" Classes="withVSeparator" Command="{Binding RemoveStepCommand}" />
+                    <Button i:Attached.Icon="fas fa-copy" Classes="withVSeparator" Command="{Binding DuplicateStepCommand}" ToolTip.Tip="Duplicate step" />
+                    <Button i:Attached.Icon="fas fa-arrow-up" Command="{Binding MoveStepUpCommand}" ToolTip.Tip="Move step up"  />
+                    <Button i:Attached.Icon="fas fa-arrow-down" Command="{Binding MoveStepDownCommand}" ToolTip.Tip="Move step down"  />
+                    <Button i:Attached.Icon="fas fa-trash-alt" Classes="withVSeparator" Command="{Binding RemoveStepCommand}" ToolTip.Tip="Remove step" />
                 </StackPanel>
             </Grid>
 
