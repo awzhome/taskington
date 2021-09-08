@@ -5,7 +5,7 @@ using System;
 
 namespace Taskington.Gui
 {
-    public class ViewLocator : IDataTemplate
+    class ViewLocator : IDataTemplate
     {
         public bool SupportsRecycling => false;
 

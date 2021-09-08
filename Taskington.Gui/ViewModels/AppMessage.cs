@@ -2,14 +2,14 @@ using Taskington.Base.Model;
 
 namespace Taskington.Gui.ViewModels
 {
-    public enum AppMessageType
+    enum AppMessageType
     {
         AppInfo,
         Info,
         Warning
     }
 
-    public class AppMessage : NotifiableObject
+    class AppMessage : NotifiableObject
     {
         private string? leftText;
 

@@ -4,7 +4,7 @@ using Avalonia.Markup.Xaml;
 
 namespace Taskington.Gui.Views
 {
-    public class PlanView : UserControl
+    class PlanView : UserControl
     {
         public PlanView()
         {

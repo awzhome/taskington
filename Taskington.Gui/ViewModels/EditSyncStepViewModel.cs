@@ -8,14 +8,14 @@ using Taskington.Base.Steps;
 
 namespace Taskington.Gui.ViewModels
 {
-    public class SyncTypeEntry
+    class SyncTypeEntry
     {
         public string? Type { get; set; }
         public string? Caption { get; set; }
 
     }
 
-    public class EditSyncStepViewModel : EditStepViewModelBase
+    class EditSyncStepViewModel : EditStepViewModelBase
     {
         public ReactiveCommand<Unit, Unit> SelectFromCommand { get; }
         public ReactiveCommand<Unit, Unit> SelectToCommand { get; }

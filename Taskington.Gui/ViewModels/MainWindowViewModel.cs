@@ -12,7 +12,7 @@ using Taskington.Base.Plans;
 
 namespace Taskington.Gui.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    class MainWindowViewModel : ViewModelBase
     {
         private readonly Application application;
         private readonly ConfigurationManager configurationManager;

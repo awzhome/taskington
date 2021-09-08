@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Taskington.Gui.ViewModels
 {
-    public class ViewModelBase : ReactiveObject
+    class ViewModelBase : ReactiveObject
     {
     }
 }

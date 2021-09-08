@@ -7,7 +7,7 @@ using Taskington.Base.Steps;
 
 namespace Taskington.Gui.ViewModels
 {
-    public class PlanViewModel : NotifiableObject
+    class PlanViewModel : NotifiableObject
     {
         private readonly ExecutablePlan executablePlan;
 

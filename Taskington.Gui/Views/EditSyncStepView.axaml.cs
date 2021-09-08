@@ -4,7 +4,7 @@ using Taskington.Gui.ViewModels;
 
 namespace Taskington.Gui.Views
 {
-    public class EditSyncStepView : ReactiveUserControl<EditSyncStepViewModel>
+    class EditSyncStepView : ReactiveUserControl<EditSyncStepViewModel>
     {
         public EditSyncStepView()
         {

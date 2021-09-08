@@ -4,7 +4,7 @@ using Avalonia.Markup.Xaml;
 
 namespace Taskington.Gui.Views
 {
-    public class EditGeneralStepView : UserControl
+    class EditGeneralStepView : UserControl
     {
         public EditGeneralStepView()
         {

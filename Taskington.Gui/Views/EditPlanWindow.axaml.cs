@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace Taskington.Gui.Views
 {
-    public class EditPlanWindow : ReactiveWindow<EditPlanViewModel>
+    class EditPlanWindow : ReactiveWindow<EditPlanViewModel>
     {
         public EditPlanWindow()
         {

@@ -6,7 +6,7 @@ using Taskington.Gui.Views;
 
 namespace Taskington.Gui
 {
-    public class App : Application
+    class App : Application
     {
         public override void Initialize()
         {

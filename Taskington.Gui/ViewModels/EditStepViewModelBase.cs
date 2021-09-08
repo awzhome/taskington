@@ -5,7 +5,7 @@ using Taskington.Base.Steps;
 
 namespace Taskington.Gui.ViewModels
 {
-    public class EditStepViewModelBase : ViewModelBase
+    class EditStepViewModelBase : ViewModelBase
     {
         private readonly PlanStep step;
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Taskington.Gui.Views
 {
-    public class MainWindow : ReactiveWindow<MainWindowViewModel>
+    class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
         public MainWindow()
         {

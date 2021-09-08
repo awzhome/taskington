@@ -10,7 +10,7 @@ using Taskington.Gui.UIProviders;
 
 namespace Taskington.Gui.ViewModels
 {
-    public class EditPlanViewModel : ViewModelBase
+    class EditPlanViewModel : ViewModelBase
     {
         private readonly Plan plan;
         private readonly IAppServiceProvider serviceProvider;

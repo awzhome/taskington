@@ -8,7 +8,7 @@ using Taskington.Base.Steps;
 
 namespace Taskington.Gui.ViewModels
 {
-    public class EditGeneralStepViewModel : EditStepViewModelBase
+    class EditGeneralStepViewModel : EditStepViewModelBase
     {
         public EditGeneralStepViewModel(PlanStep step) : base(step)
         {
