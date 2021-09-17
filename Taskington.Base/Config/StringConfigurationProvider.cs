@@ -6,7 +6,7 @@ namespace Taskington.Base.Config
 {
     public class StringConfigurationProvider : IStreamReaderProvider, IStreamWriterProvider
     {
-        private readonly StringBuilder contentBuffer = new StringBuilder();
+        private readonly StringBuilder contentBuffer = new();
 
         public StringConfigurationProvider()
         {

@@ -17,9 +17,10 @@ namespace Taskington.Base.Config
             this.configurationProvider = configurationProvider;
         }
 
-        public IEnumerable<Plan> Read()
+        public Configuration Read()
         {
-            List<Plan> plans = new();
+            var configValues = new List<(string, string?)>();
+            var plans = new List<Plan>();
 
             configurationProvider.ReadConfigurationStreams(reader =>
             {
@@ -28,85 +29,103 @@ namespace Taskington.Base.Config
                 {
                     yamlStream.Load(reader);
 
-                    if (yamlStream.Documents.Count > 0 && yamlStream.Documents[0].RootNode is YamlSequenceNode root)
+                    if (yamlStream.Documents.Count > 0 && yamlStream.Documents[0].RootNode is YamlMappingNode root)
                     {
-                        foreach (var planEntry in root.Children.OfType<YamlMappingNode>())
+                        if (GetChildNode(root.Children, "config") is YamlMappingNode configEntries)
                         {
-                            List<PlanStep> steps = new();
-                            var planType = (GetChildNode(planEntry.Children, "on") as YamlScalarNode)?.Value ?? Plan.OnSelectionRunType;
-                            var plan = new Plan(planType)
+                            foreach (var entry in configEntries.Children)
                             {
-                                Steps = steps
-                            };
-
-                            foreach (var planProperty in planEntry.Children)
-                            {
-                                if (planProperty.Key is YamlScalarNode scalarKey
-                                    && planProperty.Value is YamlScalarNode scalarValue)
+                                if (entry.Key is YamlScalarNode configScalarKey
+                                        && entry.Value is YamlScalarNode configScalarValue)
                                 {
-                                    if (scalarKey.Value == "on")
+                                    if (configScalarKey.Value != null)
                                     {
-                                        continue;
-                                    }
-                                    if (scalarKey.Value == "plan")
-                                    {
-                                        plan.Name = scalarValue.Value;
-                                    }
-                                    else
-                                    {
-                                        if (scalarKey.Value != null)
-                                        {
-                                            plan[scalarKey.Value] = (planProperty.Value as YamlScalarNode)?.Value;
-                                        }
+                                        configValues.Add((configScalarKey.Value, configScalarValue.Value));
                                     }
                                 }
                             }
+                        }
 
-                            if (GetChildNode(planEntry.Children, "steps") is YamlSequenceNode stepsEntries)
+                        if (GetChildNode(root.Children, "plans") is YamlSequenceNode planEntries)
+                        {
+                            foreach (var planEntry in planEntries.OfType<YamlMappingNode>())
                             {
-                                foreach (var stepEntry in stepsEntries.Children.OfType<YamlMappingNode>())
+                                List<PlanStep> steps = new();
+                                var planType = (GetChildNode(planEntry.Children, "on") as YamlScalarNode)?.Value ?? Plan.OnSelectionRunType;
+                                var plan = new Plan(planType)
                                 {
-                                    if (stepEntry.Children.Any())
+                                    Steps = steps
+                                };
+
+                                foreach (var planProperty in planEntry.Children)
+                                {
+                                    if (planProperty.Key is YamlScalarNode scalarKey
+                                        && planProperty.Value is YamlScalarNode scalarValue)
                                     {
-                                        var firstYamlChild = stepEntry.Children.First();
-                                        var stepType = (firstYamlChild.Key as YamlScalarNode)?.Value;
-
-                                        if (stepType != null)
+                                        if (scalarKey.Value == "on")
                                         {
-                                            var step = new PlanStep(stepType);
-
-                                            bool firstProperty = true;
-                                            foreach (var stepProperty in stepEntry.Children)
-                                            {
-                                                if (stepProperty.Key is YamlScalarNode scalarKey
-                                                    && stepProperty.Value is YamlScalarNode scalarValue)
-                                                {
-                                                    if (firstProperty)
-                                                    {
-                                                        step.DefaultProperty = scalarValue?.Value;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (scalarKey.Value != null)
-                                                        {
-                                                            step[scalarKey.Value] = scalarValue?.Value;
-                                                        }
-                                                    }
-                                                    firstProperty = false;
-                                                }
-                                            }
-
-                                            steps.Add(step);
+                                            continue;
+                                        }
+                                        if (scalarKey.Value == "plan")
+                                        {
+                                            plan.Name = scalarValue.Value;
                                         }
                                         else
                                         {
-                                            steps.Add(new InvalidPlanStep("Step has no type."));
+                                            if (scalarKey.Value != null)
+                                            {
+                                                plan[scalarKey.Value] = (planProperty.Value as YamlScalarNode)?.Value;
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            plans.Add(plan);
+                                if (GetChildNode(planEntry.Children, "steps") is YamlSequenceNode stepsEntries)
+                                {
+                                    foreach (var stepEntry in stepsEntries.Children.OfType<YamlMappingNode>())
+                                    {
+                                        if (stepEntry.Children.Any())
+                                        {
+                                            var firstYamlChild = stepEntry.Children.First();
+                                            var stepType = (firstYamlChild.Key as YamlScalarNode)?.Value;
+
+                                            if (stepType != null)
+                                            {
+                                                var step = new PlanStep(stepType);
+
+                                                bool firstProperty = true;
+                                                foreach (var stepProperty in stepEntry.Children)
+                                                {
+                                                    if (stepProperty.Key is YamlScalarNode scalarKey
+                                                        && stepProperty.Value is YamlScalarNode scalarValue)
+                                                    {
+                                                        if (firstProperty)
+                                                        {
+                                                            step.DefaultProperty = scalarValue?.Value;
+                                                        }
+                                                        else
+                                                        {
+                                                            if (scalarKey.Value != null)
+                                                            {
+                                                                step[scalarKey.Value] = scalarValue?.Value;
+                                                            }
+                                                        }
+                                                        firstProperty = false;
+                                                    }
+                                                }
+
+                                                steps.Add(step);
+                                            }
+                                            else
+                                            {
+                                                steps.Add(new InvalidPlanStep("Step has no type."));
+                                            }
+                                        }
+                                    }
+                                }
+
+                                plans.Add(plan);
+                            }
                         }
                     }
                 }
@@ -116,7 +135,7 @@ namespace Taskington.Base.Config
                 }
             });
 
-            return plans;
+            return new Configuration(configValues, plans);
         }
 
         private static YamlNode? GetChildNode(IDictionary<YamlNode, YamlNode> children, string key, YamlNode? defaultValue = default)

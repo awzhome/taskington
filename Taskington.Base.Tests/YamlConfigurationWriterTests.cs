@@ -10,10 +10,38 @@ namespace Taskington.Base.Tests
     public class YamlConfigurationWriterTests
     {
         [Fact]
+        public void ConfigValues()
+        {
+            string yaml =
+    @"config:
+  key1: value1
+  key2: value2
+  key3: value3
+  key4: ''
+plans: []
+";
+
+            var configProvider = new StringConfigurationProvider();
+            var configWriter = new YamlConfigurationWriter(configProvider);
+            var configValues = new (string, string?)[]
+            {
+                ("key1", "value1"),
+                ("key2", "value2"),
+                ("key3", "value3"),
+                ("key4", null)
+            };
+
+            configWriter.Write(new Configuration(configValues, Enumerable.Empty<Plan>()));
+            Assert.Equal(yaml, configProvider.Content);
+        }
+
+        [Fact]
         public void PlansWithSteps()
         {
             string yaml =
-@"- plan: Test Plan 1
+@"config: {}
+plans:
+- plan: Test Plan 1
   on: selection
   somekey: somevalue
   steps:
@@ -70,7 +98,7 @@ namespace Taskington.Base.Tests
                 }
             };
 
-            configWriter.Write(plans);
+            configWriter.Write(new Configuration(Enumerable.Empty<(string, string?)>(), plans));
             Assert.Equal(yaml, configProvider.Content);
         }
 
@@ -78,7 +106,9 @@ namespace Taskington.Base.Tests
         public void PlanWithoutSteps()
         {
             string yaml =
-    @"- plan: Test Plan 1
+    @"config: {}
+plans:
+- plan: Test Plan 1
   on: selection
   somekey: somevalue
   steps: []
@@ -96,7 +126,7 @@ namespace Taskington.Base.Tests
                 }
             };
 
-            configWriter.Write(plans);
+            configWriter.Write(new Configuration(Enumerable.Empty<(string, string?)>(), plans));
             Assert.Equal(yaml, configProvider.Content);
         }
 
@@ -104,14 +134,15 @@ namespace Taskington.Base.Tests
         public void NoPlans()
         {
             string yaml =
-    @"[]
+    @"config: {}
+plans: []
 ";
 
             var configProvider = new StringConfigurationProvider();
             var configWriter = new YamlConfigurationWriter(configProvider);
             var plans = Enumerable.Empty<Plan>();
 
-            configWriter.Write(plans);
+            configWriter.Write(new Configuration(Enumerable.Empty<(string, string?)>(), plans));
             Assert.Equal(yaml, configProvider.Content);
         }
     }

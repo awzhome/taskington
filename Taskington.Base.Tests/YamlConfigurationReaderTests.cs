@@ -8,9 +8,42 @@ namespace Taskington.Base.Tests
     public class YamlConfigurationReaderTests
     {
         [Fact]
+        public void ConfigValues()
+        {
+            string yaml = @"
+config:
+  key1: value1
+  key2: value2
+  key3: value3
+";
+
+            var configReader = new YamlConfigurationReader(new StringConfigurationProvider(yaml));
+            Assert.Collection(configReader.Read().ConfigValues,
+                configValue =>
+                {
+                    Assert.IsType<(string, string?)>(configValue);
+                    Assert.Equal("key1", configValue.Key);
+                    Assert.Equal("value1", configValue.Value);
+                },
+                configValue =>
+                {
+                    Assert.IsType<(string, string?)>(configValue);
+                    Assert.Equal("key2", configValue.Key);
+                    Assert.Equal("value2", configValue.Value);
+                },
+                configValue =>
+                {
+                    Assert.IsType<(string, string?)>(configValue);
+                    Assert.Equal("key3", configValue.Key);
+                    Assert.Equal("value3", configValue.Value);
+                });
+        }
+
+        [Fact]
         public void PlansWithSteps()
         {
             string yaml = @"
+plans:
 - plan: Test Plan 1
   on: selection
   somekey: somevalue
@@ -30,7 +63,7 @@ namespace Taskington.Base.Tests
 ";
 
             var configReader = new YamlConfigurationReader(new StringConfigurationProvider(yaml));
-            Assert.Collection(configReader.Read(),
+            Assert.Collection(configReader.Read().Plans,
                 plan =>
                 {
                     Assert.IsType<Plan>(plan);
@@ -73,6 +106,7 @@ namespace Taskington.Base.Tests
         public void PlanOfUnknownTypeWithSteps()
         {
             string yaml = @"
+plans:
 - plan: Test Plan
   on: SOMETHINGUNKNOWN
   steps:
@@ -82,7 +116,7 @@ namespace Taskington.Base.Tests
 ";
 
             var configReader = new YamlConfigurationReader(new StringConfigurationProvider(yaml));
-            Assert.Collection(configReader.Read(), plan =>
+            Assert.Collection(configReader.Read().Plans, plan =>
             {
                 Assert.IsType<Plan>(plan);
                 Assert.Equal("SOMETHINGUNKNOWN", plan.RunType);
@@ -101,6 +135,7 @@ namespace Taskington.Base.Tests
         public void PlanWithStepsOfUnknownType()
         {
             string yaml = @"
+plans:
 - plan: Test Plan
   on: selection
   steps:
@@ -110,7 +145,7 @@ namespace Taskington.Base.Tests
 ";
 
             var configReader = new YamlConfigurationReader(new StringConfigurationProvider(yaml));
-            Assert.Collection(configReader.Read(), plan =>
+            Assert.Collection(configReader.Read().Plans, plan =>
             {
                 Assert.IsType<Plan>(plan);
                 Assert.Equal(Plan.OnSelectionRunType, plan.RunType);
@@ -129,22 +164,24 @@ namespace Taskington.Base.Tests
         public void WrongYamlStructure()
         {
             string yaml = @"
-plan: Test Plan
-on: SOMETHINGUNKNOWN
-steps:
+plans:
+  plan: Test Plan
+  on: SOMETHINGUNKNOWN
+  steps:
   - sync: dir
     from: path1/path2
     to: path3/path4
 ";
 
             var configReader = new YamlConfigurationReader(new StringConfigurationProvider(yaml));
-            Assert.Empty(configReader.Read());
+            Assert.Empty(configReader.Read().Plans);
         }
 
         [Fact]
         public void WrongYamlStructure_SequenceAsPropertyValue()
         {
             string yaml = @"
+plans:
 - plan: Test Plan
   on: selection
   somekey:
@@ -153,7 +190,7 @@ steps:
 ";
 
             var configReader = new YamlConfigurationReader(new StringConfigurationProvider(yaml));
-            Assert.Collection(configReader.Read(),
+            Assert.Collection(configReader.Read().Plans,
                 plan =>
                 {
                     Assert.IsType<Plan>(plan);

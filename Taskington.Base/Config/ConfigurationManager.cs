@@ -39,6 +39,8 @@ namespace Taskington.Base.Config
         private readonly List<ExecutablePlan> executablePlans = new();
         public IEnumerable<ExecutablePlan> ExecutablePlans => executablePlans;
 
+        private readonly Dictionary<string, string?> configValues = new();
+
         public void Initialize()
         {
             if (!isInitialized)
@@ -91,7 +93,12 @@ namespace Taskington.Base.Config
 
         private void ReadConfiguration()
         {
-            executablePlans.AddRange(configurationReader.Read().Select(CreateExecutablePlan));
+            var configuration = configurationReader.Read();
+            foreach (var (key, value) in configuration.ConfigValues)
+            {
+                configValues.Add(key, value);
+            }
+            executablePlans.AddRange(configuration.Plans.Select(CreateExecutablePlan));
         }
 
         private ExecutablePlan CreateExecutablePlan(Plan plan)
@@ -152,7 +159,9 @@ namespace Taskington.Base.Config
 
         public void SaveConfiguration()
         {
-            configurationWriter.Write(executablePlans.Select(ep => ep.Plan));
+            configurationWriter.Write(new Configuration(
+                configValues.Select(entry => (entry.Key, entry.Value)),
+                executablePlans.Select(ep => ep.Plan)));
         }
 
         public ExecutablePlan InsertPlan(int index, Plan newPlan)
@@ -196,6 +205,21 @@ namespace Taskington.Base.Config
             }
 
             return newExecutablePlan;
+        }
+
+        public void SetValue(string key, string value)
+        {
+            configValues[key] = value;
+        }
+
+        public string? GetValue(string key)
+        {
+            if (configValues.TryGetValue(key, out string? configValue))
+            {
+                return configValue;
+            }
+
+            return null;
         }
     }
 }
