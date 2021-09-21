@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Taskington.Base.Log;
 
 namespace Taskington.Base.Service
 {
@@ -29,15 +30,20 @@ namespace Taskington.Base.Service
         private ServiceProvider? serviceProvider;
 
         private readonly List<Action> autoInitializers = new();
+        private readonly ILog log;
 
-        internal ApplicationServices()
+        internal ApplicationServices(ILog log)
         {
+            this.log = log;
+
             services = new ServiceCollection();
             Bind<IAppServiceProvider>(this);
         }
 
         public void BindServicesFrom(Assembly assembly)
         {
+            log.Info(this, "Binding services from {Assembly}", assembly.FullName ?? "");
+
             foreach (var attribute in assembly.CustomAttributes.Where(
                 a => a.AttributeType == typeof(TaskingtonExtensionAttribute) && a.ConstructorArguments.Any()))
             {
@@ -49,10 +55,14 @@ namespace Taskington.Base.Service
                     {
                         bindMethod.Invoke(null, new[] { this });
                     }
+                    else
+                    {
+                        log.Error(this, "No valid bind method found in assembly {Assembly}", assembly.GetName());
+                    }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // TODO Log this
+                    log.Error($"Error binding services from '{assembly.GetName()}'", ex);
                 }
             }
         }

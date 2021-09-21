@@ -1,5 +1,6 @@
 using Taskington.Base.Config;
 using Taskington.Base.Events;
+using Taskington.Base.Log;
 using Taskington.Base.Plans;
 using Taskington.Base.Service;
 using Taskington.Base.Steps;
@@ -27,7 +28,9 @@ namespace Taskington.Base
                 .Bind(SystemOperationsFactory.CreateSystemOperations)
                 .Bind<IStepExecution, SyncStepExecution>()
                 .Bind<PlanExecutionHelper>()
-                .Bind<IPlanExecutionCreator, ManualPlanExecution.Creator>();
+                .Bind<IPlanExecutionCreator, ManualPlanExecution.Creator>()
+                .Bind<ILog, FileLog>()
+                .Bind<LogConfiguration>();
         }
     }
 }
