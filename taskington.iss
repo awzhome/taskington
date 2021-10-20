@@ -1,6 +1,6 @@
-﻿#define APP_NAME "Taskington"
-#define APP_VERSION "0.1.0.99"
-#define APP_FULL_VERSION "0.1-preview.99"
+#define APP_NAME "Taskington"
+#define APP_VERSION "0.1.0.158"
+#define APP_FULL_VERSION "0.1-preview.158"
 #define APP_PUBLISHER "Andreas Weizel"
 #define APP_URL "https://github.com/awzhome/taskington"
 #define APP_EXE_FILE "taskington-gui.exe"
@@ -15,6 +15,7 @@ AppPublisherURL={#APP_URL}
 AppSupportURL={#APP_URL}
 AppUpdatesURL={#APP_URL}
 DefaultDirName={userpf}\{#APP_NAME}
+DisableDirPage=yes
 DisableProgramGroupPage=yes
 DisableWelcomePage=false
 PrivilegesRequired=lowest
@@ -33,14 +34,21 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; Flags: unchecked
 Name: "autostart"; Description: "{cm:AutoStartProgram,{#APP_NAME}}"
 
+[InstallDelete]
+Type: filesandordirs; Name: "{app}\0.1*"
+Type: filesandordirs; Name: "{app}\bin"
+
+[Dirs]
+Name: "{app}\bin"
+
 [Files]
-Source: "output\publish-win64\*"; DestDir: "{app}\{#APP_FULL_VERSION}"; Flags: ignoreversion
+Source: "output\publish-win64\*"; DestDir: "{app}\bin"; Flags: ignoreversion
 
 [Icons]
-Name: "{autoprograms}\{#APP_NAME}"; Filename: "{app}\{#APP_FULL_VERSION}\{#APP_EXE_FILE}"
-Name: "{autodesktop}\{#APP_NAME}"; Filename: "{app}\{#APP_FULL_VERSION}\{#APP_EXE_FILE}"; Tasks: desktopicon
-Name: "{userstartup}\{#APP_NAME}"; Filename: "{app}\{#APP_FULL_VERSION}\{#APP_EXE_FILE}"; Tasks: autostart
+Name: "{autoprograms}\{#APP_NAME}"; Filename: "{app}\bin\{#APP_EXE_FILE}"
+Name: "{autodesktop}\{#APP_NAME}"; Filename: "{app}\bin\{#APP_EXE_FILE}"; Tasks: desktopicon
+Name: "{userstartup}\{#APP_NAME}"; Filename: "{app}\bin\{#APP_EXE_FILE}"; Tasks: autostart
 
 [Run]
-Filename: "{app}\{#APP_FULL_VERSION}\{#APP_EXE_FILE}"; Description: "{cm:LaunchProgram,{#StringChange(APP_NAME, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\bin\{#APP_EXE_FILE}"; Description: "{cm:LaunchProgram,{#StringChange(APP_NAME, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
