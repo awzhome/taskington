@@ -36,7 +36,6 @@ jobs:
         run: ./build test
 
       - name: Archive artifacts
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/nukebuild'
         uses: actions/upload-artifact@v2
         with:
           name: Windows x64 Installer
