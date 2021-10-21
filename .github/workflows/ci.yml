@@ -3,9 +3,9 @@ name: CI
 on:
   push:
     branches:
-      - master
-      - ghaction
-      - nukebuild
+      - '**'
+    tags:
+      - 'v*'
   pull_request:
     branches:
       - master
@@ -41,3 +41,17 @@ jobs:
         with:
           name: Windows x64 Installer
           path: output/taskington-setup-win64-*.exe
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: Windows x64 Installer
+      - name: Create draft release
+        run: |
+          gh release create "${GITHUB_REF#refs/tags/}" --draft --title "${GITHUB_REF#refs/tags/v}" *
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
