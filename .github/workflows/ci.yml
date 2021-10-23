@@ -47,6 +47,8 @@ jobs:
           $tag = $env:GITHUB_REF -replace "refs/tags/"
           $title = $env:GITHUB_REF -replace "refs/tags/v"
           echo $tag
-          gh release create $tag --draft --title $title ./output/*.exe
+          ls
+          ls ./output
+          gh release create $tag --draft --title $title "./output/*.exe"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
