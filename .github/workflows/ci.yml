@@ -41,16 +41,9 @@ jobs:
           name: Windows x64 Installer
           path: output/taskington-setup-win64-*.exe
 
-  release:
-    needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: Windows x64 Installer
       - name: Create draft release
+        if: ${{ github.event_name == 'pull_request' }}
         run: |
-          gh release create "${GITHUB_REF#refs/tags/}" --draft --title "${GITHUB_REF#refs/tags/v}" *
+          gh release create "${GITHUB_REF#refs/tags/}" --draft --title "${GITHUB_REF#refs/tags/v}" output/*.exe
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
