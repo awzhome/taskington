@@ -43,12 +43,8 @@ jobs:
 
       - name: Create draft release
         if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
         run: |
-          $tag = $env:GITHUB_REF -replace "refs/tags/"
-          $title = $env:GITHUB_REF -replace "refs/tags/v"
-          echo $tag
-          ls
-          ls ./output
-          gh release create $tag --draft --title $title "./output/*.exe"
+          gh release create "${GITHUB_REF#refs/tags/}" --draft --title "${GITHUB_REF#refs/tags/v}" output/*.exe
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
