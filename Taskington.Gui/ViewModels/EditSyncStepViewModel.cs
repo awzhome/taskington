@@ -17,6 +17,10 @@ namespace Taskington.Gui.ViewModels
 
     class EditSyncStepViewModel : EditStepViewModelBase
     {
+        private const string SyncFileType = "file";
+        private const string SyncDirType = "dir";
+        private const string SyncSubDirsType = "sub-dirs";
+
         public ReactiveCommand<Unit, Unit> SelectFromCommand { get; }
         public ReactiveCommand<Unit, Unit> SelectToCommand { get; }
 
@@ -33,30 +37,49 @@ namespace Taskington.Gui.ViewModels
 
         public List<SyncTypeEntry> SyncTypes { get; } = new()
         {
-            new() { Type = "file", Caption = "file" },
-            new() { Type = "dir", Caption = "directory" },
-            new() { Type = "sub-dirs", Caption = "sub-directories" }
+            new() { Type = SyncFileType, Caption = "file" },
+            new() { Type = SyncDirType, Caption = "directory" },
+            new() { Type = SyncSubDirsType, Caption = "sub-directories" }
         };
 
         private SyncTypeEntry? selectedType;
         public SyncTypeEntry? SelectedType
         {
             get => selectedType;
-            set => this.RaiseAndSetIfChanged(ref selectedType, value);
+            set
+            {
+                this.RaiseAndSetIfChanged(ref selectedType, value);
+                Icon = SelectedType?.Type switch
+                {
+                    SyncFileType => "fas fa-copy",
+                    SyncDirType => "fas fa-folder-open",
+                    SyncSubDirsType => "fas fa-sitemap",
+                    _ => ""
+                };
+                UpdateCaption();
+            }
         }
 
         public string? from;
         public string? From
         {
             get => from;
-            set => this.RaiseAndSetIfChanged(ref from, value);
+            set
+            {
+                this.RaiseAndSetIfChanged(ref from, value);
+                UpdateCaption();
+            }
         }
 
         public string? to;
         public string? To
         {
             get => to;
-            set => this.RaiseAndSetIfChanged(ref to, value);
+            set
+            {
+                this.RaiseAndSetIfChanged(ref to, value);
+                UpdateCaption();
+            }
         }
 
         private void InitializeFromBasicModel(PlanStep step)
@@ -110,6 +133,11 @@ namespace Taskington.Gui.ViewModels
                     To = selectedPath;
                 }
             }
+        }
+
+        private void UpdateCaption()
+        {
+            Caption = $"Synchronize {selectedType?.Caption} from {from} to {to}";
         }
     }
 }

@@ -24,13 +24,18 @@ namespace Taskington.Gui.ViewModels
 
         private void InitializeFromBasicModel(PlanStep baseModel)
         {
-            StringBuilder sb = new();
-            sb.Append($"{baseModel.StepType} {baseModel.DefaultProperty}{Environment.NewLine}");
+            StringBuilder readablePropertiesBuilder = new();
+            readablePropertiesBuilder.Append($"{baseModel.StepType} {baseModel.DefaultProperty}{Environment.NewLine}");
+            StringBuilder captionBuilder = new();
+            captionBuilder.Append($"{baseModel.StepType} {baseModel.DefaultProperty} ");
+
             foreach (var property in baseModel.Properties)
             {
-                sb.Append($"    {property.Key} {property.Value}{Environment.NewLine}");
+                readablePropertiesBuilder.Append($"    {property.Key} {property.Value}{Environment.NewLine}");
+                captionBuilder.Append($"{property.Key} {property.Value} ");
             }
-            ReadableProperties = sb.ToString();
+            ReadableProperties = readablePropertiesBuilder.ToString();
+            Caption = captionBuilder.ToString();
         }
     }
 }

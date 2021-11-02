@@ -15,6 +15,13 @@ namespace Taskington.Gui.ViewModels
             InitializeFromBasicModel();
         }
 
+        private string? icon;
+        public string? Icon
+        {
+            get => icon;
+            set => this.RaiseAndSetIfChanged(ref icon, value);
+        }
+
         private string? caption;
         public string? Caption
         {
@@ -40,14 +47,6 @@ namespace Taskington.Gui.ViewModels
         {
             stepType = step.StepType;
             SubType = step.DefaultProperty;
-
-            StringBuilder sb = new();
-            sb.Append($"{step.StepType} {step.DefaultProperty} ");
-            foreach (var property in step.Properties)
-            {
-                sb.Append($"{property.Key} {property.Value} ");
-            }
-            Caption = sb.ToString();
         }
 
         public virtual PlanStep ConvertToStep()

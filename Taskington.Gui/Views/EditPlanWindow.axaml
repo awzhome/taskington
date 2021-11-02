@@ -65,7 +65,10 @@
                 <ListBox Grid.Column="0" Items="{Binding Steps}" SelectedItem="{Binding SelectedItem}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Caption}" />
+                            <StackPanel Orientation="Horizontal">
+                                <i:Icon Value="{Binding Icon}" />
+                                <TextBlock Text="{Binding Caption}" Margin="8,0,0,0" />
+                            </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
