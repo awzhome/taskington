@@ -32,10 +32,14 @@ namespace Taskington.Gui.ViewModels
             CloseCommand = ReactiveCommand.Create<bool, bool>(save => save);
 
             AddStepCommand = ReactiveCommand.Create<NewStepTemplate>(AddStep);
-            DuplicateStepCommand = ReactiveCommand.Create(DuplicateStep);
-            RemoveStepCommand = ReactiveCommand.Create(RemoveStep);
-            MoveStepUpCommand = ReactiveCommand.Create(MoveStepUp);
-            MoveStepDownCommand = ReactiveCommand.Create(MoveStepDown);
+            DuplicateStepCommand = ReactiveCommand.Create(DuplicateStep,
+                this.WhenAnyValue(x => x.SelectedItem, (EditStepViewModelBase? selectedItem) => selectedItem != null));
+            RemoveStepCommand = ReactiveCommand.Create(RemoveStep,
+                this.WhenAnyValue(x => x.SelectedItem, (EditStepViewModelBase? selectedItem) => selectedItem != null));
+            MoveStepUpCommand = ReactiveCommand.Create(MoveStepUp,
+                this.WhenAnyValue(x => x.SelectedItem, selectedItem => Steps.FirstOrDefault() != selectedItem));
+            MoveStepDownCommand = ReactiveCommand.Create(MoveStepDown,
+                this.WhenAnyValue(x => x.SelectedItem, selectedItem => Steps.LastOrDefault() != selectedItem));
 
             OpenFolderDialog = new();
             OpenFileDialog = new();
