@@ -47,7 +47,7 @@ namespace Taskington.Base.Log
             logger = loggerConfig.CreateLogger();
         }
 
-        private LoggerConfiguration WithMinimumLevel(LoggerConfiguration prevConfig, LogLevel minimumLevel) => minimumLevel switch
+        private static LoggerConfiguration WithMinimumLevel(LoggerConfiguration prevConfig, LogLevel minimumLevel) => minimumLevel switch
         {
             LogLevel.Verbose => prevConfig.MinimumLevel.Debug(),
             LogLevel.Warning => prevConfig.MinimumLevel.Warning(),
