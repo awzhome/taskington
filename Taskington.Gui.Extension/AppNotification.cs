@@ -1,15 +1,15 @@
 using Taskington.Base.Model;
 
-namespace Taskington.Gui.ViewModels
+namespace Taskington.Gui.Extension
 {
-    enum AppMessageType
+    public enum AppNotificationType
     {
         AppInfo,
         Info,
         Warning
     }
 
-    class AppMessage : NotifiableObject
+    public class AppNotification : NotifiableObject
     {
         private string? leftText;
 
@@ -27,12 +27,12 @@ namespace Taskington.Gui.ViewModels
             set => SetAndNotify(ref rightText, value);
         }
 
-        private AppMessageType messageType;
+        private AppNotificationType notificationType;
 
-        public AppMessageType MessageType
+        public AppNotificationType NotificationType
         {
-            get => messageType;
-            set => SetAndNotify(ref messageType, value);
+            get => notificationType;
+            set => SetAndNotify(ref notificationType, value);
         }
     }
 }

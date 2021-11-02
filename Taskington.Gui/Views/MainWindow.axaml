@@ -3,6 +3,7 @@
         xmlns:vm="using:Taskington.Gui.ViewModels"
 		xmlns:models="using:Taskington.Gui.Models"
 		xmlns:v="using:Taskington.Gui.Views"
+        xmlns:ext="using:Taskington.Gui.Extension"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
@@ -33,8 +34,8 @@
             <v:PlanView />
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type vm:AppMessage}">
-            <v:AppMessageView />
+        <DataTemplate DataType="{x:Type ext:AppNotification}">
+            <v:AppNotificationView />
         </DataTemplate>
     </Window.DataTemplates>
 
@@ -75,7 +76,7 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <ItemsControl Grid.Row="2" Items="{Binding AppMessages}">
+            <ItemsControl Grid.Row="2" Items="{Binding AppNotifications}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Vertical" />

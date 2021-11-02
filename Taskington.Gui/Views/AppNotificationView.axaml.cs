@@ -3,9 +3,9 @@ using Avalonia.Markup.Xaml;
 
 namespace Taskington.Gui.Views
 {
-    public partial class AppMessageView : UserControl
+    public partial class AppNotificationView : UserControl
     {
-        public AppMessageView()
+        public AppNotificationView()
         {
             InitializeComponent();
         }

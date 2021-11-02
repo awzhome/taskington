@@ -9,6 +9,7 @@ using Taskington.Base;
 using Taskington.Base.Config;
 using Taskington.Base.Events;
 using Taskington.Base.Plans;
+using Taskington.Gui.Extension;
 
 namespace Taskington.Gui.ViewModels
 {
@@ -18,7 +19,7 @@ namespace Taskington.Gui.ViewModels
         private readonly ConfigurationManager configurationManager;
 
         public ObservableCollection<PlanViewModel> Plans { get; }
-        public ObservableCollection<AppMessage> AppMessages { get; }
+        public ObservableCollection<AppNotification> AppNotifications { get; }
 
         public ReactiveCommand<Unit, Unit> AddPlanCommand { get; }
         public ReactiveCommand<PlanViewModel, Unit> ExecutePlanCommand { get; }
@@ -32,7 +33,7 @@ namespace Taskington.Gui.ViewModels
             this.application = application;
             this.configurationManager = configurationManager;
 
-            AppMessages = new ObservableCollection<AppMessage>();
+            AppNotifications = new ObservableCollection<AppNotification>();
 
             Plans = new ObservableCollection<PlanViewModel>();
             applicationEvents.ConfigurationReloaded += (sender, e) =>
@@ -48,9 +49,9 @@ namespace Taskington.Gui.ViewModels
             RemovePlanCommand = ReactiveCommand.Create<PlanViewModel>(RemovePlan);
             UndoPlanRemovalCommand = ReactiveCommand.Create<PlanViewModel>(UndoPlanRemoval);
 
-            AppMessages.Add(new AppMessage()
+            AppNotifications.Add(new AppNotification()
             {
-                MessageType = AppMessageType.AppInfo,
+                NotificationType = AppNotificationType.AppInfo,
                 LeftText = AppInfo.Copyright,
                 RightText = $"v{AppInfo.Version}"
             });

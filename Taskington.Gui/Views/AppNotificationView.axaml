@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:v="using:Taskington.Gui.Views"
              xmlns:vm="using:Taskington.Gui.ViewModels"
+             xmlns:ext="using:Taskington.Gui.Extension"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Taskington.Gui.Views.AppMessageView">
+             x:Class="Taskington.Gui.Views.AppNotificationView">
 
     <UserControl.Resources>
         <SolidColorBrush x:Key="transparentBackground" Color="Transparent" />
@@ -16,17 +17,16 @@
 
         <v:DynamicConverter x:Key="backgroundConverter" Default="{StaticResource transparentBackground}">
             <v:DynamicConverter.Mappings>
-                <v:Convert If="{x:Static vm:AppMessageType.Info}" Then="{StaticResource infoBackground}" />
-                <v:Convert If="{x:Static vm:AppMessageType.Warning}" Then="{StaticResource warningBackground}" />
+                <v:Convert If="{x:Static ext:AppNotificationType.Info}" Then="{StaticResource infoBackground}" />
+                <v:Convert If="{x:Static ext:AppNotificationType.Warning}" Then="{StaticResource warningBackground}" />
             </v:DynamicConverter.Mappings>
         </v:DynamicConverter>
 
         <v:DynamicConverter x:Key="foregroundConverter" Default="{StaticResource brightText}">
             <v:DynamicConverter.Mappings>
-                <v:Convert If="{x:Static vm:AppMessageType.Warning}" Then="{StaticResource darkText}" />
+                <v:Convert If="{x:Static ext:AppNotificationType.Warning}" Then="{StaticResource darkText}" />
             </v:DynamicConverter.Mappings>
         </v:DynamicConverter>
-
     </UserControl.Resources>
 
     <UserControl.Styles>
