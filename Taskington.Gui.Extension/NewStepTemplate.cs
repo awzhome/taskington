@@ -1,9 +1,9 @@
 using System;
 using Taskington.Base.Steps;
 
-namespace Taskington.Gui.UIProviders
+namespace Taskington.Gui.Extension
 {
-    class NewStepTemplate
+    public class NewStepTemplate
     {
         public string? Icon { get; set; }
         public string? Caption { get; set; }

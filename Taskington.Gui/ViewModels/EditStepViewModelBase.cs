@@ -2,10 +2,11 @@ using ReactiveUI;
 using System.Linq;
 using System.Text;
 using Taskington.Base.Steps;
+using Taskington.Gui.Extension;
 
 namespace Taskington.Gui.ViewModels
 {
-    class EditStepViewModelBase : ViewModelBase
+    class EditStepViewModelBase : ViewModelBase, IEditStepViewModel
     {
         private readonly PlanStep step;
 

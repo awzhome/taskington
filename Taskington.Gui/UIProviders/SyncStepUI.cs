@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Taskington.Base.Steps;
+using Taskington.Gui.Extension;
 using Taskington.Gui.ViewModels;
 
 namespace Taskington.Gui.UIProviders
@@ -8,7 +9,7 @@ namespace Taskington.Gui.UIProviders
     {
         public string StepType => "sync";
 
-        public EditStepViewModelBase CreateEditViewModel(PlanStep step, EditPlanViewModel parentModel) =>
+        public IEditStepViewModel CreateEditViewModel(PlanStep step, IEditPlanViewModel parentModel) =>
             new EditSyncStepViewModel(step)
             {
                 OpenFolderDialogInteraction = parentModel.OpenFolderDialog,

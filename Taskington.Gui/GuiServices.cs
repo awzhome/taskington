@@ -1,4 +1,5 @@
 using Taskington.Base.Service;
+using Taskington.Gui.Extension;
 using Taskington.Gui.UIProviders;
 using Taskington.Gui.ViewModels;
 

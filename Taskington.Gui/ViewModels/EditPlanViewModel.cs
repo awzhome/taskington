@@ -6,11 +6,11 @@ using System.Reactive;
 using Taskington.Base.Plans;
 using Taskington.Base.Service;
 using Taskington.Base.Steps;
-using Taskington.Gui.UIProviders;
+using Taskington.Gui.Extension;
 
 namespace Taskington.Gui.ViewModels
 {
-    class EditPlanViewModel : ViewModelBase
+    class EditPlanViewModel : ViewModelBase, IEditPlanViewModel
     {
         private readonly Plan plan;
         private readonly IAppServiceProvider serviceProvider;
@@ -33,13 +33,13 @@ namespace Taskington.Gui.ViewModels
 
             AddStepCommand = ReactiveCommand.Create<NewStepTemplate>(AddStep);
             DuplicateStepCommand = ReactiveCommand.Create(DuplicateStep,
-                this.WhenAnyValue(x => x.SelectedItem, (EditStepViewModelBase? selectedItem) => selectedItem != null));
+                this.WhenAnyValue(x => x.SelectedItem, (IEditStepViewModel? selectedItem) => selectedItem != null));
             RemoveStepCommand = ReactiveCommand.Create(RemoveStep,
-                this.WhenAnyValue(x => x.SelectedItem, (EditStepViewModelBase? selectedItem) => selectedItem != null));
+                this.WhenAnyValue(x => x.SelectedItem, (IEditStepViewModel? selectedItem) => selectedItem != null));
             MoveStepUpCommand = ReactiveCommand.Create(MoveStepUp,
-                this.WhenAnyValue(x => x.SelectedItem, selectedItem => Steps.FirstOrDefault() != selectedItem));
+                this.WhenAnyValue(x => x.SelectedItem, (IEditStepViewModel? selectedItem) => Steps.FirstOrDefault() != selectedItem));
             MoveStepDownCommand = ReactiveCommand.Create(MoveStepDown,
-                this.WhenAnyValue(x => x.SelectedItem, selectedItem => Steps.LastOrDefault() != selectedItem));
+                this.WhenAnyValue(x => x.SelectedItem, (IEditStepViewModel? selectedItem) => Steps.LastOrDefault() != selectedItem));
 
             OpenFolderDialog = new();
             OpenFileDialog = new();
@@ -50,7 +50,7 @@ namespace Taskington.Gui.ViewModels
             NewStepTemplates = CollectNewStepTemplates();
         }
 
-        public ObservableCollection<EditStepViewModelBase> Steps { get; } = new();
+        public ObservableCollection<IEditStepViewModel> Steps { get; } = new();
 
         public List<NewStepTemplate> NewStepTemplates { get; }
 
@@ -68,8 +68,8 @@ namespace Taskington.Gui.ViewModels
             set => this.RaiseAndSetIfChanged(ref runType, value);
         }
 
-        private EditStepViewModelBase? selectedItem;
-        public EditStepViewModelBase? SelectedItem
+        private IEditStepViewModel? selectedItem;
+        public IEditStepViewModel? SelectedItem
         {
             get => selectedItem;
             set
@@ -84,7 +84,7 @@ namespace Taskington.Gui.ViewModels
             }
         }
 
-        private EditStepViewModelBase CreateEditStepViewModel(PlanStep step) =>
+        private IEditStepViewModel CreateEditStepViewModel(PlanStep step) =>
             serviceProvider.Get<IStepTypeUI>(stepTypeUI => stepTypeUI.StepType == step.StepType)
                 ?.CreateEditViewModel(step, this)
                 ?? new EditGeneralStepViewModel(step);

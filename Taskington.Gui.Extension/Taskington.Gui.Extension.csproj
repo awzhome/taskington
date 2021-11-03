@@ -14,6 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ReactiveUI" Version="13.2.10" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
   </ItemGroup>
 </Project>
