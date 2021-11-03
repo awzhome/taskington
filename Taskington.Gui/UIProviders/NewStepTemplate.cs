@@ -5,6 +5,7 @@ namespace Taskington.Gui.UIProviders
 {
     class NewStepTemplate
     {
+        public string? Icon { get; set; }
         public string? Caption { get; set; }
         public Func<PlanStep>? Creator { get; set; }
     }

@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Taskington.Base.Steps;
 using Taskington.Gui.ViewModels;
 
@@ -24,6 +20,7 @@ namespace Taskington.Gui.UIProviders
             yield return new()
             {
                 Caption = "Synchronize file",
+                Icon = "fas fa-copy",
                 Creator = () => new PlanStep("sync")
                 {
                     DefaultProperty = "file"
@@ -32,6 +29,7 @@ namespace Taskington.Gui.UIProviders
             yield return new()
             {
                 Caption = "Synchronize directory",
+                Icon = "fas fa-folder-open",
                 Creator = () => new PlanStep("sync")
                 {
                     DefaultProperty = "dir"
@@ -40,6 +38,7 @@ namespace Taskington.Gui.UIProviders
             yield return new()
             {
                 Caption = "Synchronize sub-directories",
+                Icon = "fas fa-sitemap",
                 Creator = () => new PlanStep("sync")
                 {
                     DefaultProperty = "sub-dirs"
