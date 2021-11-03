@@ -89,7 +89,12 @@
                     </StackPanel>
                 </StackPanel>
 
-                <Button Grid.Column="1" Content="Restore" Command="{Binding UndoPlanRemovalCommand}" CommandParameter="{Binding}" />
+                <Button Grid.Column="1" Command="{Binding UndoPlanRemovalCommand}" CommandParameter="{Binding}">
+                    <StackPanel Orientation="Horizontal">
+                        <i:Icon Value="fas fa-undo" />
+                        <TextBlock Text="Restore" Margin="4,0,0,0" />
+                    </StackPanel>
+                </Button>
             </Grid>
         </StackPanel>
     </Border>
