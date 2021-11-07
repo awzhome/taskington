@@ -17,7 +17,7 @@ namespace Taskington.Gui
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var application = new Taskington.Base.Application(GetType().Assembly);
+                var application = new Taskington.Base.Application(GetType().Assembly, typeof(Taskington.Update.Windows.UpdateServices).Assembly);
                 application.Start();
 
                 var mainViewModel = application.ServiceProvider.Get<MainWindowViewModel>();

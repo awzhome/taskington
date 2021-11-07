@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskington.Gui", "Taskingto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{04E341BA-3340-4B5D-9655-F282EB2213FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskington.Gui.Extension", "Taskington.Gui.Extension\Taskington.Gui.Extension.csproj", "{0B0FE87F-585A-4132-9EC5-A6424EC0CFB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskington.Gui.Extension", "Taskington.Gui.Extension\Taskington.Gui.Extension.csproj", "{0B0FE87F-585A-4132-9EC5-A6424EC0CFB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskington.Update.Windows", "Taskington.Update.Windows\Taskington.Update.Windows.csproj", "{FAED5E44-8A25-4E2E-ADA4-B6CC0A4AE901}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{0B0FE87F-585A-4132-9EC5-A6424EC0CFB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B0FE87F-585A-4132-9EC5-A6424EC0CFB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B0FE87F-585A-4132-9EC5-A6424EC0CFB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAED5E44-8A25-4E2E-ADA4-B6CC0A4AE901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAED5E44-8A25-4E2E-ADA4-B6CC0A4AE901}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAED5E44-8A25-4E2E-ADA4-B6CC0A4AE901}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAED5E44-8A25-4E2E-ADA4-B6CC0A4AE901}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

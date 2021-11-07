@@ -35,6 +35,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
     <ProjectReference Include="..\Taskington.Gui.Extension\Taskington.Gui.Extension.csproj" />
+    <ProjectReference Include="..\Taskington.Update.Windows\Taskington.Update.Windows.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Views\AppNotificationView.axaml.cs">
