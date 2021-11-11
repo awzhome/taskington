@@ -1,27 +1,37 @@
 using System.Linq;
 using System.Reflection;
 using Taskington.Base.Config;
+using Taskington.Base.Extension;
 using Taskington.Base.Log;
 using Taskington.Base.Service;
+using Taskington.Base.TinyBus;
 
 namespace Taskington.Base
 {
     public class Application
     {
+        private readonly ExtensionContainer extensionContainer;
         private readonly ApplicationServices services;
         private readonly ILog log;
+        private readonly EventBus eventBus;
 
         public Application(params Assembly[] extensionAssemblies)
         {
             log = new FileLog();
 
+            eventBus = new EventBus(log);
+
             services = new ApplicationServices(log);
-            services.BindServicesFrom(GetType().Assembly);
+
+            extensionContainer = new ExtensionContainer(log, services, eventBus);
+            extensionContainer.LoadExtensionFrom(GetType().Assembly);
+
             services.Bind(log);
             services.Bind(this);
+
             foreach (var extensionAssembly in extensionAssemblies)
             {
-                services.BindServicesFrom(extensionAssembly);
+                extensionContainer.LoadExtensionFrom(extensionAssembly);
             }
         }
 

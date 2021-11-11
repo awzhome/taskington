@@ -1,16 +1,19 @@
+using System.Diagnostics;
 using Taskington.Base.Config;
 using Taskington.Base.Events;
+using Taskington.Base.Extension;
 using Taskington.Base.Log;
 using Taskington.Base.Plans;
 using Taskington.Base.Service;
 using Taskington.Base.Steps;
 using Taskington.Base.SystemOperations;
+using Taskington.Base.TinyBus;
 
 [assembly: TaskingtonExtension(typeof(Taskington.Base.BaseServices))]
 
 namespace Taskington.Base
 {
-    static class BaseServices
+    class BaseServices : ITaskingtonExtension
     {
         public static void Bind(IAppServiceBinder binder)
         {
@@ -31,6 +34,10 @@ namespace Taskington.Base
                 .Bind<IPlanExecutionCreator, ManualPlanExecution.Creator>()
                 .Bind<ILog, FileLog>()
                 .Bind<LogConfiguration>();
+        }
+
+        public void Initialize(IEventBus eventBus)
+        {
         }
     }
 }
