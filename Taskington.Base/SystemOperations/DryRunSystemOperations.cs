@@ -1,34 +1,50 @@
 using System;
-using System.IO;
 using System.Threading;
+using Taskington.Base.Events;
+using Taskington.Base.Log;
+using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.SystemOperations
 {
-    class DryRunSystemOperations : ISystemOperations
+    class DryRunSystemOperations
     {
-        public void SyncDirectory(SyncDirection syncDirection, string fromDir, string toDir)
+        private readonly IEventBus eventBus;
+        private readonly ILog log;
+
+        public DryRunSystemOperations(IEventBus eventBus, ILog log)
         {
+            this.eventBus = eventBus;
+            this.log = log;
+            eventBus
+                .Subscribe<SyncDirectory>(SyncDirectory)
+                .Subscribe<SyncFile>(SyncFile)
+                .Subscribe<LoadSystemPlaceholders, Placeholders>(LoadSystemPlaceholders);
+        }
+
+        public void SyncDirectory(SyncDirectory e)
+        {
+            (SyncDirection syncDirection, string fromDir, string toDir) = e;
+
             var syncDirectionOutput = syncDirection switch
             {
                 SyncDirection.FromTo => "->",
                 SyncDirection.Both => "<->",
                 _ => "?-?"
             };
-            Console.WriteLine($"SYSOP: Sync dir '{fromDir}' {syncDirectionOutput} '{toDir}");
+            log.Debug(this, $"SYSOP: Sync dir '{fromDir}' {syncDirectionOutput} '{toDir}");
 
             Thread.Sleep(500);
         }
 
-        public void SyncFile(string fromDir, string toDir, string file)
+        public void SyncFile(SyncFile e)
         {
-            Console.WriteLine($"SYSOP: Sync file '{file}' '{fromDir}' -> '{toDir}'");
+            (string fromDir, string toDir, string file) = e;
+
+            log.Debug(this, $"SYSOP: Sync file '{file}' '{fromDir}' -> '{toDir}'");
 
             Thread.Sleep(500);
         }
 
-        public void LoadSystemPlaceholders(Placeholders placeholders)
-        {
-            WindowsSystemOperations.LoadWindowsSystemPlaceholders(placeholders);
-        }
+        public Placeholders LoadSystemPlaceholders(LoadSystemPlaceholders e) => WindowsSystemOperations.LoadWindowsSystemPlaceholders(e);
     }
 }

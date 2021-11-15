@@ -4,6 +4,6 @@ namespace Taskington.Base.Extension
 {
     public interface ITaskingtonExtension
     {
-        void Initialize(IEventBus eventBus);
+        void Initialize(IEventBus eventBus, IHandlerStore handlerStore);
     }
 }

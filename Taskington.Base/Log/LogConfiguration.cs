@@ -1,34 +1,27 @@
-using Taskington.Base.Config;
+using System.Linq;
 using Taskington.Base.Events;
-using Taskington.Base.Service;
+using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.Log
 {
-    class LogConfiguration : IAutoInitializable
+    class LogConfiguration
     {
-        private readonly IApplicationEvents applicationEvents;
+        private readonly IEventBus eventBus;
         private readonly ILog log;
-        private readonly ConfigurationManager configurationManager;
 
-        public LogConfiguration(IApplicationEvents applicationEvents, ILog log, ConfigurationManager configurationManager)
+        public LogConfiguration(IEventBus eventBus, ILog log)
         {
-            this.applicationEvents = applicationEvents;
+            this.eventBus = eventBus;
             this.log = log;
-            this.configurationManager = configurationManager;
-        }
 
-        public void Initialize()
-        {
             UpdateMinimumLevel();
-            applicationEvents.ConfigurationReloaded += (o, e) =>
-            {
-                UpdateMinimumLevel();
-            };
+            eventBus.Subscribe<ConfigurationReloaded>(e => UpdateMinimumLevel());
         }
 
         private void UpdateMinimumLevel()
         {
-            (log as IReconfigurableLog)?.SetMiminumLevel(configurationManager.GetValue("log") switch
+            var logLevel = eventBus.Request<GetConfigValue, string?>(new("log")).First();
+            (log as IReconfigurableLog)?.SetMiminumLevel(logLevel switch
             {
                 "verbose" => LogLevel.Verbose,
                 "warning" => LogLevel.Warning,

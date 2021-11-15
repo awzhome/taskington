@@ -11,14 +11,13 @@ namespace Taskington.Base.Extension
     internal class ExtensionContainer
     {
         private readonly ILog log;
-        private readonly ApplicationServices applicationServices;
         private readonly EventBus eventBus;
         private readonly List<ITaskingtonExtension> extensions = new();
+        private readonly Dictionary<ITaskingtonExtension, ExtensionHandlerStore> messageHandlerStore = new();
 
-        public ExtensionContainer(ILog log, ApplicationServices applicationServices, EventBus eventBus)
+        public ExtensionContainer(ILog log, EventBus eventBus)
         {
             this.log = log;
-            this.applicationServices = applicationServices;
             this.eventBus = eventBus;
         }
 
@@ -40,20 +39,15 @@ namespace Taskington.Base.Extension
                             if (Activator.CreateInstance(extensionType) is ITaskingtonExtension extensionInstance)
                             {
                                 extensions.Add(extensionInstance);
-                                extensionInstance.Initialize(eventBus);
+                                var handlerStore = new ExtensionHandlerStore();
+                                messageHandlerStore[extensionInstance] = handlerStore;
+                                extensionInstance.Initialize(eventBus, handlerStore);
                                 log.Info(this, "Loaded extension from {Assembly}", assembly.FullName ?? "");
                             }
                         }
                         else
                         {
                             log.Warning(this, "No valid extension implementation found in assembly {Assembly}", assembly.GetName());
-                        }
-
-                        var bindMethod = extensionType?.GetMethod("Bind", new[] { typeof(IAppServiceBinder) });
-                        if ((bindMethod != null) && bindMethod.IsStatic)
-                        {
-                            bindMethod.Invoke(null, new[] { applicationServices });
-                            log.Info(this, "Bound services from from {Assembly}", assembly.FullName ?? "");
                         }
                     }
                 }

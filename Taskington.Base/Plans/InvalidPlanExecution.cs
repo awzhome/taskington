@@ -1,31 +1,28 @@
-using System.Threading.Tasks;
 using Taskington.Base.Events;
+using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.Plans
 {
-    class InvalidPlanExecution : IPlanExecution
+    class InvalidPlanExecution
     {
-        private readonly Plan plan;
-        private readonly ApplicationEvents events;
-        private readonly string reason;
+        private readonly IEventBus eventBus;
 
-        public InvalidPlanExecution(Plan plan, ApplicationEvents events, string reason)
+        public InvalidPlanExecution(IEventBus eventBus)
         {
-            this.plan = plan;
-            this.events = events;
-            this.reason = reason;
-        }
-        public void NotifyInitialStates()
-        {
-            events
-                .OnPlanCanExecute(plan,false)
-                .OnPlanIsRunning(plan, false)
-                .OnPlanHasErrors(plan, true, reason);
-        }
+            this.eventBus = eventBus;
 
-        public Task Execute()
+            eventBus
+                .Subscribe<NotifyInitialPlanStates>(NotifyInitialStates);
+        }
+        private void NotifyInitialStates(NotifyInitialPlanStates e)
         {
-            return Task.CompletedTask;
+            if (!e.Plan.IsValid)
+            {
+                eventBus
+                    .Push(new PlanCanExecuteUpdated(e.Plan, false))
+                    .Push(new PlanIsRunningUpdated(e.Plan, false))
+                    .Push(new PlanHasErrorsUpdated(e.Plan, true, e.Plan.ValidationMessage ?? ""));
+            }
         }
     }
 }

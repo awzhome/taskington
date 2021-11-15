@@ -2,20 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Taskington.Base.Events;
 using Taskington.Base.SystemOperations;
+using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.Steps
 {
-    internal class SyncStepExecution : IStepExecution
+    internal class SyncStepExecution
     {
-        private readonly ISystemOperations systemOperations;
+        private readonly IEventBus eventBus;
 
-        public SyncStepExecution(ISystemOperations systemOperations)
+        public SyncStepExecution(IEventBus eventBus)
         {
-            this.systemOperations = systemOperations;
-        }
+            this.eventBus = eventBus;
 
-        public string Type => "sync";
+            eventBus.Subscribe<ExecuteStep>(Execute);
+        }
 
         private IEnumerable<string> GetRelevantPathsOfStep(PlanStep step)
         {
@@ -34,44 +36,48 @@ namespace Taskington.Base.Steps
         public bool CanExecuteSupportedSteps(IEnumerable<PlanStep> steps, Placeholders placeholders)
         {
             return !steps
-                .Where(step => step.StepType == Type)
+                .Where(step => step.StepType == "sync")
                 .SelectMany(GetRelevantPathsOfStep)
                 .SelectMany(placeholders.ExtractPlaceholders)
                 .Any(result => result.Placeholder.StartsWith("drive:") && result.Resolved == null);
         }
 
-        public void Execute(PlanStep step, Placeholders placeholders, Action<int>? progressCallback, Action<string>? statusTextCallback)
+        public void Execute(ExecuteStep e)
         {
-            var syncStep = new SyncStep(step, placeholders);
-            if (syncStep.From != null && syncStep.To != null)
+            if (e.Step.StepType == "sync")
             {
-                switch (syncStep.SynchronizedObject)
+                (PlanStep step, Placeholders placeholders, Action<int>? progressCallback, Action<string>? statusTextCallback) = e;
+                var syncStep = new SyncStep(step, placeholders);
+                if (syncStep.From != null && syncStep.To != null)
                 {
-                    case SynchronizedObject.Directory:
-                        {
-                            SyncDirectory(syncStep.SyncDirection, syncStep.From, syncStep.To, statusTextCallback);
-                            break;
-                        }
-                    case SynchronizedObject.SubDirectories:
-                        {
-                            var directories = Directory.GetDirectories(syncStep.From);
-                            var directoryCount = directories.Length;
-                            int dirsFinished = 0;
-                            foreach (var dir in directories)
+                    switch (syncStep.SynchronizedObject)
+                    {
+                        case SynchronizedObject.Directory:
                             {
-                                SyncDirectory(syncStep.SyncDirection, dir, Path.Combine(syncStep.To, Path.GetFileName(dir)), statusTextCallback);
-                                dirsFinished++;
-                                progressCallback?.Invoke(dirsFinished * 100 / directoryCount);
+                                SyncDirectory(syncStep.SyncDirection, syncStep.From, syncStep.To, statusTextCallback);
+                                break;
+                            }
+                        case SynchronizedObject.SubDirectories:
+                            {
+                                var directories = Directory.GetDirectories(syncStep.From);
+                                var directoryCount = directories.Length;
+                                int dirsFinished = 0;
+                                foreach (var dir in directories)
+                                {
+                                    SyncDirectory(syncStep.SyncDirection, dir, Path.Combine(syncStep.To, Path.GetFileName(dir)), statusTextCallback);
+                                    dirsFinished++;
+                                    progressCallback?.Invoke(dirsFinished * 100 / directoryCount);
+                                }
+                                break;
+                            }
+                        case SynchronizedObject.File:
+                            if (syncStep.File != null)
+                            {
+                                statusTextCallback?.Invoke($"Sync file '{Path.GetFileName(syncStep.File)}'");
+                                eventBus.Push(new SyncFile(syncStep.From, syncStep.To, syncStep.File));
                             }
                             break;
-                        }
-                    case SynchronizedObject.File:
-                        if (syncStep.File != null)
-                        {
-                            statusTextCallback?.Invoke($"Sync file '{Path.GetFileName(syncStep.File)}'");
-                            systemOperations.SyncFile(syncStep.From, syncStep.To, syncStep.File);
-                        }
-                        break;
+                    }
                 }
             }
         }
@@ -79,7 +85,7 @@ namespace Taskington.Base.Steps
         private void SyncDirectory(SyncDirection syncDirection, string dir1, string dir2, Action<string>? statusTextCallback)
         {
             statusTextCallback?.Invoke($"Sync directory '{Path.GetFileName(dir1)}'");
-            systemOperations.SyncDirectory(syncDirection, dir1, dir2);
+            eventBus.Push(new SyncDirectory(syncDirection, dir1, dir2));
         }
     }
 }
