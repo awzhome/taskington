@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net472</TargetFramework>
+    <StartupObject>Taskington.Installer.Windows.Builder</StartupObject>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Product>Taskington</Product>
+    <Authors>Andreas Weizel</Authors>
+    <Company>Andreas Weizel</Company>
+    <Description>Taskington MSI Builder</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixSharp" Version="1.19.0" />
+    <PackageReference Include="WixSharp.wix.bin" Version="3.11.2" />
+  </ItemGroup>
+
+</Project>

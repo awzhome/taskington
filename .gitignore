@@ -8,3 +8,4 @@ output/
 .fake/
 build.fsx.lock
 .nuke/temp/
+Taskington.Installer.Windows/wix/

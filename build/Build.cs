@@ -56,8 +56,16 @@ class Build : NukeBuild
             var version = Versioning.GetVersionInfo();
             var writer = new VersionInfoWriter(version);
 
-            writer.WriteToInnoSetupScript(WorkingDirectory / "taskington.iss");
             writer.WriteToVsProject(FindFiles("Taskington*.csproj").Concat(FindFiles("Taskington*.fsproj")));
+
+            VersionInfoWriter.WriteVersionToFiles(
+                "public static string NumericVersion = \"$$$\";", 
+                version.AsNumericVersion(),
+                WorkingDirectory / "Taskington.Installer.Windows" / "AppPackage.cs");
+            VersionInfoWriter.WriteVersionToFiles(
+                "public static string FullVersion = \"$$$\";", 
+                version.AsString(),
+                WorkingDirectory / "Taskington.Installer.Windows" / "AppPackage.cs");
 
             VersionInfoWriter.WriteVersionToFiles(
                 "public static string Version = \"$$$\";", 
