@@ -38,7 +38,7 @@ namespace Taskington.Installer.Windows
                     new FileShortcut("Taskington", @"%ProgramMenu%")
                 };
 
-            Compiler.BuildMsi(project, Path.Combine(project.SourceBaseDir, "output", $"taskington-x64-{AppPackage.FullVersion}.msi"));
+            Compiler.BuildMsi(project, Path.Combine(project.SourceBaseDir, "output", $"Taskington-{AppPackage.FullVersion}-win-x64.msi"));
         }
     }
 }
