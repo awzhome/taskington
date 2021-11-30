@@ -118,8 +118,7 @@ class Build : NukeBuild
         {
             DotNetBuild(s => s
                 .SetProjectFile(WinInstallerSolution)
-                .SetConfiguration(Configuration)
-                .EnableNoRestore());
+                .SetConfiguration(Configuration));
         });
 
     Target Test => _ => _
