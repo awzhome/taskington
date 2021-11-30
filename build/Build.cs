@@ -32,6 +32,8 @@ class Build : NukeBuild
     [Solution] readonly Solution Solution;
     [GitRepository] readonly GitRepository GitRepository;
 
+    string WinInstallerSolution => RootDirectory / "Taskington.Installer.Windows.sln"; 
+
     AbsolutePath OutputDirectory => RootDirectory / "output";
 
     BranchSpecificConfig BranchVersioningConfig => b => b switch
@@ -114,10 +116,10 @@ class Build : NukeBuild
         .DependsOn(PublishWin64)
         .Executes(() =>
         {
-            InnoSetup(s => s
-                .SetScriptFile("taskington.iss")
-                .SetProcessToolPath(((AbsolutePath) SpecialFolder(SpecialFolders.ProgramFilesX86)) / "Inno Setup 6" / "ISCC.exe")
-                .SetOutputDir(OutputDirectory));
+            DotNetBuild(s => s
+                .SetProjectFile(WinInstallerSolution)
+                .SetConfiguration(Configuration)
+                .EnableNoRestore());
         });
 
     Target Test => _ => _
