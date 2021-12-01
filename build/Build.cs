@@ -1,24 +1,20 @@
-using System;
-using System.IO;
-using System.Linq;
+using AWZhome.GutenTag;
+using AWZhome.GutenTag.Nuke;
 using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.InnoSetup;
 using Nuke.Common.Utilities.Collections;
+using System;
+using System.Linq;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
-using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
-using static Nuke.Common.Tools.InnoSetup.InnoSetupTasks;
 using static Utilities;
-using AWZhome.GutenTag;
-using AWZhome.GutenTag.Nuke;
 
 [CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]
@@ -31,6 +27,8 @@ class Build : NukeBuild
 
     [Solution] readonly Solution Solution;
     [GitRepository] readonly GitRepository GitRepository;
+
+    string WinInstallerSolution => RootDirectory / "Taskington.Installer.Windows.sln";
 
     AbsolutePath OutputDirectory => RootDirectory / "output";
 
@@ -56,12 +54,20 @@ class Build : NukeBuild
             var version = Versioning.GetVersionInfo();
             var writer = new VersionInfoWriter(version);
 
-            writer.WriteToInnoSetupScript(WorkingDirectory / "taskington.iss");
             writer.WriteToVsProject(FindFiles("Taskington*.csproj").Concat(FindFiles("Taskington*.fsproj")));
 
             VersionInfoWriter.WriteVersionToFiles(
-                "public static string Version = \"$$$\";", 
-                version.AsString(), 
+                "public static string NumericVersion = \"$$$\";",
+                version.AsNumericVersion(),
+                WorkingDirectory / "Taskington.Installer.Windows" / "AppPackage.cs");
+            VersionInfoWriter.WriteVersionToFiles(
+                "public static string FullVersion = \"$$$\";",
+                version.AsString(),
+                WorkingDirectory / "Taskington.Installer.Windows" / "AppPackage.cs");
+
+            VersionInfoWriter.WriteVersionToFiles(
+                "public static string Version = \"$$$\";",
+                version.AsString(),
                 WorkingDirectory / "Taskington.Gui" / "AppInfo.cs");
         });
 
@@ -93,23 +99,25 @@ class Build : NukeBuild
         .DependsOn(Restore, Versionize)
         .Executes(() =>
         {
+            var publishDir = OutputDirectory / "publish-win64";
+
+            EnsureCleanDirectory(publishDir);
             DotNetPublish(s => s
                 .SetProject("Taskington.Gui")
                 .SetConfiguration(Configuration.Release)
                 .EnableSelfContained()
                 .SetPublishTrimmed(true)
                 .SetRuntime("win-x64")
-                .SetOutput(OutputDirectory / "publish-win64"));
+                .SetOutput(publishDir));
         });
 
     Target InstallerWin64 => _ => _
         .DependsOn(PublishWin64)
         .Executes(() =>
         {
-            InnoSetup(s => s
-                .SetScriptFile("taskington.iss")
-                .SetProcessToolPath(((AbsolutePath) SpecialFolder(SpecialFolders.ProgramFilesX86)) / "Inno Setup 6" / "ISCC.exe")
-                .SetOutputDir(OutputDirectory));
+            DotNetBuild(s => s
+                .SetProjectFile(WinInstallerSolution)
+                .SetConfiguration(Configuration));
         });
 
     Target Test => _ => _
