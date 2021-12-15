@@ -25,6 +25,8 @@ namespace Taskington.Installer.Windows
             project.SourceBaseDir = Path.GetDirectoryName(Environment.CurrentDirectory);
             project.InstallScope = InstallScope.perUser;
             project.InstallPrivileges = InstallPrivileges.limited;
+            project.ControlPanelInfo.ProductIcon = @"..\Taskington.Gui\Assets\AppIcon.ico";
+            project.ControlPanelInfo.Manufacturer = "Andreas Weizel";
 
             project.MajorUpgrade = new MajorUpgrade
             {
@@ -33,7 +35,7 @@ namespace Taskington.Installer.Windows
                 DowngradeErrorMessage = "A newer release of Taskington is already installed on this system. Please uninstall it first to continue."
             };
 
-            project.UI = WUI.WixUI_Minimal;
+            project.UI = WUI.WixUI_InstallDir;
 
             project.ResolveWildCards().FindFile(f => f.Name.EndsWith("taskington-gui.exe")).First()
                 .Shortcuts = new[] {
