@@ -1,27 +1,19 @@
-using Taskington.Base.Events;
-using Taskington.Base.TinyBus;
-
 namespace Taskington.Base.Plans
 {
     class InvalidPlanExecution
     {
-        private readonly IEventBus eventBus;
-
-        public InvalidPlanExecution(IEventBus eventBus)
+        public InvalidPlanExecution()
         {
-            this.eventBus = eventBus;
-
-            eventBus
-                .Subscribe<NotifyInitialPlanStates>(NotifyInitialStates);
+            PlanEvents.NotifyInitialPlanStates.Subscribe(NotifyInitialStates);
         }
-        private void NotifyInitialStates(NotifyInitialPlanStates e)
+
+        private void NotifyInitialStates(Plan plan)
         {
-            if (!e.Plan.IsValid)
+            if (!plan.IsValid)
             {
-                eventBus
-                    .Push(new PlanCanExecuteUpdated(e.Plan, false))
-                    .Push(new PlanIsRunningUpdated(e.Plan, false))
-                    .Push(new PlanHasErrorsUpdated(e.Plan, true, e.Plan.ValidationMessage ?? ""));
+                PlanEvents.PlanCanExecuteUpdated.Push(plan, false);
+                PlanEvents.PlanIsRunningUpdated.Push(plan, false);
+                PlanEvents.PlanHasErrorsUpdated.Push(plan, true, plan.ValidationMessage);
             }
         }
     }

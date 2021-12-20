@@ -2,23 +2,17 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Taskington.Base.Events;
-using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.SystemOperations
 {
     internal class WindowsSystemOperations
     {
-        private readonly IEventBus eventBus;
 
-        public WindowsSystemOperations(IEventBus eventBus)
+        public WindowsSystemOperations()
         {
-            this.eventBus = eventBus;
-
-            eventBus
-                .Subscribe<SyncDirectory>(SyncDirectory)
-                .Subscribe<SyncFile>(SyncFile)
-                .Subscribe<LoadSystemPlaceholders, Placeholders>(LoadWindowsSystemPlaceholders);
+            SystemOperationsEvents.SyncDirectory.Subscribe((direction, from, to) => SyncDirectory(from, to));
+            SystemOperationsEvents.SyncFile.Subscribe(SyncFile);
+            SystemOperationsEvents.LoadSystemPlaceholders.Subscribe(LoadWindowsSystemPlaceholders);
         }
 
         private static void RunProcess(string fileName, params string[] arguments)
@@ -42,16 +36,16 @@ namespace Taskington.Base.SystemOperations
             process.StandardOutput.ReadToEnd();
         }
 
-        private void RunRoboCopy(params string[] arguments) =>
+        private static void RunRoboCopy(params string[] arguments) =>
             RunProcess("robocopy", arguments);
 
-        public void SyncDirectory(SyncDirectory e) =>
-            RunRoboCopy(e.FromDir, e.ToDir, "/MIR", "/FFT", "/NFL", "/NJH", "/NJS" /*, "/L"*/);
+        public static void SyncDirectory(string fromDir, string toDir) =>
+            RunRoboCopy(fromDir, toDir, "/MIR", "/FFT", "/NFL", "/NJH", "/NJS" /*, "/L"*/);
 
-        public void SyncFile(SyncFile e) =>
-            RunRoboCopy(e.FromDir, e.ToDir, e.File, "/NFL", "/NJH", "/NJS" /*, "/L"*/);
+        public void SyncFile(string fromDir, string toDir, string file) =>
+            RunRoboCopy(fromDir, toDir, file, "/NFL", "/NJH", "/NJS" /*, "/L"*/);
 
-        internal static Placeholders LoadWindowsSystemPlaceholders(LoadSystemPlaceholders e)
+        internal static Placeholders LoadWindowsSystemPlaceholders()
         {
             var placeholders = new Placeholders();
             var systemDrives = DriveInfo.GetDrives();

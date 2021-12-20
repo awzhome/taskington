@@ -1,31 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Taskington.Base.Events;
-using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.Config
 {
     public abstract class WatchingFileReaderProvider : IStreamReaderProvider, IDisposable
     {
         private FileSystemWatcher? configFileWatcher;
-        private readonly IEventBus eventBus;
 
         protected static string AppRoamingPath =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "taskington");
 
-        public WatchingFileReaderProvider(IEventBus eventBus)
+        public WatchingFileReaderProvider()
         {
-            this.eventBus = eventBus;
-
             configFileWatcher = new FileSystemWatcher(GetConfigDirectory(), WatchedFilesFilter)
             {
                 NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.LastAccess | NotifyFilters.DirectoryName | NotifyFilters.FileName
             };
             configFileWatcher.Created += OnFileChanged;
             configFileWatcher.Changed += OnFileChanged;
-            configFileWatcher.Renamed += (sender, e) => eventBus.Push(new ConfigurationChanged());
-            configFileWatcher.Deleted += (sender, e) => eventBus.Push(new ConfigurationChanged());
+            configFileWatcher.Renamed += (sender, e) => ConfigurationEvents.ConfigurationChanged.Push();
+            configFileWatcher.Deleted += (sender, e) => ConfigurationEvents.ConfigurationChanged.Push();
             configFileWatcher.EnableRaisingEvents = true;
         }
 
@@ -45,7 +40,7 @@ namespace Taskington.Base.Config
                     fileStream.Close();
                 }
 
-                eventBus.Push(new ConfigurationChanged());
+                ConfigurationEvents.ConfigurationChanged.Push();
             }
             catch (IOException) { }
         }

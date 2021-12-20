@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Taskington.Base.Events;
 using Taskington.Base.Plans;
-using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.Config
 {
@@ -14,33 +12,28 @@ namespace Taskington.Base.Config
         private bool reloadDelayed = false;
         private readonly HashSet<Plan> runningPlans = new();
 
-        private readonly IEventBus eventBus;
         private readonly YamlConfigurationReader configurationReader;
         private readonly YamlConfigurationWriter configurationWriter;
 
         public ConfigurationManager(
-            IEventBus eventBus,
             YamlConfigurationReader configurationReader,
             YamlConfigurationWriter configurationWriter)
         {
-            this.eventBus = eventBus;
             this.configurationReader = configurationReader;
             this.configurationWriter = configurationWriter;
 
-            eventBus
-                .Subscribe<InitializeConfiguration>(e => Initialize())
-                .Subscribe<ConfigurationChanged>(OnConfigurationChanged)
-                .Subscribe<PlanIsRunningUpdated>(OnPlanIsRunningUpdated)
-                .Subscribe<GetConfigValue, string?>(e => GetValue(e.Key))
-                .Subscribe<SetConfigValue>(e => SetValue(e.Key, e.Value))
-                .Subscribe<SaveConfiguration>(e => SaveConfiguration())
-                .Subscribe<InsertPlan>(e => InsertPlan(e.Index, e.NewPlan))
-                .Subscribe<RemovePlan>(e => RemovePlan(e.Plan))
-                .Subscribe<ReplacePlan>(e => ReplacePlan(e.OldPlan, e.NewPlan));
+            ConfigurationEvents.InitializeConfiguration.Subscribe(() => Initialize());
+            ConfigurationEvents.ConfigurationChanged.Subscribe(OnConfigurationChanged);
+            ConfigurationEvents.GetConfigValue.Subscribe(key => GetValue(key));
+            ConfigurationEvents.SetConfigValue.Subscribe((key, value) => SetValue(key, value));
+            ConfigurationEvents.InsertPlan.Subscribe((index, plan) => InsertPlan(index, plan));
+            ConfigurationEvents.RemovePlan.Subscribe((plan) => RemovePlan(plan));
+            ConfigurationEvents.ReplacePlan.Subscribe((oldPlan, newPlan) => ReplacePlan(oldPlan, newPlan));
+            ConfigurationEvents.GetPlans.Subscribe(() => plans);
+            PlanEvents.PlanIsRunningUpdated.Subscribe(OnPlanIsRunningUpdated);
         }
 
         private readonly List<Plan> plans = new();
-        public IEnumerable<Plan> Plans => plans;
 
         private readonly Dictionary<string, string?> configValues = new();
 
@@ -56,7 +49,7 @@ namespace Taskington.Base.Config
             }
         }
 
-        private void OnConfigurationChanged(ConfigurationChanged e)
+        private void OnConfigurationChanged()
         {
             bool configReloaded = false;
             lock (configurationLock)
@@ -66,7 +59,7 @@ namespace Taskington.Base.Config
 
             if (configReloaded)
             {
-                eventBus.Push(new ConfigurationReloaded());
+                ConfigurationEvents.ConfigurationReloaded.Push();
             }
         }
 
@@ -82,7 +75,7 @@ namespace Taskington.Base.Config
             {
                 if (!reloadDelayed)
                 {
-                    eventBus.Push(new ConfigurationReloadDelayed(true));
+                    ConfigurationEvents.ConfigurationReloadDelayed.Push(true);
                 }
                 reloadDelayed = true;
                 return false;
@@ -99,13 +92,13 @@ namespace Taskington.Base.Config
             plans.AddRange(configuration.Plans);
         }
 
-        private void OnPlanIsRunningUpdated(PlanIsRunningUpdated e)
+        private void OnPlanIsRunningUpdated(Plan plan, bool isRunning)
         {
-            if (e.IsRunning)
+            if (isRunning)
             {
                 lock (configurationLock)
                 {
-                    runningPlans.Add(e.Plan);
+                    runningPlans.Add(plan);
                 }
             }
             else
@@ -113,17 +106,17 @@ namespace Taskington.Base.Config
                 bool configReloaded = false;
                 lock (configurationLock)
                 {
-                    runningPlans.Remove(e.Plan);
+                    runningPlans.Remove(plan);
                     if (runningPlans.Count == 0 && reloadDelayed)
                     {
-                        eventBus.Push(new ConfigurationReloadDelayed(false));
+                        ConfigurationEvents.ConfigurationReloadDelayed.Push(true);
                         reloadDelayed = false;
                         configReloaded = TryReloadConfiguration();
                     }
                 }
                 if (configReloaded)
                 {
-                    eventBus.Push(new ConfigurationReloaded());
+                    ConfigurationEvents.ConfigurationReloaded.Push();
                 }
             }
         }

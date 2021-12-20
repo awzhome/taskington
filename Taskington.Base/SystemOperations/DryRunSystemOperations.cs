@@ -1,30 +1,23 @@
-using System;
 using System.Threading;
-using Taskington.Base.Events;
 using Taskington.Base.Log;
-using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.SystemOperations
 {
     class DryRunSystemOperations
     {
-        private readonly IEventBus eventBus;
         private readonly ILog log;
 
-        public DryRunSystemOperations(IEventBus eventBus, ILog log)
+        public DryRunSystemOperations(ILog log)
         {
-            this.eventBus = eventBus;
             this.log = log;
-            eventBus
-                .Subscribe<SyncDirectory>(SyncDirectory)
-                .Subscribe<SyncFile>(SyncFile)
-                .Subscribe<LoadSystemPlaceholders, Placeholders>(LoadSystemPlaceholders);
+
+            SystemOperationsEvents.SyncDirectory.Subscribe(SyncDirectory);
+            SystemOperationsEvents.SyncFile.Subscribe(SyncFile);
+            SystemOperationsEvents.LoadSystemPlaceholders.Subscribe(WindowsSystemOperations.LoadWindowsSystemPlaceholders);
         }
 
-        public void SyncDirectory(SyncDirectory e)
+        public void SyncDirectory(SyncDirection syncDirection, string fromDir, string toDir)
         {
-            (SyncDirection syncDirection, string fromDir, string toDir) = e;
-
             var syncDirectionOutput = syncDirection switch
             {
                 SyncDirection.FromTo => "->",
@@ -36,15 +29,11 @@ namespace Taskington.Base.SystemOperations
             Thread.Sleep(500);
         }
 
-        public void SyncFile(SyncFile e)
+        public void SyncFile(string fromDir, string toDir, string file)
         {
-            (string fromDir, string toDir, string file) = e;
-
             log.Debug(this, $"SYSOP: Sync file '{file}' '{fromDir}' -> '{toDir}'");
 
             Thread.Sleep(500);
         }
-
-        public Placeholders LoadSystemPlaceholders(LoadSystemPlaceholders e) => WindowsSystemOperations.LoadWindowsSystemPlaceholders(e);
     }
 }

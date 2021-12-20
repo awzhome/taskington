@@ -1,34 +1,26 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Taskington.Base.Events;
 using Taskington.Base.SystemOperations;
-using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.Plans
 {
     internal class PlanExecution
     {
-        private readonly IEventBus eventBus;
-
-        internal PlanExecution(IEventBus eventBus)
+        internal PlanExecution()
         {
-            this.eventBus = eventBus;
-
-            eventBus
-                .Subscribe<NotifyInitialPlanStates>(NotifyInitialStates)
-                .Subscribe<ExecutePlan>(Execute);
+            PlanEvents.NotifyInitialPlanStates.Subscribe(NotifyInitialStates);
+            PlanEvents.ExecutePlan.Subscribe(Execute);
         }
 
-        private void NotifyInitialStates(NotifyInitialPlanStates e)
+        private void NotifyInitialStates(Plan plan)
         {
-            if (e.Plan.RunType == Plan.OnSelectionRunType)
+            if (plan.RunType == Plan.OnSelectionRunType)
             {
-                eventBus
-                    .Push(new PlanCanExecuteUpdated(e.Plan, CanExecute(e.Plan)))
-                    .Push(new PlanHasErrorsUpdated(e.Plan, false))
-                    .Push(new PlanIsRunningUpdated(e.Plan, false))
-                    .Push(new PlanStatusTextUpdated(e.Plan, "Not run yet"));
+                PlanEvents.PlanCanExecuteUpdated.Push(plan, CanExecute(plan));
+                PlanEvents.PlanHasErrorsUpdated.Push(plan, false, null);
+                PlanEvents.PlanIsRunningUpdated.Push(plan, false);
+                PlanEvents.PlanStatusTextUpdated.Push(plan, "Not run yet");
             }
         }
 
@@ -51,42 +43,39 @@ namespace Taskington.Base.Plans
         }
 #pragma warning restore CA1822 // Mark members as static
 
-        private void Execute(ExecutePlan e)
+        private void Execute(Plan plan)
         {
-            if (e.Plan.IsValid)
+            if (plan.IsValid)
             {
                 Task.Run(() =>
                 {
-                    var plan = e.Plan;
-
                     try
                     {
-                        eventBus.Push(new PlanIsRunningUpdated(plan, true));
+                        PlanEvents.PlanIsRunningUpdated.Push(plan, true);
 
-                        var placeholders = eventBus.Request<LoadSystemPlaceholders, Placeholders>(new()).First();
+                        var placeholders = SystemOperationsEvents.LoadSystemPlaceholders.Request().First();
 
                         int stepsFinished = 0;
-                        eventBus.Push(new PlanProgressUpdated(plan, 0));
+                        PlanEvents.PlanProgressUpdated.Push(plan, 0);
                         int planProgress = 0;
                         foreach (var step in plan.Steps)
                         {
-                            eventBus.Push(new ExecuteStep(step, placeholders,
-                                progress => eventBus.Push(new PlanProgressUpdated(plan, planProgress + progress / plan.Steps.Count())),
-                                text => eventBus.Push(new PlanStatusTextUpdated(plan, text))));
+                            PlanEvents.ExecuteStep.Push(step, placeholders,
+                                progress => PlanEvents.PlanProgressUpdated.Push(plan, planProgress + progress / plan.Steps.Count()),
+                                text => PlanEvents.PlanStatusTextUpdated.Push(plan, text));
                             stepsFinished++;
                             planProgress = stepsFinished * 100 / plan.Steps.Count();
-                            eventBus.Push(new PlanProgressUpdated(plan, planProgress));
+                            PlanEvents.PlanProgressUpdated.Push(plan, planProgress);
                         }
                     }
                     catch (Exception ex)
                     {
-                        eventBus.Push(new PlanHasErrorsUpdated(plan, true, ex.Message));
+                        PlanEvents.PlanHasErrorsUpdated.Push(plan, true, ex.Message);
                     }
                     finally
                     {
-                        eventBus
-                            .Push(new PlanIsRunningUpdated(plan, true))
-                            .Push(new PlanStatusTextUpdated(plan, "Finished successfully"));
+                        PlanEvents.PlanIsRunningUpdated.Push(plan, true);
+                        PlanEvents.PlanStatusTextUpdated.Push(plan, "Finished successfully");
                     }
                 });
             }

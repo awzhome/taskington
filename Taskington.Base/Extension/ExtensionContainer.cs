@@ -3,22 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Taskington.Base.Log;
-using Taskington.Base.Service;
-using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.Extension
 {
     internal class ExtensionContainer
     {
         private readonly ILog log;
-        private readonly EventBus eventBus;
         private readonly List<ITaskingtonExtension> extensions = new();
         private readonly Dictionary<ITaskingtonExtension, ExtensionHandlerStore> messageHandlerStore = new();
 
-        public ExtensionContainer(ILog log, EventBus eventBus)
+        public ExtensionContainer(ILog log)
         {
             this.log = log;
-            this.eventBus = eventBus;
         }
 
         public void LoadExtensionFrom(Assembly assembly)
@@ -41,7 +37,7 @@ namespace Taskington.Base.Extension
                                 extensions.Add(extensionInstance);
                                 var handlerStore = new ExtensionHandlerStore();
                                 messageHandlerStore[extensionInstance] = handlerStore;
-                                extensionInstance.Initialize(eventBus, handlerStore);
+                                extensionInstance.Initialize(handlerStore);
                                 log.Info(this, "Loaded extension from {Assembly}", assembly.FullName ?? "");
                             }
                         }

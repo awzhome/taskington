@@ -2,21 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Taskington.Base.Events;
+using Taskington.Base.Plans;
 using Taskington.Base.SystemOperations;
-using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.Steps
 {
     internal class SyncStepExecution
     {
-        private readonly IEventBus eventBus;
-
-        public SyncStepExecution(IEventBus eventBus)
+        public SyncStepExecution()
         {
-            this.eventBus = eventBus;
-
-            eventBus.Subscribe<ExecuteStep>(Execute);
+            PlanEvents.ExecuteStep.Subscribe(Execute);
         }
 
         private IEnumerable<string> GetRelevantPathsOfStep(PlanStep step)
@@ -42,11 +37,10 @@ namespace Taskington.Base.Steps
                 .Any(result => result.Placeholder.StartsWith("drive:") && result.Resolved == null);
         }
 
-        public void Execute(ExecuteStep e)
+        public void Execute(PlanStep step, Placeholders placeholders, Action<int> progressCallback, Action<string> statusTextCallback)
         {
-            if (e.Step.StepType == "sync")
+            if (step.StepType == "sync")
             {
-                (PlanStep step, Placeholders placeholders, Action<int>? progressCallback, Action<string>? statusTextCallback) = e;
                 var syncStep = new SyncStep(step, placeholders);
                 if (syncStep.From != null && syncStep.To != null)
                 {
@@ -74,7 +68,7 @@ namespace Taskington.Base.Steps
                             if (syncStep.File != null)
                             {
                                 statusTextCallback?.Invoke($"Sync file '{Path.GetFileName(syncStep.File)}'");
-                                eventBus.Push(new SyncFile(syncStep.From, syncStep.To, syncStep.File));
+                                SystemOperationsEvents.SyncFile.Push(syncStep.From, syncStep.To, syncStep.File);
                             }
                             break;
                     }
@@ -82,10 +76,10 @@ namespace Taskington.Base.Steps
             }
         }
 
-        private void SyncDirectory(SyncDirection syncDirection, string dir1, string dir2, Action<string>? statusTextCallback)
+        private static void SyncDirectory(SyncDirection syncDirection, string dir1, string dir2, Action<string>? statusTextCallback)
         {
             statusTextCallback?.Invoke($"Sync directory '{Path.GetFileName(dir1)}'");
-            eventBus.Push(new SyncDirectory(syncDirection, dir1, dir2));
+            SystemOperationsEvents.SyncDirectory.Push(syncDirection, dir1, dir2);
         }
     }
 }

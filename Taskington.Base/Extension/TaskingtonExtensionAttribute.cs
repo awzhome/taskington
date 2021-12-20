@@ -1,6 +1,6 @@
 using System;
 
-namespace Taskington.Base.Service
+namespace Taskington.Base.Extension
 {
     [AttributeUsage(AttributeTargets.Assembly)]
     public class TaskingtonExtensionAttribute : Attribute
