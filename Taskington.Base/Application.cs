@@ -9,13 +9,16 @@ namespace Taskington.Base
         private readonly ExtensionContainer extensionContainer;
         private readonly ILog log;
 
-        public Application(params Assembly[] extensionAssemblies)
+        public Application()
         {
             log = new FileLog();
 
             extensionContainer = new ExtensionContainer(log);
-            extensionContainer.LoadExtensionFrom(GetType().Assembly);
+        }
 
+        public void Load(params Assembly[] extensionAssemblies)
+        {
+            extensionContainer.LoadExtensionFrom(GetType().Assembly);
             foreach (var extensionAssembly in extensionAssemblies)
             {
                 extensionContainer.LoadExtensionFrom(extensionAssembly);

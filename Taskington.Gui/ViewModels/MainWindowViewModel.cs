@@ -5,9 +5,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Taskington.Base;
 using Taskington.Base.Config;
-using Taskington.Base.Events;
 using Taskington.Base.Plans;
 using Taskington.Gui.Extension;
 
@@ -15,8 +13,7 @@ namespace Taskington.Gui.ViewModels
 {
     class MainWindowViewModel : ViewModelBase
     {
-        private readonly Application application;
-        private readonly ConfigurationManager configurationManager;
+        public ModelEventDispatcher modelEventDispatcher;
 
         public ObservableCollection<PlanViewModel> Plans { get; }
         public ObservableCollection<AppNotification> AppNotifications { get; }
@@ -28,22 +25,18 @@ namespace Taskington.Gui.ViewModels
         public ReactiveCommand<PlanViewModel, Unit> RemovePlanCommand { get; }
         public ReactiveCommand<PlanViewModel, Unit> UndoPlanRemovalCommand { get; }
 
-        public MainWindowViewModel(Application application, ConfigurationManager configurationManager, IApplicationEvents applicationEvents)
+        public MainWindowViewModel()
         {
-            this.application = application;
-            this.configurationManager = configurationManager;
+            modelEventDispatcher = new(this);
 
             AppNotifications = new ObservableCollection<AppNotification>();
 
             Plans = new ObservableCollection<PlanViewModel>();
-            applicationEvents.ConfigurationReloaded += (sender, e) =>
-            {
-                UpdatePlanViewModels();
-            };
+            ConfigurationEvents.ConfigurationReloaded.Subscribe(UpdatePlanViewModels);
             UpdatePlanViewModels();
 
             AddPlanCommand = ReactiveCommand.CreateFromTask(AddPlan);
-            ExecutePlanCommand = ReactiveCommand.CreateFromTask<PlanViewModel>(ExecutePlan);
+            ExecutePlanCommand = ReactiveCommand.Create<PlanViewModel>(ExecutePlan);
             ShowPlanEditDialog = new();
             EditPlanCommand = ReactiveCommand.CreateFromTask<PlanViewModel>(EditPlan);
             RemovePlanCommand = ReactiveCommand.Create<PlanViewModel>(RemovePlan);
@@ -55,6 +48,8 @@ namespace Taskington.Gui.ViewModels
                 LeftText = AppInfo.Copyright,
                 RightText = $"v{AppInfo.Version}"
             });
+
+            ConfigurationEvents.InitializeConfiguration.Push();
         }
 
         private void UpdatePlanViewModels()
@@ -64,51 +59,53 @@ namespace Taskington.Gui.ViewModels
                 var removedPlanModels = Plans.Where(plan => plan.IsRemoved);
 
                 Plans.Clear();
-                foreach (var plan in configurationManager.ExecutablePlans)
+                var plans = ConfigurationEvents.GetPlans.Request().SelectMany(v => v);
+                foreach (var plan in plans)
                 {
                     Plans.Add(CreatePlanViewModel(plan));
+                    PlanEvents.NotifyInitialPlanStates.Push(plan);
                 }
                 foreach (var plan in removedPlanModels)
                 {
                     Plans.Insert(plan.PreviousIndex, plan);
                 }
-                application.NotifyInitialStates();
             });
         }
 
-        private PlanViewModel CreatePlanViewModel(ExecutablePlan executablePlan) =>
-            new(executablePlan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand, UndoPlanRemovalCommand);
+        private PlanViewModel CreatePlanViewModel(Plan plan) =>
+            new(plan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand, UndoPlanRemovalCommand);
 
-        private async Task ExecutePlan(PlanViewModel planViewModel)
+        private void ExecutePlan(PlanViewModel planViewModel)
         {
-            await planViewModel.Execution.Execute();
+            PlanEvents.ExecutePlan.Push(planViewModel.Plan);
         }
 
         private async Task AddPlan()
         {
             var newPlan = new Plan(Plan.OnSelectionRunType) { Name = "New plan" };
-            var newExecutablePlan = configurationManager.InsertPlan(Plans.Count, newPlan);
-            configurationManager.SaveConfiguration();
-            var newPlanViewModel = CreatePlanViewModel(newExecutablePlan);
+            ConfigurationEvents.InsertPlan.Push(Plans.Count, newPlan);
+            ConfigurationEvents.SaveConfiguration.Push();
+            var newPlanViewModel = CreatePlanViewModel(newPlan);
             Plans.Add(newPlanViewModel);
-            newExecutablePlan.Execution.NotifyInitialStates();
+            PlanEvents.NotifyInitialPlanStates.Push(newPlan);
             await EditPlan(newPlanViewModel);
         }
 
         private async Task EditPlan(PlanViewModel planViewModel)
         {
-            var editPlanViewModel = new EditPlanViewModel(application.ServiceProvider, planViewModel);
+            var editPlanViewModel = new EditPlanViewModel(planViewModel);
             var shouldSave = await ShowPlanEditDialog.Handle(editPlanViewModel);
             if (shouldSave)
             {
-                var newExecutablePlan = configurationManager.ReplacePlan(planViewModel.ExecutablePlan, editPlanViewModel.ConvertToPlan());
+                var editedPlan = editPlanViewModel.ConvertToPlan();
+                ConfigurationEvents.ReplacePlan.Push(planViewModel.Plan, editedPlan);
                 int existingIndex = Plans.IndexOf(planViewModel);
                 if (existingIndex >= 0)
                 {
-                    Plans[existingIndex] = new PlanViewModel(newExecutablePlan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand, UndoPlanRemovalCommand);
-                    newExecutablePlan.Execution.NotifyInitialStates();
+                    Plans[existingIndex] = new PlanViewModel(editedPlan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand, UndoPlanRemovalCommand);
+                    PlanEvents.NotifyInitialPlanStates.Push(editedPlan);
                 }
-                configurationManager.SaveConfiguration();
+                ConfigurationEvents.SaveConfiguration.Push();
             }
         }
 
@@ -116,19 +113,19 @@ namespace Taskington.Gui.ViewModels
         {
             planViewModel.IsRemoved = true;
             planViewModel.PreviousIndex = Plans.IndexOf(planViewModel);
-            configurationManager.RemovePlan(planViewModel.ExecutablePlan);
-            configurationManager.SaveConfiguration();
+            ConfigurationEvents.RemovePlan.Push(planViewModel.Plan);
+            ConfigurationEvents.SaveConfiguration.Push();
         }
 
         private void UndoPlanRemoval(PlanViewModel planViewModel)
         {
             Plans.Remove(planViewModel);
-            var newExecutablePlan = configurationManager.InsertPlan(planViewModel.PreviousIndex, planViewModel.ExecutablePlan.Plan);
+            ConfigurationEvents.InsertPlan.Push(planViewModel.PreviousIndex, planViewModel.Plan);
             Plans.Insert(
-                planViewModel.PreviousIndex, 
-                new PlanViewModel(newExecutablePlan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand, UndoPlanRemovalCommand));
-            newExecutablePlan.Execution.NotifyInitialStates();
-            configurationManager.SaveConfiguration();
+                planViewModel.PreviousIndex,
+                new PlanViewModel(planViewModel.Plan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand, UndoPlanRemovalCommand));
+            PlanEvents.NotifyInitialPlanStates.Push(planViewModel.Plan);
+            ConfigurationEvents.SaveConfiguration.Push();
         }
     }
 }

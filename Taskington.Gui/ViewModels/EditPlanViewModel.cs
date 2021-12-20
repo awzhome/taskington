@@ -4,16 +4,16 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using Taskington.Base.Plans;
-using Taskington.Base.Service;
 using Taskington.Base.Steps;
+using Taskington.Base.TinyBus;
 using Taskington.Gui.Extension;
+using Taskington.Gui.Extension.Events;
 
 namespace Taskington.Gui.ViewModels
 {
     class EditPlanViewModel : ViewModelBase, IEditPlanViewModel
     {
         private readonly Plan plan;
-        private readonly IAppServiceProvider serviceProvider;
 
         public ReactiveCommand<bool, bool> CloseCommand { get; }
         public ReactiveCommand<NewStepTemplate, Unit> AddStepCommand { get; }
@@ -24,10 +24,9 @@ namespace Taskington.Gui.ViewModels
         public Interaction<Unit, string> OpenFolderDialog { get; }
         public Interaction<Unit, string?> OpenFileDialog { get; }
 
-        public EditPlanViewModel(IAppServiceProvider serviceProvider, PlanViewModel planViewModel)
+        public EditPlanViewModel(PlanViewModel planViewModel)
         {
-            this.serviceProvider = serviceProvider;
-            plan = planViewModel.ExecutablePlan.Plan;
+            plan = planViewModel.Plan;
 
             CloseCommand = ReactiveCommand.Create<bool, bool>(save => save);
 
@@ -85,12 +84,10 @@ namespace Taskington.Gui.ViewModels
         }
 
         private IEditStepViewModel CreateEditStepViewModel(PlanStep step) =>
-            serviceProvider.Get<IStepTypeUI>(stepTypeUI => stepTypeUI.StepType == step.StepType)
-                ?.CreateEditViewModel(step, this)
-                ?? new EditGeneralStepViewModel(step);
+            StepUIEvents.NewEditViewModel.Request(step, this).FirstOrDefault() ?? new EditGeneralStepViewModel(step);
 
         private List<NewStepTemplate> CollectNewStepTemplates() =>
-            new(serviceProvider.GetAll<IStepTypeUI>().SelectMany(stepTypeUI => stepTypeUI.GetNewStepTemplates()));
+            new(StepUIEvents.NewStepTemplates.RequestMany());
 
         private void InitializeFromBasicModel()
         {

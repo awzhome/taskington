@@ -29,6 +29,7 @@ namespace Taskington.Base.Config
             ConfigurationEvents.InsertPlan.Subscribe((index, plan) => InsertPlan(index, plan));
             ConfigurationEvents.RemovePlan.Subscribe((plan) => RemovePlan(plan));
             ConfigurationEvents.ReplacePlan.Subscribe((oldPlan, newPlan) => ReplacePlan(oldPlan, newPlan));
+            ConfigurationEvents.SaveConfiguration.Subscribe(SaveConfiguration);
             ConfigurationEvents.GetPlans.Subscribe(() => plans);
             PlanEvents.PlanIsRunningUpdated.Subscribe(OnPlanIsRunningUpdated);
         }

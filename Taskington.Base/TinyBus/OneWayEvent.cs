@@ -1,22 +1,31 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Taskington.Base.TinyBus
 {
-    public abstract class OneWayEvent<T>
+    public abstract class OneWayEvent<F, P>
     {
-        private readonly List<T> subscriptions = new();
+        private readonly List<SubscriberInfo<F, P>> subscriptions = new();
 
-        public void Subscribe(T subscriber)
+        public void Subscribe(F subscriber)
         {
-            subscriptions.Add(subscriber);
+            subscriptions.Add(new SubscriberInfo<F, P>(subscriber));
         }
 
-        protected void Invoke(Action<T> invoker)
+        public void Subscribe(F subscriber, P predicate)
         {
-            foreach (var subscriber in subscriptions)
+            subscriptions.Add(new SubscriberInfo<F, P>(subscriber, predicate));
+        }
+
+        protected void Invoke(Action<F> invoker, Predicate<P> predicateInvoker)
+        {
+            foreach (var subscriberInfo in subscriptions)
             {
-                invoker(subscriber);
+                if ((subscriberInfo.Predicate == null) || predicateInvoker(subscriberInfo.Predicate))
+                {
+                    invoker(subscriberInfo.Subscriber);
+                }
             }
         }
     }
