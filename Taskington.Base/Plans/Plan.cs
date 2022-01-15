@@ -26,7 +26,7 @@ namespace Taskington.Base.Plans
 
         public IEnumerable<PlanStep> Steps { get; set; } = Enumerable.Empty<PlanStep>();
 
-        public bool IsValid => Steps.OfType<InvalidPlanStep>().Any();
+        public bool IsValid => !Steps.OfType<InvalidPlanStep>().Any();
 
         public string? ValidationMessage => !IsValid ? "Plan contains invalid steps." : null;
     }
