@@ -12,6 +12,7 @@ namespace Taskington.Base.Steps
         public SyncStepExecution()
         {
             PlanEvents.ExecuteStep.Subscribe(Execute);
+            PlanEvents.PreCheckPlanExecution.Subscribe(PreCheckPlanExecution);
         }
 
         private IEnumerable<string> GetRelevantPathsOfStep(PlanStep step)
@@ -28,14 +29,24 @@ namespace Taskington.Base.Steps
             }
         }
 
-        public bool CanExecuteSupportedSteps(IEnumerable<PlanStep> steps, Placeholders placeholders)
+#pragma warning disable CA1822 // Mark members as static
+        public void PreCheckPlanExecution(Plan plan)
         {
-            return !steps
+#if SYS_OPS_DRYRUN
+            return true;
+#else
+            var placeholders = SystemOperationsEvents.LoadSystemPlaceholders.Request().First();
+
+            var canExecute = !plan.Steps
                 .Where(step => step.StepType == "sync")
                 .SelectMany(GetRelevantPathsOfStep)
                 .SelectMany(placeholders.ExtractPlaceholders)
                 .Any(result => result.Placeholder.StartsWith("drive:") && result.Resolved == null);
+
+            PlanEvents.PlanCanExecuteUpdated.Push(plan, canExecute);
+#endif
         }
+#pragma warning restore CA1822 // Mark members as static
 
         public void Execute(PlanStep step, Placeholders placeholders, Action<int> progressCallback, Action<string> statusTextCallback)
         {

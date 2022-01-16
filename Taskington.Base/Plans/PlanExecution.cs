@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Taskington.Base.SystemOperations;
@@ -17,31 +18,12 @@ namespace Taskington.Base.Plans
         {
             if (plan.RunType == Plan.OnSelectionRunType)
             {
-                PlanEvents.PlanCanExecuteUpdated.Push(plan, CanExecute(plan));
+                PlanEvents.PreCheckPlanExecution.Push(plan);
                 PlanEvents.PlanHasErrorsUpdated.Push(plan, false, null);
                 PlanEvents.PlanIsRunningUpdated.Push(plan, false);
                 PlanEvents.PlanStatusTextUpdated.Push(plan, "Not run yet");
             }
         }
-
-#pragma warning disable CA1822 // Mark members as static
-        public bool CanExecute(Plan plan)
-        {
-            // TODO
-            //#if SYS_OPS_DRYRUN
-            return true;
-            //#else
-            //            var placeholders = new Placeholders();
-            //            systemOperations.LoadSystemPlaceholders(placeholders);
-
-            //            var stepTypes = new HashSet<string>(plan.Steps.Select(step => step.StepType));
-            //            return
-            //                !stepTypes.Select(type => serviceProvider.Get<IStepExecution>(s => s.Type == type)
-            //                    ?.CanExecuteSupportedSteps(plan.Steps, placeholders))
-            //                .Any(result => !(result ?? true));
-            //#endif
-        }
-#pragma warning restore CA1822 // Mark members as static
 
         private void Execute(Plan plan)
         {

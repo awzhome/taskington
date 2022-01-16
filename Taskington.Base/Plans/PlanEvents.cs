@@ -16,6 +16,7 @@ namespace Taskington.Base.Plans
         public static Event<Plan, bool> PlanIsRunningUpdated { get; } = new();
         public static Event<Plan> ExecutePlan { get; } = new();
         public static Event<Plan> NotifyInitialPlanStates { get; } = new();
+        public static Event<Plan> PreCheckPlanExecution { get; } = new();
         public static Event<PlanStep, Placeholders, Action<int>, Action<string>> ExecuteStep { get; } = new();
 
     }
