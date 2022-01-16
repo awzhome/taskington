@@ -74,7 +74,7 @@ namespace Taskington.Base.Plans
                     }
                     finally
                     {
-                        PlanEvents.PlanIsRunningUpdated.Push(plan, true);
+                        PlanEvents.PlanIsRunningUpdated.Push(plan, false);
                         PlanEvents.PlanStatusTextUpdated.Push(plan, "Finished successfully");
                     }
                 });
