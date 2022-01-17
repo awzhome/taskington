@@ -2,61 +2,60 @@ open System
 open PPBackup.Console
 open Taskington.Base
 open Taskington.Base.Plans
-open Taskington.Base.Events
+open Taskington.Base.Config
+open Taskington.Base.TinyBus
 
 [<EntryPoint>]
 let main argv =
     let application = Application()
-    application.Start()
-
-    let executablePlans = application.ServiceProvider.Get<seq<ExecutablePlan>>()
-    let applicationEvents = application.ServiceProvider.Get<IApplicationEvents>()
+    application.Load()
+    ConfigurationEvents.InitializeConfiguration.Push();
 
     let mutable cursorPos = UI.getCursorPos()
     let mutable planName = ""
-    let mutable progress = 0
-    let mutable hasErrors = false
-    let mutable statusText = ""
-    let mutable isRunning = false
+    let mutable progressState = 0
+    let mutable hasErrorsState = false
+    let mutable statusTextState = ""
+    let mutable isRunningState = false
 
     let initProgress() =
-        progress <- 0
-        hasErrors <- false
-        statusText <- ""
+        progressState <- 0
+        hasErrorsState <- false
+        statusTextState <- ""
 
     let updateProgress() =
-        if isRunning then
+        if isRunningState then
             UI.setCursorPos cursorPos
             UI.emptyline 4
             UI.setCursorPos cursorPos
-            printfn "[%d%%] %s" progress planName
-            if hasErrors then
-                printfn "ERROR: %s" statusText
+            printfn "[%d%%] %s" progressState planName
+            if hasErrorsState then
+                printfn "ERROR: %s" statusTextState
             else
-                printfn "%s" statusText
+                printfn "%s" statusTextState
 
-    for plan in executablePlans do
-        applicationEvents.PlanIsRunningUpdated.AddHandler (fun o e ->
-            if e.IsRunning then
-                initProgress()
-                planName <- e.Plan.Name
-            isRunning <- e.IsRunning)
-        applicationEvents.PlanProgressUpdated.AddHandler (fun o e ->
-            progress <- e.Progress
-            updateProgress())
-        applicationEvents.PlanHasErrorsUpdated.AddHandler (fun o e ->
-            hasErrors <- e.HasErrors
-            statusText <- e.StatusText
-            updateProgress())
-        applicationEvents.PlanStatusTextUpdated.AddHandler (fun o e ->
-            statusText <- e.StatusText
-            updateProgress())
+    PlanEvents.PlanIsRunningUpdated.Subscribe (fun plan isRunning ->
+        if isRunning then
+            initProgress()
+            planName <- plan.Name
+        isRunningState <- isRunning)
+    PlanEvents.PlanProgressUpdated.Subscribe (fun plan progress ->
+        progressState <- progress
+        updateProgress())
+    PlanEvents.PlanHasErrorsUpdated.Subscribe (fun plan hasErrors errorText ->
+        hasErrorsState <- hasErrors
+        statusTextState <- errorText
+        updateProgress())
+    PlanEvents.PlanStatusTextUpdated.Subscribe (fun plan statusText ->
+        statusTextState <- statusText
+        updateProgress())
 
-    UI.menu "PPBackup" (executablePlans
+    let plans = ConfigurationEvents.GetPlans.RequestMany()
+    UI.menu "Taskington" (plans
         |> Seq.map(fun plan ->
-            (plan.Plan.Name, fun() ->
+            (plan.Name, fun() ->
                 cursorPos <- UI.getCursorPos()
-                plan.Execution.Execute().Wait()
+                PlanEvents.ExecutePlan.Push(plan)
             )))
 
     0
