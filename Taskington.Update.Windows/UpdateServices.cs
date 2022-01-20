@@ -1,16 +1,13 @@
-using System;
-using Taskington.Base.Service;
+using Taskington.Base.Extension;
 
 [assembly: TaskingtonExtension(typeof(Taskington.Update.Windows.UpdateServices))]
 
 namespace Taskington.Update.Windows
 {
-    public static class UpdateServices
+    public class UpdateServices : ITaskingtonExtension
     {
-        public static void Bind(IAppServiceBinder binder)
+        public void Initialize(IHandlerStore handlerStore)
         {
-            //binder
-            //    .Bind<?>();
         }
     }
 }

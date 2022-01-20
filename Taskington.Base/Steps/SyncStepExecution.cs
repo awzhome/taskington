@@ -2,20 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Taskington.Base.Plans;
 using Taskington.Base.SystemOperations;
 
 namespace Taskington.Base.Steps
 {
-    internal class SyncStepExecution : IStepExecution
+    internal class SyncStepExecution
     {
-        private readonly ISystemOperations systemOperations;
-
-        public SyncStepExecution(ISystemOperations systemOperations)
+        public SyncStepExecution()
         {
-            this.systemOperations = systemOperations;
+            PlanEvents.ExecuteStep.Subscribe(Execute,
+                (PlanStep step, Placeholders placeholders, Action<int> progressCallback, Action<string> statusTextCallback) => step.StepType == "sync");
+            PlanEvents.PreCheckPlanExecution.Subscribe(PreCheckPlanExecution);
         }
-
-        public string Type => "sync";
 
         private IEnumerable<string> GetRelevantPathsOfStep(PlanStep step)
         {
@@ -31,16 +30,24 @@ namespace Taskington.Base.Steps
             }
         }
 
-        public bool CanExecuteSupportedSteps(IEnumerable<PlanStep> steps, Placeholders placeholders)
+#pragma warning disable CA1822 // Mark members as static
+        public void PreCheckPlanExecution(Plan plan)
         {
-            return !steps
-                .Where(step => step.StepType == Type)
+#if !SYS_OPS_DRYRUN
+            var placeholders = SystemOperationsEvents.LoadSystemPlaceholders.Request().First();
+
+            var canExecute = !plan.Steps
+                .Where(step => step.StepType == "sync")
                 .SelectMany(GetRelevantPathsOfStep)
                 .SelectMany(placeholders.ExtractPlaceholders)
                 .Any(result => result.Placeholder.StartsWith("drive:") && result.Resolved == null);
-        }
 
-        public void Execute(PlanStep step, Placeholders placeholders, Action<int>? progressCallback, Action<string>? statusTextCallback)
+            PlanEvents.PlanCanExecuteUpdated.Push(plan, canExecute);
+#endif
+        }
+#pragma warning restore CA1822 // Mark members as static
+
+        public void Execute(PlanStep step, Placeholders placeholders, Action<int> progressCallback, Action<string> statusTextCallback)
         {
             var syncStep = new SyncStep(step, placeholders);
             if (syncStep.From != null && syncStep.To != null)
@@ -69,17 +76,17 @@ namespace Taskington.Base.Steps
                         if (syncStep.File != null)
                         {
                             statusTextCallback?.Invoke($"Sync file '{Path.GetFileName(syncStep.File)}'");
-                            systemOperations.SyncFile(syncStep.From, syncStep.To, syncStep.File);
+                            SystemOperationsEvents.SyncFile.Push(syncStep.From, syncStep.To, syncStep.File);
                         }
                         break;
                 }
             }
         }
 
-        private void SyncDirectory(SyncDirection syncDirection, string dir1, string dir2, Action<string>? statusTextCallback)
+        private static void SyncDirectory(SyncDirection syncDirection, string dir1, string dir2, Action<string>? statusTextCallback)
         {
             statusTextCallback?.Invoke($"Sync directory '{Path.GetFileName(dir1)}'");
-            systemOperations.SyncDirectory(syncDirection, dir1, dir2);
+            SystemOperationsEvents.SyncDirectory.Push(syncDirection, dir1, dir2);
         }
     }
 }

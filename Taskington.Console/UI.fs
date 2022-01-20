@@ -1,4 +1,4 @@
-﻿namespace PPBackup.Console
+namespace PPBackup.Console
 
 open System
 
@@ -20,10 +20,10 @@ module UI =
         line()
         margin()
 
-    let public head() =
+    let public head (title : string) =
         margin()
         line()
-        printfn "  PPBackup"
+        printfn "  %s" title
         line()
         margin()
 
@@ -48,7 +48,7 @@ module UI =
                     )
                 |> Map.ofSeq
         
-        head()
+        head title
         entriesmap |> Map.iter (fun key value ->
             printfn "[%s] %s" key (fst value))
         margin()

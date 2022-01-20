@@ -1,31 +1,20 @@
-using System.Threading.Tasks;
-using Taskington.Base.Events;
-
 namespace Taskington.Base.Plans
 {
-    class InvalidPlanExecution : IPlanExecution
+    class InvalidPlanExecution
     {
-        private readonly Plan plan;
-        private readonly ApplicationEvents events;
-        private readonly string reason;
-
-        public InvalidPlanExecution(Plan plan, ApplicationEvents events, string reason)
+        public InvalidPlanExecution()
         {
-            this.plan = plan;
-            this.events = events;
-            this.reason = reason;
-        }
-        public void NotifyInitialStates()
-        {
-            events
-                .OnPlanCanExecute(plan,false)
-                .OnPlanIsRunning(plan, false)
-                .OnPlanHasErrors(plan, true, reason);
+            PlanEvents.NotifyInitialPlanStates.Subscribe(NotifyInitialStates);
         }
 
-        public Task Execute()
+        private void NotifyInitialStates(Plan plan)
         {
-            return Task.CompletedTask;
+            if (!plan.IsValid)
+            {
+                PlanEvents.PlanCanExecuteUpdated.Push(plan, false);
+                PlanEvents.PlanIsRunningUpdated.Push(plan, false);
+                PlanEvents.PlanHasErrorsUpdated.Push(plan, true, plan.ValidationMessage);
+            }
         }
     }
 }

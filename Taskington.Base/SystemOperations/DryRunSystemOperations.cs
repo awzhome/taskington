@@ -1,11 +1,21 @@
-using System;
-using System.IO;
 using System.Threading;
+using Taskington.Base.Log;
 
 namespace Taskington.Base.SystemOperations
 {
-    class DryRunSystemOperations : ISystemOperations
+    class DryRunSystemOperations
     {
+        private readonly ILog log;
+
+        public DryRunSystemOperations(ILog log)
+        {
+            this.log = log;
+
+            SystemOperationsEvents.SyncDirectory.Subscribe(SyncDirectory);
+            SystemOperationsEvents.SyncFile.Subscribe(SyncFile);
+            SystemOperationsEvents.LoadSystemPlaceholders.Subscribe(WindowsSystemOperations.LoadWindowsSystemPlaceholders);
+        }
+
         public void SyncDirectory(SyncDirection syncDirection, string fromDir, string toDir)
         {
             var syncDirectionOutput = syncDirection switch
@@ -14,21 +24,16 @@ namespace Taskington.Base.SystemOperations
                 SyncDirection.Both => "<->",
                 _ => "?-?"
             };
-            Console.WriteLine($"SYSOP: Sync dir '{fromDir}' {syncDirectionOutput} '{toDir}");
+            log.Debug(this, $"SYSOP: Sync dir '{fromDir}' {syncDirectionOutput} '{toDir}");
 
             Thread.Sleep(500);
         }
 
         public void SyncFile(string fromDir, string toDir, string file)
         {
-            Console.WriteLine($"SYSOP: Sync file '{file}' '{fromDir}' -> '{toDir}'");
+            log.Debug(this, $"SYSOP: Sync file '{file}' '{fromDir}' -> '{toDir}'");
 
             Thread.Sleep(500);
-        }
-
-        public void LoadSystemPlaceholders(Placeholders placeholders)
-        {
-            WindowsSystemOperations.LoadWindowsSystemPlaceholders(placeholders);
         }
     }
 }

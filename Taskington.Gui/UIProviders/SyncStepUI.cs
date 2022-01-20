@@ -1,20 +1,29 @@
 using System.Collections.Generic;
 using Taskington.Base.Steps;
 using Taskington.Gui.Extension;
+using Taskington.Gui.Extension.Events;
 using Taskington.Gui.ViewModels;
 
 namespace Taskington.Gui.UIProviders
 {
-    class SyncStepUI : IStepTypeUI
+    class SyncStepUI
     {
-        public string StepType => "sync";
+        public const string StepType = "sync";
 
-        public IEditStepViewModel CreateEditViewModel(PlanStep step, IEditPlanViewModel parentModel) =>
-            new EditSyncStepViewModel(step)
+        public SyncStepUI()
+        {
+            StepUIEvents.NewEditViewModel.Subscribe(CreateEditViewModel, (step, parentModel) => step.StepType == StepType);
+            StepUIEvents.NewStepTemplates.Subscribe(GetNewStepTemplates);
+        }
+
+        public IEditStepViewModel CreateEditViewModel(PlanStep step, IEditPlanViewModel parentModel)
+        {
+            return new EditSyncStepViewModel(step)
             {
                 OpenFolderDialogInteraction = parentModel.OpenFolderDialog,
                 OpenFileDialogInteraction = parentModel.OpenFileDialog
             };
+        }
 
         public IEnumerable<NewStepTemplate> GetNewStepTemplates()
         {

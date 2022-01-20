@@ -1,14 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Taskington.Base.Events;
 using Taskington.Base.Plans;
-using Taskington.Base.Service;
-using Taskington.Base.Steps;
 
 namespace Taskington.Base.Config
 {
-    public class ConfigurationManager : IAutoInitializable
+    public class ConfigurationManager
     {
         private static readonly object configurationLock = new();
 
@@ -16,28 +12,29 @@ namespace Taskington.Base.Config
         private bool reloadDelayed = false;
         private readonly HashSet<Plan> runningPlans = new();
 
-        private readonly IAppServiceProvider serviceProvider;
-        private readonly ApplicationEvents applicationEvents;
         private readonly YamlConfigurationReader configurationReader;
         private readonly YamlConfigurationWriter configurationWriter;
 
         public ConfigurationManager(
-            IAppServiceProvider serviceProvider,
-            ApplicationEvents applicationEvents,
             YamlConfigurationReader configurationReader,
             YamlConfigurationWriter configurationWriter)
         {
-            this.serviceProvider = serviceProvider;
-            this.applicationEvents = applicationEvents;
             this.configurationReader = configurationReader;
             this.configurationWriter = configurationWriter;
 
-            applicationEvents.ConfigurationChanged += OnConfigurationChanged;
-            applicationEvents.PlanIsRunningUpdated += OnPlanIsRunningUpdated;
+            ConfigurationEvents.InitializeConfiguration.Subscribe(() => Initialize());
+            ConfigurationEvents.ConfigurationChanged.Subscribe(OnConfigurationChanged);
+            ConfigurationEvents.GetConfigValue.Subscribe(key => GetValue(key));
+            ConfigurationEvents.SetConfigValue.Subscribe((key, value) => SetValue(key, value));
+            ConfigurationEvents.InsertPlan.Subscribe((index, plan) => InsertPlan(index, plan));
+            ConfigurationEvents.RemovePlan.Subscribe((plan) => RemovePlan(plan));
+            ConfigurationEvents.ReplacePlan.Subscribe((oldPlan, newPlan) => ReplacePlan(oldPlan, newPlan));
+            ConfigurationEvents.SaveConfiguration.Subscribe(SaveConfiguration);
+            ConfigurationEvents.GetPlans.Subscribe(() => plans);
+            PlanEvents.PlanIsRunningUpdated.Subscribe(OnPlanIsRunningUpdated);
         }
 
-        private readonly List<ExecutablePlan> executablePlans = new();
-        public IEnumerable<ExecutablePlan> ExecutablePlans => executablePlans;
+        private readonly List<Plan> plans = new();
 
         private readonly Dictionary<string, string?> configValues = new();
 
@@ -53,7 +50,7 @@ namespace Taskington.Base.Config
             }
         }
 
-        private void OnConfigurationChanged(object? sender, EventArgs e)
+        private void OnConfigurationChanged()
         {
             bool configReloaded = false;
             lock (configurationLock)
@@ -63,7 +60,7 @@ namespace Taskington.Base.Config
 
             if (configReloaded)
             {
-                applicationEvents.OnConfigurationReloaded();
+                ConfigurationEvents.ConfigurationReloaded.Push();
             }
         }
 
@@ -71,12 +68,7 @@ namespace Taskington.Base.Config
         {
             if (runningPlans.Count == 0)
             {
-                foreach (var executablePlan in executablePlans)
-                {
-                    (executablePlan.Execution as IDisposable)?.Dispose();
-                }
-                executablePlans.Clear();
-
+                plans.Clear();
                 ReadConfiguration();
                 return true;
             }
@@ -84,7 +76,7 @@ namespace Taskington.Base.Config
             {
                 if (!reloadDelayed)
                 {
-                    applicationEvents.OnConfigurationReloadDelayed(true);
+                    ConfigurationEvents.ConfigurationReloadDelayed.Push(true);
                 }
                 reloadDelayed = true;
                 return false;
@@ -98,43 +90,16 @@ namespace Taskington.Base.Config
             {
                 configValues.Add(key, value);
             }
-            executablePlans.AddRange(configuration.Plans.Select(CreateExecutablePlan));
+            plans.AddRange(configuration.Plans);
         }
 
-        private ExecutablePlan CreateExecutablePlan(Plan plan)
+        private void OnPlanIsRunningUpdated(Plan plan, bool isRunning)
         {
-            if (plan.Steps.OfType<InvalidPlanStep>().Any())
-            {
-                return new ExecutablePlan(
-                    plan,
-                    new InvalidPlanExecution(plan, applicationEvents, "Plan contains invalid steps."));
-            }
-            else
-            {
-                var planExecutionCreator = serviceProvider.Get<IPlanExecutionCreator>(
-                    execution => execution.RunType == plan.RunType);
-                if (planExecutionCreator == null)
-                {
-                    return new ExecutablePlan(
-                        plan,
-                        new InvalidPlanExecution(plan, applicationEvents, $"Unknown plan run type '{plan.RunType}'"));
-                }
-                else
-                {
-                    return new ExecutablePlan(
-                         plan,
-                         planExecutionCreator.Create(plan));
-                }
-            }
-        }
-
-        private void OnPlanIsRunningUpdated(object? sender, PlanIsRunningUpdatedEventArgs e)
-        {
-            if (e.IsRunning)
+            if (isRunning)
             {
                 lock (configurationLock)
                 {
-                    runningPlans.Add(e.Plan);
+                    runningPlans.Add(plan);
                 }
             }
             else
@@ -142,17 +107,17 @@ namespace Taskington.Base.Config
                 bool configReloaded = false;
                 lock (configurationLock)
                 {
-                    runningPlans.Remove(e.Plan);
+                    runningPlans.Remove(plan);
                     if (runningPlans.Count == 0 && reloadDelayed)
                     {
-                        applicationEvents.OnConfigurationReloadDelayed(false);
+                        ConfigurationEvents.ConfigurationReloadDelayed.Push(true);
                         reloadDelayed = false;
                         configReloaded = TryReloadConfiguration();
                     }
                 }
                 if (configReloaded)
                 {
-                    applicationEvents.OnConfigurationReloaded();
+                    ConfigurationEvents.ConfigurationReloaded.Push();
                 }
             }
         }
@@ -161,50 +126,42 @@ namespace Taskington.Base.Config
         {
             configurationWriter.Write(new Configuration(
                 configValues.Select(entry => (entry.Key, entry.Value)),
-                executablePlans.Select(ep => ep.Plan)));
+                plans));
         }
 
-        public ExecutablePlan InsertPlan(int index, Plan newPlan)
+        public void InsertPlan(int index, Plan newPlan)
         {
-            var newExecutablePlan = CreateExecutablePlan(newPlan);
             if (index > -1)
             {
-                executablePlans.Insert(index, newExecutablePlan);
+                plans.Insert(index, newPlan);
             }
             else
             {
-                executablePlans.Add(newExecutablePlan);
-            }
-
-            return newExecutablePlan;
-        }
-
-        public void RemovePlan(ExecutablePlan executablePlan)
-        {
-            int index = executablePlans.IndexOf(executablePlan);
-            if (index > -1)
-            {
-                (executablePlan.Execution as IDisposable)?.Dispose();
-                executablePlans.RemoveAt(index);
+                plans.Add(newPlan);
             }
         }
 
-        public ExecutablePlan ReplacePlan(ExecutablePlan executablePlan, Plan newPlan)
+        public void RemovePlan(Plan plan)
         {
-            var newExecutablePlan = CreateExecutablePlan(newPlan);
-            int index = executablePlans.IndexOf(executablePlan);
+            int index = plans.IndexOf(plan);
             if (index > -1)
             {
-                (executablePlan.Execution as IDisposable)?.Dispose();
-                executablePlans.RemoveAt(index);
-                executablePlans.Insert(index, newExecutablePlan);
+                plans.RemoveAt(index);
+            }
+        }
+
+        public void ReplacePlan(Plan oldPlan, Plan newPlan)
+        {
+            int index = plans.IndexOf(oldPlan);
+            if (index > -1)
+            {
+                plans.RemoveAt(index);
+                plans.Insert(index, newPlan);
             }
             else
             {
-                executablePlans.Add(newExecutablePlan);
+                plans.Add(newPlan);
             }
-
-            return newExecutablePlan;
         }
 
         public void SetValue(string key, string value)

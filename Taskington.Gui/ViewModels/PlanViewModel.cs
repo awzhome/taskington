@@ -9,15 +9,15 @@ namespace Taskington.Gui.ViewModels
 {
     class PlanViewModel : NotifiableObject
     {
-        private readonly ExecutablePlan executablePlan;
+        private readonly Plan plan;
 
-        public PlanViewModel(ExecutablePlan executablePlan,
+        public PlanViewModel(Plan plan,
             ReactiveCommand<PlanViewModel, Unit> executePlanCommand,
             ReactiveCommand<PlanViewModel, Unit> editPlanCommand,
             ReactiveCommand<PlanViewModel, Unit> removePlanCommand,
             ReactiveCommand<PlanViewModel, Unit> undoPlanRemovalCommand)
         {
-            this.executablePlan = executablePlan;
+            this.plan = plan;
 
             ExecutePlanCommand = executePlanCommand;
             EditPlanCommand = editPlanCommand;
@@ -30,13 +30,11 @@ namespace Taskington.Gui.ViewModels
         public ReactiveCommand<PlanViewModel, Unit> RemovePlanCommand { get; }
         public ReactiveCommand<PlanViewModel, Unit> UndoPlanRemovalCommand { get; }
 
-        public ExecutablePlan ExecutablePlan => executablePlan;
+        public Plan Plan => plan;
 
-        public IPlanExecution Execution => executablePlan.Execution;
+        public IEnumerable<PlanStep> Steps => plan.Steps;
 
-        public IEnumerable<PlanStep> Steps => executablePlan.Plan.Steps;
-
-        public string? Name => executablePlan.Plan.Name;
+        public string? Name => plan.Name;
 
         private bool isRunning;
         public bool IsRunning
