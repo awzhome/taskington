@@ -33,7 +33,9 @@ namespace Taskington.Base.Steps
 #pragma warning disable CA1822 // Mark members as static
         public void PreCheckPlanExecution(Plan plan)
         {
-#if !SYS_OPS_DRYRUN
+#if SYS_OPS_DRYRUN
+            var canExecute = true;
+#else
             var placeholders = SystemOperationsEvents.LoadSystemPlaceholders.Request().First();
 
             var canExecute = !plan.Steps
@@ -42,8 +44,8 @@ namespace Taskington.Base.Steps
                 .SelectMany(placeholders.ExtractPlaceholders)
                 .Any(result => result.Placeholder.StartsWith("drive:") && result.Resolved == null);
 
-            PlanEvents.PlanCanExecuteUpdated.Push(plan, canExecute);
 #endif
+            PlanEvents.PlanCanExecuteUpdated.Push(plan, canExecute);
         }
 #pragma warning restore CA1822 // Mark members as static
 
