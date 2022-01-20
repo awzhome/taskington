@@ -7,11 +7,12 @@
     <NoWarn>CS0649;CS0169</NoWarn>
     <NukeRootDirectory>..</NukeRootDirectory>
     <NukeScriptDirectory>..</NukeScriptDirectory>
+    <NukeTelemetryVersion>1</NukeTelemetryVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWZhome.GutenTag" Version="1.0.0-preview.27" />
-    <PackageReference Include="Nuke.Common" Version="5.1.0" />
+    <PackageReference Include="AWZhome.GutenTag" Version="1.0.0-preview.28" />
+    <PackageReference Include="Nuke.Common" Version="6.0.1" />
   </ItemGroup>
 
 </Project>

@@ -1,16 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Copyright>Copyright (c) 2020 Andreas Weizel</Copyright>
     <Authors>Andreas Weizel</Authors>
     <Product>Taskington</Product>
     <Description>Taskington Base Framework Tests</Description>
 	<Nullable>enable</Nullable>
-	<Version>0.1-preview.99</Version>
+	<Version>0.1-preview.200</Version>
 	<OutputType>Library</OutputType>
-	<AssemblyVersion>0.1.0.99</AssemblyVersion>
-	<FileVersion>0.1.0.99</FileVersion>
+	<AssemblyVersion>0.1.0.200</AssemblyVersion>
+	<FileVersion>0.1.0.200</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Product>Taskington</Product>
     <Authors>Andreas Weizel</Authors>
     <Copyright>Copyright (c) 2020 Andreas Weizel</Copyright>
     <Description>Taskington Base Framework</Description>
 	<Nullable>enable</Nullable>
-	<Version>0.1-preview.99</Version>
-	<AssemblyVersion>0.1.0.99</AssemblyVersion>
-	<FileVersion>0.1.0.99</FileVersion>
+	<Version>0.1-preview.200</Version>
+	<AssemblyVersion>0.1.0.200</AssemblyVersion>
+	<FileVersion>0.1.0.200</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
