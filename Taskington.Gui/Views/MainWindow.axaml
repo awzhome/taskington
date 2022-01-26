@@ -50,7 +50,7 @@
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
 
-        <Grid RowDefinitions="Auto,*,Auto" Margin="0,20,0,0">
+        <Grid RowDefinitions="Auto,*,Auto,Auto" Margin="0,20,0,0">
             <Grid Grid.Row="0">
                 <Image Classes="logo" Source="/Assets/TaskingtonLogo.png" />
             </Grid>
@@ -64,19 +64,19 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
-
-                    <StackPanel HorizontalAlignment="Center" MinWidth="400">
-                        <Button Margin="20,0,20,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding AddPlanCommand}">
-                            <StackPanel Orientation="Horizontal">
-                                <i:Icon Value="fas fa-plus" />
-                                <TextBlock Margin="10,0,0,0">Add new plan</TextBlock>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
                 </StackPanel>
             </ScrollViewer>
 
-            <ItemsControl Grid.Row="2" Items="{Binding AppNotifications}">
+            <StackPanel Grid.Row="2" HorizontalAlignment="Center" MinWidth="400">
+                <Button Margin="20,20,20,20" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding AddPlanCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <i:Icon Value="fas fa-plus" />
+                        <TextBlock Margin="10,0,0,0">Add new plan</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <ItemsControl Grid.Row="3" Items="{Binding AppNotifications}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Vertical" />
