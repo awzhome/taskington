@@ -5,5 +5,11 @@
         "packages": true,
         ".ionide": true,
         ".vs": true,
+    },
+    "[xml]": {
+        "editor.formatOnSave": false
+    },
+    "[csharp]": {
+        "editor.formatOnSave": true,
     }
 }
