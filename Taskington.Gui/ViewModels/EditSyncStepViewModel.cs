@@ -24,7 +24,7 @@ namespace Taskington.Gui.ViewModels
         public ReactiveCommand<Unit, Unit> SelectFromCommand { get; }
         public ReactiveCommand<Unit, Unit> SelectToCommand { get; }
 
-        public Interaction<Unit, string>? OpenFolderDialogInteraction { get; set; }
+        public Interaction<Unit, string?>? OpenFolderDialogInteraction { get; set; }
         public Interaction<Unit, string?>? OpenFileDialogInteraction { get; set; }
 
         public EditSyncStepViewModel(PlanStep step) : base(step)

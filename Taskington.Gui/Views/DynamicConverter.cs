@@ -20,7 +20,7 @@ namespace Taskington.Gui.Views
 
         public List<Convert> Mappings { get; } = new();
 
-        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             var mapping = Mappings.FirstOrDefault(m => m.If?.Equals(value) ?? false);
             if (mapping != null)
@@ -30,7 +30,7 @@ namespace Taskington.Gui.Views
             return Default;
         }
 
-        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

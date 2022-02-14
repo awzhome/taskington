@@ -21,7 +21,7 @@ namespace Taskington.Gui.ViewModels
         public ReactiveCommand<Unit, Unit> RemoveStepCommand { get; }
         public ReactiveCommand<Unit, Unit> MoveStepUpCommand { get; }
         public ReactiveCommand<Unit, Unit> MoveStepDownCommand { get; }
-        public Interaction<Unit, string> OpenFolderDialog { get; }
+        public Interaction<Unit, string?> OpenFolderDialog { get; }
         public Interaction<Unit, string?> OpenFileDialog { get; }
 
         public EditPlanViewModel(PlanViewModel planViewModel)

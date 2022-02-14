@@ -37,7 +37,7 @@ namespace Taskington.Gui.Views
             senderControl?.ContextMenu?.Open(senderControl);
         }
 
-        private async Task OpenFolderDialogAsync(InteractionContext<Unit, string> interaction)
+        private async Task OpenFolderDialogAsync(InteractionContext<Unit, string?> interaction)
         {
             var dialog = new OpenFolderDialog
             {
