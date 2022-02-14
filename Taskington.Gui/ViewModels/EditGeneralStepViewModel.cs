@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Taskington.Base.Steps;
+using Taskington.Gui.Extension;
 
 namespace Taskington.Gui.ViewModels
 {
@@ -35,7 +36,7 @@ namespace Taskington.Gui.ViewModels
                 captionBuilder.Append($"{property.Key} {property.Value} ");
             }
             ReadableProperties = readablePropertiesBuilder.ToString();
-            Caption = captionBuilder.ToString();
+            CaptionFragments = new[] { new StepCaptionFragment { Text = captionBuilder.ToString() } };
         }
     }
 }

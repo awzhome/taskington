@@ -1,4 +1,5 @@
 using ReactiveUI;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Taskington.Base.Steps;
@@ -23,11 +24,11 @@ namespace Taskington.Gui.ViewModels
             set => this.RaiseAndSetIfChanged(ref icon, value);
         }
 
-        private string? caption;
-        public string? Caption
+        private IEnumerable<StepCaptionFragment>? captionFragments;
+        public IEnumerable<StepCaptionFragment>? CaptionFragments
         {
-            get => caption;
-            set => this.RaiseAndSetIfChanged(ref caption, value);
+            get => captionFragments;
+            set => this.RaiseAndSetIfChanged(ref captionFragments, value);
         }
 
         private string? stepType;

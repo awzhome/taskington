@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Taskington.Base.Steps;
+using Taskington.Gui.Extension;
 
 namespace Taskington.Gui.ViewModels
 {
@@ -26,6 +27,11 @@ namespace Taskington.Gui.ViewModels
 
         public Interaction<Unit, string?>? OpenFolderDialogInteraction { get; set; }
         public Interaction<Unit, string?>? OpenFileDialogInteraction { get; set; }
+
+        readonly StepCaptionFragment leftTextPart = new();
+        readonly StepPathFragment fromPathPart = new();
+        readonly StepCaptionFragment middleTextPart = new();
+        readonly StepPathFragment toPathPart = new();
 
         public EditSyncStepViewModel(PlanStep step) : base(step)
         {
@@ -56,7 +62,8 @@ namespace Taskington.Gui.ViewModels
                     SyncSubDirsType => "fas fa-sitemap",
                     _ => ""
                 };
-                UpdateCaption();
+                leftTextPart.Text = $"Synchronize {selectedType?.Caption} from ";
+                middleTextPart.Text = " to ";
             }
         }
 
@@ -67,7 +74,7 @@ namespace Taskington.Gui.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref from, value);
-                UpdateCaption();
+                fromPathPart.Text = from;
             }
         }
 
@@ -78,7 +85,7 @@ namespace Taskington.Gui.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref to, value);
-                UpdateCaption();
+                toPathPart.Text = to;
             }
         }
 
@@ -87,6 +94,8 @@ namespace Taskington.Gui.ViewModels
             SelectedType = SyncTypes.FirstOrDefault(entry => entry.Type == step.DefaultProperty);
             From = step["from"];
             To = step["to"];
+
+            CaptionFragments = new[] { leftTextPart, fromPathPart, middleTextPart, toPathPart };
         }
 
         public override PlanStep ConvertToStep()
@@ -133,11 +142,6 @@ namespace Taskington.Gui.ViewModels
                     To = selectedPath;
                 }
             }
-        }
-
-        private void UpdateCaption()
-        {
-            Caption = $"Synchronize {selectedType?.Caption} from {from} to {to}";
         }
     }
 }

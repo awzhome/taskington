@@ -3,7 +3,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:Taskington.Gui.ViewModels"
+        xmlns:ext="using:Taskington.Gui.Extension"
         xmlns:views="using:Taskington.Gui.Views"
+        xmlns:controls="using:Taskington.Gui.Controls"
         xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Taskington.Gui.Views.EditPlanWindow"
@@ -42,6 +44,16 @@
         </Style>
     </Window.Styles>
 
+    <Window.DataTemplates>
+        <DataTemplate DataType="{x:Type ext:StepPathFragment}">
+            <controls:PathTextBlock DataContext="{Binding}" />
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type ext:StepCaptionFragment}">
+            <TextBlock Text="{Binding Text}"/>
+        </DataTemplate>
+    </Window.DataTemplates>
+
     <Panel>
         <ExperimentalAcrylicBorder IsHitTestVisible="False">
             <ExperimentalAcrylicBorder.Material>
@@ -67,7 +79,13 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <i:Icon Value="{Binding Icon}" />
-                                <TextBlock Text="{Binding Caption}" Margin="8,0,0,0" />
+                                <ItemsControl Items="{Binding CaptionFragments}" Margin="8,0,0,0">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

@@ -1,17 +1,28 @@
+namespace Taskington.Gui.Extension;
+
+using System.Collections.Generic;
+using Taskington.Base.Model;
 using Taskington.Base.Steps;
 
-namespace Taskington.Gui.Extension
+public class StepCaptionFragment : NotifiableObject
 {
-    public interface IEditStepViewModel
+    private string? text;
+    public virtual string? Text
     {
-        public string? Icon { get; set; }
-
-        public string? Caption { get; set; }
-
-        public string? StepType { get; set; }
-
-        public string? SubType { get; set; }
-
-        PlanStep ConvertToStep();
+        get => text;
+        set => SetAndNotify(ref text, value);
     }
+}
+
+public interface IEditStepViewModel
+{
+    public string? Icon { get; set; }
+
+    public IEnumerable<StepCaptionFragment>? CaptionFragments { get; set; }
+
+    public string? StepType { get; set; }
+
+    public string? SubType { get; set; }
+
+    PlanStep ConvertToStep();
 }

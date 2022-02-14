@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ext="using:Taskington.Gui.Extension"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Taskington.Gui.Controls.PathTextBlock">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="stringFragment" Color="#F2BF35" />
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <Style Selector="TextBlock.stringFragment">
+            <Setter Property="Foreground" Value="{StaticResource stringFragment}" />
+        </Style>
+    </UserControl.Styles>
+
+    <ItemsControl Items="{Binding PathFragments}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type ext:PathFragment}">
+                <TextBlock Classes="stringFragment" Text="{Binding Text}" />
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+
+</UserControl>
