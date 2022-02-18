@@ -5,7 +5,7 @@ namespace Taskington.Base.SystemOperations
 {
     public class Placeholders
     {
-        private readonly Dictionary<string, string> placeholderMappings = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> placeholderMappings = new();
 
         public string? this[string placeholder]
         {

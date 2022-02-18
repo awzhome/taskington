@@ -3,18 +3,28 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ext="using:Taskington.Gui.Extension"
+             xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+             xmlns:v="using:Taskington.Gui.Views"
+             xmlns:controls="using:Taskington.Gui.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Taskington.Gui.Controls.PathTextBlock">
 
     <UserControl.Resources>
-        <SolidColorBrush x:Key="stringFragment" Color="#F2BF35" />
-    </UserControl.Resources>
+        <v:BoolToThicknessConverter x:Key="borderWidthConverter" IfTrue="1" IfFalse="0" />
+        <v:BoolToThicknessConverter x:Key="borderMarginConverter" IfTrue="0,0,2,0" IfFalse="0" />
+        <v:BoolToThicknessConverter x:Key="borderPaddingConverter" IfTrue="4,0,4,0" IfFalse="0" />
 
-    <UserControl.Styles>
-        <Style Selector="TextBlock.stringFragment">
-            <Setter Property="Foreground" Value="{StaticResource stringFragment}" />
-        </Style>
-    </UserControl.Styles>
+        <SolidColorBrush x:Key="brightYellow" Color="#FDE292" />
+        <SolidColorBrush x:Key="yellow" Color="#F2BF35" />
+        <SolidColorBrush x:Key="blue" Color="#9CCEFE" />
+
+        <v:DynamicConverter x:Key="foregroundConverter" Default="{StaticResource brightYellow}">
+            <v:DynamicConverter.Mappings>
+                <v:Convert If="{x:Static ext:PathFragmentColor.Yellow}" Then="{StaticResource yellow}" />
+                <v:Convert If="{x:Static ext:PathFragmentColor.Blue}" Then="{StaticResource blue}" />
+            </v:DynamicConverter.Mappings>
+        </v:DynamicConverter>
+    </UserControl.Resources>
 
     <ItemsControl Items="{Binding PathFragments}">
         <ItemsControl.ItemsPanel>
@@ -24,9 +34,22 @@
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
             <DataTemplate DataType="{x:Type ext:PathFragment}">
-                <TextBlock Classes="stringFragment" Text="{Binding Text}" />
+                <Border
+                        BorderThickness="{Binding IsPlaceholder, Converter={StaticResource borderWidthConverter}}"
+                        BorderBrush="{Binding Color, Converter={StaticResource foregroundConverter}}"
+                        CornerRadius="4,4,4,4"
+                        Margin="{Binding IsPlaceholder, Converter={StaticResource borderMarginConverter}}"
+                        Padding="{Binding IsPlaceholder, Converter={StaticResource borderPaddingConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <i:Icon
+                            Value="{Binding Icon}"
+                            IsVisible="{Binding IsPlaceholder}"
+                            Margin="0,0,4,0"
+                            Foreground="{Binding Color, Converter={StaticResource foregroundConverter}}" />
+                        <TextBlock Text="{Binding Text}" Foreground="{Binding Color, Converter={StaticResource foregroundConverter}}" />
+                    </StackPanel>
+                </Border>
             </DataTemplate>
         </ItemsControl.ItemTemplate>
     </ItemsControl>
-
 </UserControl>

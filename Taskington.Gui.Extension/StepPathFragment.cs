@@ -1,6 +1,12 @@
 namespace Taskington.Gui.Extension;
-
 using System.Collections.ObjectModel;
+
+public enum PathFragmentColor
+{
+    BrightYellow,
+    Yellow,
+    Blue
+}
 
 public class PathFragment
 {
@@ -8,11 +14,30 @@ public class PathFragment
     {
         Text = text;
         IsPlaceholder = isPlaceholder;
+
+        if (isPlaceholder)
+        {
+            switch (text)
+            {
+                case { } when text.StartsWith("drive:"):
+                    Color = PathFragmentColor.Blue;
+                    Icon = "fas fa-hdd";
+                    Text = text[6..];
+                    break;
+
+                default:
+                    Color = PathFragmentColor.Yellow;
+                    Icon = "fas fa-folder";
+                    break;
+            };
+        }
     }
 
     public string Text { get; }
     public bool IsPlaceholder { get; }
-    public string? ExpandedText { get; init; }
+    public string? ExpandedText { get; set; }
+    public string? Icon { get; }
+    public PathFragmentColor Color { get; } = PathFragmentColor.BrightYellow;
 }
 
 public class StepPathFragment : StepCaptionFragment
@@ -27,10 +52,39 @@ public class StepPathFragment : StepCaptionFragment
             PathFragments.Clear();
             if (value != null)
             {
-                PathFragments.Add(new(value, false));
+                ExtractFragments(value);
             }
         }
     }
 
     public ObservableCollection<PathFragment> PathFragments { get; } = new();
+
+    private void ExtractFragments(string input)
+    {
+        int pos = 0;
+        while (pos < input.Length)
+        {
+            int placeholderStart = input.IndexOf("${", pos);
+            if (placeholderStart == -1)
+            {
+                PathFragments.Add(new PathFragment(input[pos..], false));
+                break;
+            }
+            else
+            {
+                int placeholderEnd = input.IndexOf('}', placeholderStart);
+                if (placeholderEnd == -1)
+                {
+                    PathFragments.Add(new PathFragment(input[placeholderStart..], true));
+                    break;
+                }
+                else
+                {
+                    string placeholder = input.Substring(placeholderStart + 2, placeholderEnd - placeholderStart - 2);
+                    PathFragments.Add(new PathFragment(placeholder, true));
+                    pos = placeholderEnd + 1;
+                }
+            }
+        }
+    }
 }
