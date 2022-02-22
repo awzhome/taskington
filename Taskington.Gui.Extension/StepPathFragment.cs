@@ -1,5 +1,6 @@
 namespace Taskington.Gui.Extension;
 using System.Collections.ObjectModel;
+using Taskington.Base.SystemOperations;
 
 public enum PathFragmentColor
 {
@@ -42,6 +43,13 @@ public class PathFragment
 
 public class StepPathFragment : StepCaptionFragment
 {
+    private readonly Placeholders placeholders;
+
+    public StepPathFragment(Placeholders placeholders)
+    {
+        this.placeholders = placeholders;
+    }
+
     public override string? Text
     {
         get => base.Text;
@@ -75,13 +83,17 @@ public class StepPathFragment : StepCaptionFragment
                 int placeholderEnd = input.IndexOf('}', placeholderStart);
                 if (placeholderEnd == -1)
                 {
+
                     PathFragments.Add(new PathFragment(input[placeholderStart..], true));
                     break;
                 }
                 else
                 {
                     string placeholder = input.Substring(placeholderStart + 2, placeholderEnd - placeholderStart - 2);
-                    PathFragments.Add(new PathFragment(placeholder, true));
+                    PathFragments.Add(new PathFragment(placeholder, true)
+                    {
+                        ExpandedText = placeholders[placeholder]
+                    });
                     pos = placeholderEnd + 1;
                 }
             }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive;
 using Taskington.Base.Plans;
 using Taskington.Base.Steps;
+using Taskington.Base.SystemOperations;
 using Taskington.Base.TinyBus;
 using Taskington.Gui.Extension;
 using Taskington.Gui.Extension.Events;
@@ -14,6 +15,7 @@ namespace Taskington.Gui.ViewModels
     class EditPlanViewModel : ViewModelBase, IEditPlanViewModel
     {
         private readonly Plan plan;
+        private readonly Placeholders placeholders;
 
         public ReactiveCommand<bool, bool> CloseCommand { get; }
         public ReactiveCommand<NewStepTemplate, Unit> AddStepCommand { get; }
@@ -27,6 +29,7 @@ namespace Taskington.Gui.ViewModels
         public EditPlanViewModel(PlanViewModel planViewModel)
         {
             plan = planViewModel.Plan;
+            placeholders = SystemOperationsEvents.LoadSystemPlaceholders.Request().First();
 
             CloseCommand = ReactiveCommand.Create<bool, bool>(save => save);
 
@@ -84,7 +87,7 @@ namespace Taskington.Gui.ViewModels
         }
 
         private IEditStepViewModel CreateEditStepViewModel(PlanStep step) =>
-            StepUIEvents.NewEditViewModel.Request(step, this).FirstOrDefault() ?? new EditGeneralStepViewModel(step);
+            StepUIEvents.NewEditViewModel.Request(step, this, placeholders).FirstOrDefault() ?? new EditGeneralStepViewModel(step);
 
         private List<NewStepTemplate> CollectNewStepTemplates() =>
             new(StepUIEvents.NewStepTemplates.RequestMany());

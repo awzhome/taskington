@@ -39,7 +39,8 @@
                         BorderBrush="{Binding Color, Converter={StaticResource foregroundConverter}}"
                         CornerRadius="4,4,4,4"
                         Margin="{Binding IsPlaceholder, Converter={StaticResource borderMarginConverter}}"
-                        Padding="{Binding IsPlaceholder, Converter={StaticResource borderPaddingConverter}}">
+                        Padding="{Binding IsPlaceholder, Converter={StaticResource borderPaddingConverter}}"
+                        ToolTip.Tip="{Binding ExpandedText}">
                     <StackPanel Orientation="Horizontal">
                         <i:Icon
                             Value="{Binding Icon}"

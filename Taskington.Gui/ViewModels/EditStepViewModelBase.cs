@@ -1,7 +1,5 @@
 using ReactiveUI;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Taskington.Base.Steps;
 using Taskington.Gui.Extension;
 

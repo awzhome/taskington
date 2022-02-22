@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Taskington.Base.Steps;
+using Taskington.Base.SystemOperations;
 using Taskington.Gui.Extension;
 using Taskington.Gui.Extension.Events;
 using Taskington.Gui.ViewModels;
@@ -12,13 +13,13 @@ namespace Taskington.Gui.UIProviders
 
         public SyncStepUI()
         {
-            StepUIEvents.NewEditViewModel.Subscribe(CreateEditViewModel, (step, parentModel) => step.StepType == StepType);
+            StepUIEvents.NewEditViewModel.Subscribe(CreateEditViewModel, (step, parentModel, placeholders) => step.StepType == StepType);
             StepUIEvents.NewStepTemplates.Subscribe(GetNewStepTemplates);
         }
 
-        public IEditStepViewModel CreateEditViewModel(PlanStep step, IEditPlanViewModel parentModel)
+        public IEditStepViewModel CreateEditViewModel(PlanStep step, IEditPlanViewModel parentModel, Placeholders placeholders)
         {
-            return new EditSyncStepViewModel(step)
+            return new EditSyncStepViewModel(step, placeholders)
             {
                 OpenFolderDialogInteraction = parentModel.OpenFolderDialog,
                 OpenFileDialogInteraction = parentModel.OpenFileDialog

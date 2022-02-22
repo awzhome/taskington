@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Taskington.Base.Steps;
+using Taskington.Base.SystemOperations;
 using Taskington.Gui.Extension;
 
 namespace Taskington.Gui.ViewModels
@@ -28,15 +29,20 @@ namespace Taskington.Gui.ViewModels
         public Interaction<Unit, string?>? OpenFolderDialogInteraction { get; set; }
         public Interaction<Unit, string?>? OpenFileDialogInteraction { get; set; }
 
-        readonly StepCaptionFragment leftTextPart = new();
-        readonly StepPathFragment fromPathPart = new();
-        readonly StepCaptionFragment middleTextPart = new();
-        readonly StepPathFragment toPathPart = new();
+        readonly StepCaptionFragment leftTextPart;
+        readonly StepPathFragment fromPathPart;
+        readonly StepCaptionFragment middleTextPart;
+        readonly StepPathFragment toPathPart;
 
-        public EditSyncStepViewModel(PlanStep step) : base(step)
+        public EditSyncStepViewModel(PlanStep step, Placeholders placeholders) : base(step)
         {
             SelectFromCommand = ReactiveCommand.CreateFromTask(OpenSelectFromDialogAsync);
             SelectToCommand = ReactiveCommand.CreateFromTask(OpenSelectToDialogAsync);
+
+            leftTextPart = new();
+            fromPathPart = new(placeholders);
+            middleTextPart = new();
+            toPathPart = new(placeholders);
 
             InitializeFromBasicModel(step);
         }
