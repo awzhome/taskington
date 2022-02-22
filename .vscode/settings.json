@@ -9,7 +9,12 @@
     "[xml]": {
         "editor.formatOnSave": false
     },
+    "[axml]": {
+        "editor.formatOnSave": false
+    },
     "[csharp]": {
         "editor.formatOnSave": true,
-    }
+    },
+    "omnisharp.useModernNet": true,
+    "omnisharp.organizeImportsOnFormat": true,
 }
