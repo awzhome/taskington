@@ -6,6 +6,9 @@
         ".ionide": true,
         ".vs": true,
     },
+    "files.associations": {
+        "*.axaml": "xml"
+    },
     "[xml]": {
         "editor.formatOnSave": false
     },
