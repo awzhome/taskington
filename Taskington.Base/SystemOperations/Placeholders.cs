@@ -32,6 +32,10 @@ namespace Taskington.Base.SystemOperations
             }
         }
 
+        public IEnumerable<KeyValuePair<string, string>> Entries => placeholderMappings;
+        public IEnumerable<string> Keys => placeholderMappings.Keys;
+        public IEnumerable<string> Values => placeholderMappings.Values;
+
         public string? ResolvePlaceholders(string? input)
         {
             if (input == null)
