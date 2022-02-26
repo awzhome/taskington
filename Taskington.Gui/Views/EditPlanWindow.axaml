@@ -14,7 +14,8 @@
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent"
         ExtendClientAreaToDecorationsHint="True"
-        Title="Edit plan">
+        Title="Edit plan"
+        Icon="/Assets/AppIcon.ico">
 
     <Window.Styles>
         <Style Selector="TextBox.dialogControl">
