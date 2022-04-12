@@ -9,3 +9,4 @@ output/
 build.fsx.lock
 .nuke/temp/
 Taskington.Installer.Windows/wix/
+**/.DS_Store
