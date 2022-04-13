@@ -7,35 +7,28 @@ namespace Taskington.Base.Config
     {
         static string AppRoamingPath =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "taskington");
+        static string UserFilePath => Path.Combine(AppRoamingPath, "taskington.yml");
 
         public void ReadConfigurationStreams(Action<TextReader> configReader)
         {
-            using var reader = new StreamReader(DetermineFileName());
-            configReader(reader);
+            var settingsFile = UserFilePath;
+            if (File.Exists(settingsFile))
+            {
+                using var reader = new StreamReader(settingsFile);
+                configReader(reader);
+            }
+            else
+            {
+                using var memoryStream = new MemoryStream();
+                using var reader = new StreamReader(memoryStream);
+                configReader(reader);
+            }
         }
 
         public void WriteConfigurationStreams(Action<TextWriter> configWriter)
         {
-            using var writer = new StreamWriter(DetermineFileName());
+            using var writer = new StreamWriter(UserFilePath);
             configWriter(writer);
-        }
-
-        private static string DetermineFileName()
-        {
-            string fileName = "taskington.yml";
-            string userFilePath = Path.Combine(AppRoamingPath, fileName);
-            string workDirFilePath = Path.Combine(Environment.CurrentDirectory, fileName);
-
-            if (File.Exists(workDirFilePath))
-            {
-                return workDirFilePath;
-            }
-            else if (File.Exists(userFilePath))
-            {
-                return userFilePath;
-            }
-
-            throw new FileNotFoundException("No configuration file found.");
         }
     }
 }
