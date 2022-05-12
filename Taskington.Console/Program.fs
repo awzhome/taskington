@@ -9,7 +9,7 @@ open Taskington.Base.TinyBus
 let main argv =
     let application = Application()
     application.Load()
-    ConfigurationEvents.InitializeConfiguration.Push();
+    ConfigurationMessages.InitializeConfiguration.Push();
 
     let mutable cursorPos = UI.getCursorPos()
     let mutable planName = ""
@@ -34,28 +34,28 @@ let main argv =
             else
                 printfn "%s" statusTextState
 
-    PlanEvents.PlanIsRunningUpdated.Subscribe (fun plan isRunning ->
+    PlanMessages.PlanIsRunningUpdated.Subscribe (fun plan isRunning ->
         if isRunning then
             initProgress()
             planName <- plan.Name
         isRunningState <- isRunning)
-    PlanEvents.PlanProgressUpdated.Subscribe (fun plan progress ->
+    PlanMessages.PlanProgressUpdated.Subscribe (fun plan progress ->
         progressState <- progress
         updateProgress())
-    PlanEvents.PlanHasErrorsUpdated.Subscribe (fun plan hasErrors errorText ->
+    PlanMessages.PlanHasErrorsUpdated.Subscribe (fun plan hasErrors errorText ->
         hasErrorsState <- hasErrors
         statusTextState <- errorText
         updateProgress())
-    PlanEvents.PlanStatusTextUpdated.Subscribe (fun plan statusText ->
+    PlanMessages.PlanStatusTextUpdated.Subscribe (fun plan statusText ->
         statusTextState <- statusText
         updateProgress())
 
-    let plans = ConfigurationEvents.GetPlans.RequestMany()
+    let plans = ConfigurationMessages.GetPlans.RequestMany()
     UI.menu "Taskington" (plans
         |> Seq.map(fun plan ->
             (plan.Name, fun() ->
                 cursorPos <- UI.getCursorPos()
-                PlanEvents.ExecutePlan.Push(plan)
+                PlanMessages.ExecutePlan.Push(plan)
             )))
 
     0

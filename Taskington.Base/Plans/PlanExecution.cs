@@ -10,18 +10,18 @@ namespace Taskington.Base.Plans
     {
         internal PlanExecution()
         {
-            PlanEvents.NotifyInitialPlanStates.Subscribe(NotifyInitialStates);
-            PlanEvents.ExecutePlan.Subscribe(Execute);
+            PlanMessages.NotifyInitialPlanStates.Subscribe(NotifyInitialStates);
+            PlanMessages.ExecutePlan.Subscribe(Execute);
         }
 
         private void NotifyInitialStates(Plan plan)
         {
             if (plan.RunType == Plan.OnSelectionRunType)
             {
-                PlanEvents.PreCheckPlanExecution.Push(plan);
-                PlanEvents.PlanHasErrorsUpdated.Push(plan, false, null);
-                PlanEvents.PlanIsRunningUpdated.Push(plan, false);
-                PlanEvents.PlanStatusTextUpdated.Push(plan, "Not run yet");
+                PlanMessages.PreCheckPlanExecution.Push(plan);
+                PlanMessages.PlanHasErrorsUpdated.Push(plan, false, null);
+                PlanMessages.PlanIsRunningUpdated.Push(plan, false);
+                PlanMessages.PlanStatusTextUpdated.Push(plan, "Not run yet");
             }
         }
 
@@ -33,31 +33,31 @@ namespace Taskington.Base.Plans
                 {
                     try
                     {
-                        PlanEvents.PlanIsRunningUpdated.Push(plan, true);
+                        PlanMessages.PlanIsRunningUpdated.Push(plan, true);
 
-                        var placeholders = SystemOperationsEvents.LoadSystemPlaceholders.Request().First();
+                        var placeholders = SystemOperationsMessages.LoadSystemPlaceholders.Request().First();
 
                         int stepsFinished = 0;
-                        PlanEvents.PlanProgressUpdated.Push(plan, 0);
+                        PlanMessages.PlanProgressUpdated.Push(plan, 0);
                         int planProgress = 0;
                         foreach (var step in plan.Steps)
                         {
-                            PlanEvents.ExecuteStep.Push(step, placeholders,
-                                progress => PlanEvents.PlanProgressUpdated.Push(plan, planProgress + progress / plan.Steps.Count()),
-                                text => PlanEvents.PlanStatusTextUpdated.Push(plan, text));
+                            PlanMessages.ExecuteStep.Push(step, placeholders,
+                                progress => PlanMessages.PlanProgressUpdated.Push(plan, planProgress + progress / plan.Steps.Count()),
+                                text => PlanMessages.PlanStatusTextUpdated.Push(plan, text));
                             stepsFinished++;
                             planProgress = stepsFinished * 100 / plan.Steps.Count();
-                            PlanEvents.PlanProgressUpdated.Push(plan, planProgress);
+                            PlanMessages.PlanProgressUpdated.Push(plan, planProgress);
                         }
                     }
                     catch (Exception ex)
                     {
-                        PlanEvents.PlanHasErrorsUpdated.Push(plan, true, ex.Message);
+                        PlanMessages.PlanHasErrorsUpdated.Push(plan, true, ex.Message);
                     }
                     finally
                     {
-                        PlanEvents.PlanIsRunningUpdated.Push(plan, false);
-                        PlanEvents.PlanStatusTextUpdated.Push(plan, "Finished successfully");
+                        PlanMessages.PlanIsRunningUpdated.Push(plan, false);
+                        PlanMessages.PlanStatusTextUpdated.Push(plan, "Finished successfully");
                     }
                 });
             }

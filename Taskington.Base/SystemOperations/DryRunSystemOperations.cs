@@ -11,9 +11,9 @@ namespace Taskington.Base.SystemOperations
         {
             this.log = log;
 
-            SystemOperationsEvents.SyncDirectory.Subscribe(SyncDirectory);
-            SystemOperationsEvents.SyncFile.Subscribe(SyncFile);
-            SystemOperationsEvents.LoadSystemPlaceholders.Subscribe(WindowsSystemOperations.LoadWindowsSystemPlaceholders);
+            SystemOperationsMessages.SyncDirectory.Subscribe(SyncDirectory);
+            SystemOperationsMessages.SyncFile.Subscribe(SyncFile);
+            SystemOperationsMessages.LoadSystemPlaceholders.Subscribe(WindowsSystemOperations.LoadWindowsSystemPlaceholders);
         }
 
         public void SyncDirectory(SyncDirection syncDirection, string fromDir, string toDir)

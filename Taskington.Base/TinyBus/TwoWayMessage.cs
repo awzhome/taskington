@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Taskington.Base.TinyBus
 {
-    public abstract class TwoWayEvent<F, P, R>
+    public abstract class TwoWayMessage<F, P, R>
     {
         private readonly List<SubscriberInfo<F, P>> subscriptions = new();
 

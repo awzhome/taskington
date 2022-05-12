@@ -11,9 +11,9 @@ namespace Taskington.Base.Steps
     {
         public SyncStepExecution()
         {
-            PlanEvents.ExecuteStep.Subscribe(Execute,
+            PlanMessages.ExecuteStep.Subscribe(Execute,
                 (PlanStep step, Placeholders placeholders, Action<int> progressCallback, Action<string> statusTextCallback) => step.StepType == "sync");
-            PlanEvents.PreCheckPlanExecution.Subscribe(PreCheckPlanExecution);
+            PlanMessages.PreCheckPlanExecution.Subscribe(PreCheckPlanExecution);
         }
 
         private IEnumerable<string> GetRelevantPathsOfStep(PlanStep step)
@@ -45,7 +45,7 @@ namespace Taskington.Base.Steps
                 .Any(result => result.Placeholder.StartsWith("drive:") && result.Resolved == null);
 
 #endif
-            PlanEvents.PlanCanExecuteUpdated.Push(plan, canExecute);
+            PlanMessages.PlanCanExecuteUpdated.Push(plan, canExecute);
         }
 #pragma warning restore CA1822 // Mark members as static
 
@@ -78,7 +78,7 @@ namespace Taskington.Base.Steps
                         if (syncStep.File != null)
                         {
                             statusTextCallback?.Invoke($"Sync file '{Path.GetFileName(syncStep.File)}'");
-                            SystemOperationsEvents.SyncFile.Push(syncStep.From, syncStep.To, syncStep.File);
+                            SystemOperationsMessages.SyncFile.Push(syncStep.From, syncStep.To, syncStep.File);
                         }
                         break;
                 }
@@ -88,7 +88,7 @@ namespace Taskington.Base.Steps
         private static void SyncDirectory(SyncDirection syncDirection, string dir1, string dir2, Action<string>? statusTextCallback)
         {
             statusTextCallback?.Invoke($"Sync directory '{Path.GetFileName(dir1)}'");
-            SystemOperationsEvents.SyncDirectory.Push(syncDirection, dir1, dir2);
+            SystemOperationsMessages.SyncDirectory.Push(syncDirection, dir1, dir2);
         }
     }
 }

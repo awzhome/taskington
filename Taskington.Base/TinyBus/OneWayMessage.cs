@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Taskington.Base.TinyBus
 {
-    public abstract class OneWayEvent<F, P>
+    public abstract class OneWayMessage<F, P>
     {
         private readonly List<SubscriberInfo<F, P>> subscriptions = new();
 

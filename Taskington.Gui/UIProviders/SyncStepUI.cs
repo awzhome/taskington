@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Taskington.Base.Steps;
 using Taskington.Base.SystemOperations;
 using Taskington.Gui.Extension;
-using Taskington.Gui.Extension.Events;
+using Taskington.Gui.Extension.Messages;
 using Taskington.Gui.ViewModels;
 
 namespace Taskington.Gui.UIProviders
@@ -13,8 +13,8 @@ namespace Taskington.Gui.UIProviders
 
         public SyncStepUI()
         {
-            StepUIEvents.NewEditViewModel.Subscribe(CreateEditViewModel, (step, parentModel, placeholders) => step.StepType == StepType);
-            StepUIEvents.NewStepTemplates.Subscribe(GetNewStepTemplates);
+            StepUIMessages.NewEditViewModel.Subscribe(CreateEditViewModel, (step, parentModel, placeholders) => step.StepType == StepType);
+            StepUIMessages.NewStepTemplates.Subscribe(GetNewStepTemplates);
         }
 
         public IEditStepViewModel CreateEditViewModel(PlanStep step, IEditPlanViewModel parentModel, Placeholders placeholders)

@@ -12,11 +12,11 @@ namespace Taskington.Gui.ViewModels
         {
             this.mainWindowViewModel = mainWindowViewModel;
 
-            PlanEvents.PlanCanExecuteUpdated.Subscribe((plan, canExecute) => UpdateViewModel(plan, m => m.CanExecute = canExecute));
-            PlanEvents.PlanHasErrorsUpdated.Subscribe((plan, hasErrors, validationText) => UpdateViewModel(plan, m => m.HasErrors = hasErrors));
-            PlanEvents.PlanIsRunningUpdated.Subscribe((plan, isRunning) => UpdateViewModel(plan, m => m.IsRunning = isRunning));
-            PlanEvents.PlanProgressUpdated.Subscribe((plan, progress) => UpdateViewModel(plan, m => m.Progress = progress));
-            PlanEvents.PlanStatusTextUpdated.Subscribe((plan, statusText) => UpdateViewModel(plan, m => m.StatusText = statusText));
+            PlanMessages.PlanCanExecuteUpdated.Subscribe((plan, canExecute) => UpdateViewModel(plan, m => m.CanExecute = canExecute));
+            PlanMessages.PlanHasErrorsUpdated.Subscribe((plan, hasErrors, validationText) => UpdateViewModel(plan, m => m.HasErrors = hasErrors));
+            PlanMessages.PlanIsRunningUpdated.Subscribe((plan, isRunning) => UpdateViewModel(plan, m => m.IsRunning = isRunning));
+            PlanMessages.PlanProgressUpdated.Subscribe((plan, progress) => UpdateViewModel(plan, m => m.Progress = progress));
+            PlanMessages.PlanStatusTextUpdated.Subscribe((plan, statusText) => UpdateViewModel(plan, m => m.StatusText = statusText));
         }
 
         private void UpdateViewModel(Plan plan, Action<PlanViewModel> updater)

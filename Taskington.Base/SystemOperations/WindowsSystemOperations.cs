@@ -10,9 +10,9 @@ namespace Taskington.Base.SystemOperations
 
         public WindowsSystemOperations()
         {
-            SystemOperationsEvents.SyncDirectory.Subscribe((direction, from, to) => SyncDirectory(from, to));
-            SystemOperationsEvents.SyncFile.Subscribe(SyncFile);
-            SystemOperationsEvents.LoadSystemPlaceholders.Subscribe(LoadWindowsSystemPlaceholders);
+            SystemOperationsMessages.SyncDirectory.Subscribe((direction, from, to) => SyncDirectory(from, to));
+            SystemOperationsMessages.SyncFile.Subscribe(SyncFile);
+            SystemOperationsMessages.LoadSystemPlaceholders.Subscribe(LoadWindowsSystemPlaceholders);
         }
 
         private static void RunProcess(string fileName, params string[] arguments)

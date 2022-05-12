@@ -8,7 +8,7 @@ using Taskington.Base.Steps;
 using Taskington.Base.SystemOperations;
 using Taskington.Base.TinyBus;
 using Taskington.Gui.Extension;
-using Taskington.Gui.Extension.Events;
+using Taskington.Gui.Extension.Messages;
 
 namespace Taskington.Gui.ViewModels
 {
@@ -29,7 +29,7 @@ namespace Taskington.Gui.ViewModels
         public EditPlanViewModel(PlanViewModel planViewModel)
         {
             plan = planViewModel.Plan;
-            placeholders = SystemOperationsEvents.LoadSystemPlaceholders.Request().First();
+            placeholders = SystemOperationsMessages.LoadSystemPlaceholders.Request().First();
 
             CloseCommand = ReactiveCommand.Create<bool, bool>(save => save);
 
@@ -87,10 +87,10 @@ namespace Taskington.Gui.ViewModels
         }
 
         private IEditStepViewModel CreateEditStepViewModel(PlanStep step) =>
-            StepUIEvents.NewEditViewModel.Request(step, this, placeholders).FirstOrDefault() ?? new EditGeneralStepViewModel(step);
+            StepUIMessages.NewEditViewModel.Request(step, this, placeholders).FirstOrDefault() ?? new EditGeneralStepViewModel(step);
 
         private List<NewStepTemplate> CollectNewStepTemplates() =>
-            new(StepUIEvents.NewStepTemplates.RequestMany());
+            new(StepUIMessages.NewStepTemplates.RequestMany());
 
         private void InitializeFromBasicModel()
         {
