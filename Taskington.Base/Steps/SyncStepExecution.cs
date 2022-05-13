@@ -36,7 +36,7 @@ namespace Taskington.Base.Steps
 #if SYS_OPS_DRYRUN
             var canExecute = true;
 #else
-            var placeholders = SystemOperationsEvents.LoadSystemPlaceholders.Request().First();
+            var placeholders = SystemOperationsMessages.LoadSystemPlaceholders.Request().First();
 
             var canExecute = !plan.Steps
                 .Where(step => step.StepType == "sync")
