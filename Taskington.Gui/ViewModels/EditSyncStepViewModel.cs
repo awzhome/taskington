@@ -69,7 +69,8 @@ namespace Taskington.Gui.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref selectedType, value);
-                Icon = SelectedType?.Type switch
+                SubType = selectedType?.Type;
+                Icon = selectedType?.Type switch
                 {
                     SyncFileType => "fas fa-copy",
                     SyncDirType => "fas fa-folder-open",
