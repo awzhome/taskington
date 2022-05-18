@@ -19,9 +19,11 @@ namespace Taskington.Base.Config
         {
             configWriterProvider.WriteConfigurationStreams(writer =>
             {
-                var yamlRoot = new YamlMappingNode();
-                yamlRoot.Add("config", CreateConfigRoot(configuration.ConfigValues));
-                yamlRoot.Add("plans", CreatePlansRoot(configuration.Plans));
+                var yamlRoot = new YamlMappingNode
+                {
+                    { "config", CreateConfigRoot(configuration.ConfigValues) },
+                    { "plans", CreatePlansRoot(configuration.Plans) }
+                };
 
                 var serializer = new Serializer();
                 serializer.Serialize(writer, yamlRoot);
@@ -29,18 +31,18 @@ namespace Taskington.Base.Config
         }
 
         private static YamlMappingNode CreateConfigRoot(IEnumerable<(string Key, string? Value)> configValues) =>
-            new YamlMappingNode(
+            new(
                 configValues.Select(keyValue => StringMapping(keyValue.Key, keyValue.Value)));
 
         private static YamlSequenceNode CreatePlansRoot(IEnumerable<Plan> plans) =>
-            new YamlSequenceNode(
+            new(
                 plans.Select(plan =>
                 {
                     var mappings = new List<KeyValuePair<YamlNode, YamlNode>>
                     {
-                    StringMapping("plan", plan.Name),
+                        StringMapping("plan", plan.Name),
+                        StringMapping("on", plan.RunType)
                     };
-                    mappings.Add(StringMapping("on", plan.RunType));
                     mappings.AddRange(plan.Properties.Select(keyValue => StringMapping(keyValue.Key, keyValue.Value)));
                     mappings.Add(Mapping("steps", new YamlSequenceNode(
                         plan.Steps.Select(step => new YamlMappingNode(

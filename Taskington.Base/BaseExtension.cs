@@ -29,7 +29,7 @@ namespace Taskington.Base
                 configurationProvider,
                 configurationReader,
                 configurationWriter,
-                new WindowsSystemOperations(),
+                OsSpecificSystemOperations.Create(),
                 new SyncStepExecution(),
                 new PlanExecution());
         }
