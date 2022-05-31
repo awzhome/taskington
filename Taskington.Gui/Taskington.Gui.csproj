@@ -18,10 +18,12 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
   <ItemGroup>
-    <AvaloniaXaml Remove="Models\**" />
-    <Compile Remove="Models\**" />
-    <EmbeddedResource Remove="Models\**" />
-    <None Remove="Models\**" />
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <AvaloniaResource Include="**\*.xaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\AppIcon.ico" />
@@ -43,16 +45,5 @@
     <ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
     <ProjectReference Include="..\Taskington.Gui.Extension\Taskington.Gui.Extension.csproj" />
     <ProjectReference Include="..\Taskington.Update.Windows\Taskington.Update.Windows.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Views\AppNotificationView.axaml.cs">
-      <DependentUpon>AppNotificationView.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\EditPlanWindow.axaml.cs">
-      <DependentUpon>EditPlanWindow.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\PlanView.axaml.cs">
-      <DependentUpon>PlanView.axaml</DependentUpon>
-    </Compile>
   </ItemGroup>
 </Project>
