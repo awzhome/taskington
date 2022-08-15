@@ -25,10 +25,14 @@
 
   <ItemGroup>
     <Folder Include="Executors\" />
+    <Folder Include="TinyBus\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="TinyBus\" />
+  </ItemGroup>
 </Project>
