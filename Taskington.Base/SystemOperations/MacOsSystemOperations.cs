@@ -44,11 +44,11 @@ internal class MacOsSystemOperations
         {
             Directory.CreateDirectory(toDir);
         }
-        RunRSync("-r", "--delete", $"{fromDir}/", toDir);
+        RunRSync("-r", "--delete", "-t", $"{fromDir}/", toDir);
     }
 
     public void SyncFile(string fromDir, string toDir, string file) =>
-        RunRSync(Path.Combine(fromDir, file), toDir);
+        RunRSync("--delete", "-t", Path.Combine(fromDir, file), toDir);
 
     internal static Placeholders LoadMacOsSystemPlaceholders()
     {
