@@ -29,8 +29,8 @@ namespace Taskington.Gui.ViewModels
         public ReactiveCommand<Unit, Unit> PutPlaceholderInFromFieldCommand { get; }
         public ReactiveCommand<Unit, Unit> PutPlaceholderInToFieldCommand { get; }
 
-        public Interaction<Unit, string?>? OpenFolderDialogInteraction { get; set; }
-        public Interaction<Unit, string?>? OpenFileDialogInteraction { get; set; }
+        public Interaction<string?, string?>? OpenFolderDialogInteraction { get; set; }
+        public Interaction<string?, string?>? OpenFileDialogInteraction { get; set; }
 
         readonly StepCaptionFragment leftTextPart;
         readonly StepPathFragment fromPathPart;
@@ -152,7 +152,7 @@ namespace Taskington.Gui.ViewModels
             {
                 if (OpenFileDialogInteraction != null)
                 {
-                    var selectedFile = await OpenFileDialogInteraction.Handle(Unit.Default);
+                    var selectedFile = await OpenFileDialogInteraction.Handle(from);
                     if (!string.IsNullOrEmpty(selectedFile))
                     {
                         From = selectedFile;
@@ -163,7 +163,7 @@ namespace Taskington.Gui.ViewModels
             {
                 if (OpenFolderDialogInteraction != null)
                 {
-                    var selectedPath = await OpenFolderDialogInteraction.Handle(Unit.Default);
+                    var selectedPath = await OpenFolderDialogInteraction.Handle(from);
                     if (!string.IsNullOrEmpty(selectedPath))
                     {
                         From = selectedPath;
@@ -176,7 +176,7 @@ namespace Taskington.Gui.ViewModels
         {
             if (OpenFolderDialogInteraction != null)
             {
-                var selectedPath = await OpenFolderDialogInteraction.Handle(Unit.Default);
+                var selectedPath = await OpenFolderDialogInteraction.Handle(to);
                 if (!string.IsNullOrEmpty(selectedPath))
                 {
                     To = selectedPath;

@@ -37,23 +37,25 @@ namespace Taskington.Gui.Views
             senderControl?.ContextMenu?.Open(senderControl);
         }
 
-        private async Task OpenFolderDialogAsync(InteractionContext<Unit, string?> interaction)
+        private async Task OpenFolderDialogAsync(InteractionContext<string?, string?> interaction)
         {
             var dialog = new OpenFolderDialog
             {
                 Title = "Select directory",
+                Directory = interaction.Input
             };
 
             var result = await dialog.ShowAsync(this);
             interaction.SetOutput(result);
         }
 
-        private async Task OpenFileDialogAsync(InteractionContext<Unit, string?> interaction)
+        private async Task OpenFileDialogAsync(InteractionContext<string?, string?> interaction)
         {
             var dialog = new OpenFileDialog
             {
                 Title = "Select file",
-                AllowMultiple = false
+                AllowMultiple = false,
+                InitialFileName = interaction.Input
             };
 
             var result = await dialog.ShowAsync(this);

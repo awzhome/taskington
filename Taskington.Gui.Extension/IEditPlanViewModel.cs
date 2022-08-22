@@ -5,7 +5,7 @@ namespace Taskington.Gui.Extension
 {
     public interface IEditPlanViewModel
     {
-        Interaction<Unit, string?> OpenFolderDialog { get; }
-        Interaction<Unit, string?> OpenFileDialog { get; }
+        Interaction<string?, string?> OpenFolderDialog { get; }
+        Interaction<string?, string?> OpenFileDialog { get; }
     }
 }
