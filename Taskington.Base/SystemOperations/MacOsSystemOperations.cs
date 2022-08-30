@@ -48,7 +48,7 @@ internal class MacOsSystemOperations
     }
 
     public void SyncFile(string fromDir, string toDir, string file) =>
-        RunRSync("--delete", "-t", Path.Combine(fromDir, file), toDir);
+        RunRSync("-t", Path.Combine(fromDir, file), toDir);
 
     internal static Placeholders LoadMacOsSystemPlaceholders()
     {
