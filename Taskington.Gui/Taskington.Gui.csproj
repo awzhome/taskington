@@ -39,9 +39,6 @@
     <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="3.7.1" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\PerspectivesPictured.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
     <ProjectReference Include="..\Taskington.Gui.Extension\Taskington.Gui.Extension.csproj" />
     <ProjectReference Include="..\Taskington.Update.Windows\Taskington.Update.Windows.csproj" />
