@@ -22,4 +22,10 @@
     <PackageReference Include="YamlDotNet" Version="8.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="TinyBus\Endpoints\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TinyBus\Endpoints\" />
+  </ItemGroup>
 </Project>

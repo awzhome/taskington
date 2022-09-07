@@ -1,11 +1,12 @@
 using System;
 using System.Threading.Tasks;
+using Taskington.Base.TinyBus.Endpoints;
 
 namespace Taskington.Base.TinyBus;
 
-public abstract record AsyncMessageData<T> where T : AsyncMessageData<T>
+public abstract record AsyncMessage<T> where T : AsyncMessage<T>
 {
-    private static AsyncMessage<T> messageEndPoint = new();
+    private static AsyncMessageEndPoint<T> messageEndPoint = new();
 
     public async Task Publish() =>
         await messageEndPoint.Push((T) this);

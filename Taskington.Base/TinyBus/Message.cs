@@ -1,9 +1,11 @@
 using System;
+using Taskington.Base.TinyBus.Endpoints;
+
 namespace Taskington.Base.TinyBus;
 
-public abstract record MessageData<T> where T : MessageData<T>
+public abstract record Message<T> where T : Message<T>
 {
-    private static Message<T> messageEndPoint = new();
+    private static MessageEndPoint<T> messageEndPoint = new();
 
     public void Publish() =>
         messageEndPoint.Push((T) this);

@@ -3,7 +3,7 @@ open PPBackup.Console
 open Taskington.Base
 open Taskington.Base.Plans
 open Taskington.Base.Config
-open Taskington.Base.TinyBus
+open Taskington.Base.TinyBus.Endpoints
 
 [<EntryPoint>]
 let main argv =

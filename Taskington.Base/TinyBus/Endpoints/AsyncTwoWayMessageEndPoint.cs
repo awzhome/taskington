@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Taskington.Base.TinyBus;
+namespace Taskington.Base.TinyBus.Endpoints;
 
-public abstract class AsyncTwoWayMessage<F, P, R> : TwoWayMessage<F, P, Task<R>>
+public abstract class AsyncTwoWayMessageEndPoint<F, P, R> : TwoWayMessageEndPoint<F, P, Task<R>>
     where F : notnull
     where P : notnull
 {

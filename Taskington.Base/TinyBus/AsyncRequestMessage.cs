@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Taskington.Base.TinyBus.Endpoints;
 
 namespace Taskington.Base.TinyBus;
 
-public abstract record AsyncRequestMessageData<T, R> where T : AsyncRequestMessageData<T, R>
+public abstract record AsyncRequestMessage<T, R> where T : AsyncRequestMessage<T, R>
 {
-    private static readonly AsyncRequestMessage<T, R> messageEndPoint = new();
+    private static readonly AsyncRequestMessageEndPoint<T, R> messageEndPoint = new();
 
     public async Task<IEnumerable<R>> Request() =>
         await messageEndPoint.Request((T) this);
@@ -25,8 +26,9 @@ public abstract record AsyncRequestMessageData<T, R> where T : AsyncRequestMessa
         messageEndPoint.UnsubscribeAll();
 }
 
-public static class AsyncRequestMessageDataExtensions
+public static class AsyncRequestMessageExtensions
 {
-    public static async Task<IEnumerable<R>> RequestMany<T, R>(this AsyncRequestMessage<T, IEnumerable<R>> message, T param1) =>
-       (await message.Request(param1)).SelectMany(r => r);
+    public static async Task<IEnumerable<R>> RequestMany<T, R>(this AsyncRequestMessage<T, IEnumerable<R>> message)
+            where T : AsyncRequestMessage<T, IEnumerable<R>> =>
+        (await message.Request()).SelectMany(r => r);
 }

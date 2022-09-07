@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Taskington.Base.TinyBus;
+using Taskington.Base.TinyBus.Endpoints;
 using Xunit;
 
 namespace Taskington.Base.Tests.TinyBus;
 
 public class SyncMessageTests
 {
-    public Message<string> TestOneWayMessage { get; } = new();
-    public RequestMessage<string, int> TestRequestMessage { get; } = new();
+    public MessageEndPoint<string> TestOneWayMessage { get; } = new();
+    public RequestMessageEndPoint<string, int> TestRequestMessage { get; } = new();
 
     public SyncMessageTests()
     {

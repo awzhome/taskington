@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Taskington.Base.TinyBus.Endpoints;
 
 namespace Taskington.Base.TinyBus;
 
-public abstract record RequestMessageData<T, R> where T : RequestMessageData<T, R>
+public abstract record RequestMessage<T, R> where T : RequestMessage<T, R>
 {
-    private static readonly RequestMessage<T, R> messageEndPoint = new();
+    private static readonly RequestMessageEndPoint<T, R> messageEndPoint = new();
 
     public IEnumerable<R> Request() =>
         messageEndPoint.Request((T) this);
@@ -24,9 +25,9 @@ public abstract record RequestMessageData<T, R> where T : RequestMessageData<T, 
         messageEndPoint.UnsubscribeAll();
 }
 
-public static class RequestMessageDataExtensions
+public static class RequestMessageExtensions
 {
-    public static IEnumerable<R> RequestMany<T, R>(this RequestMessageData<T, IEnumerable<R>> message)
-         where T : RequestMessageData<T, IEnumerable<R>> =>
+    public static IEnumerable<R> RequestMany<T, R>(this RequestMessage<T, IEnumerable<R>> message)
+         where T : RequestMessage<T, IEnumerable<R>> =>
        message.Request().SelectMany(r => r);
 }

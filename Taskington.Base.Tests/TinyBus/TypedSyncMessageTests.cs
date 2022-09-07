@@ -6,11 +6,11 @@ namespace Taskington.Base.Tests.TinyBus;
 
 public class TypedSyncMessageTests
 {
-    public record TestOneWayMessage(string Param) : MessageData<TestOneWayMessage>
+    public record TestOneWayMessage(string Param) : Message<TestOneWayMessage>
     {
         public static void CleanUp() => UnsubscribeAll();
     }
-    public record TestRequestMessage(string Param) : RequestMessageData<TestRequestMessage, int>
+    public record TestRequestMessage(string Param) : RequestMessage<TestRequestMessage, int>
     {
         public static void CleanUp() => UnsubscribeAll();
     }

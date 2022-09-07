@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Taskington.Base.TinyBus;
+using Taskington.Base.TinyBus.Endpoints;
 using Xunit;
 
 namespace Taskington.Base.Tests.TinyBus;
 
 public class AsyncMessageTests
 {
-    public AsyncMessage<string> TestOneWayMessage { get; } = new();
-    public AsyncRequestMessage<string, int> TestRequestMessage { get; } = new();
+    public AsyncMessageEndPoint<string> TestOneWayMessage { get; } = new();
+    public AsyncRequestMessageEndPoint<string, int> TestRequestMessage { get; } = new();
 
     public AsyncMessageTests()
     {

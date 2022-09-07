@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Taskington.Base.TinyBus;
+namespace Taskington.Base.TinyBus.Endpoints;
 
 public class Subscribable<F, P>
     where F : notnull
