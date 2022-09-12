@@ -30,7 +30,7 @@ namespace Taskington.Gui.ViewModels
         public EditPlanViewModel(PlanViewModel planViewModel)
         {
             plan = planViewModel.Plan;
-            placeholders = SystemOperationsMessages.LoadSystemPlaceholders.Request().First();
+            placeholders = new LoadSystemPlaceholdersMessage().Request().First();
 
             CloseCommand = ReactiveCommand.Create<bool, bool>(save => save);
 

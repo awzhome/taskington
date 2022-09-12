@@ -10,9 +10,9 @@ namespace Taskington.Base.SystemOperations
 
         public WindowsSystemOperations()
         {
-            SystemOperationsMessages.SyncDirectory.Subscribe((direction, from, to) => SyncDirectory(from, to));
-            SystemOperationsMessages.SyncFile.Subscribe(SyncFile);
-            SystemOperationsMessages.LoadSystemPlaceholders.Subscribe(LoadWindowsSystemPlaceholders);
+            SyncDirectoryMessage.Subscribe(SyncDirectory);
+            SyncFileMessage.Subscribe(SyncFile);
+            LoadSystemPlaceholdersMessage.Subscribe(LoadWindowsSystemPlaceholders);
         }
 
         private static void RunProcess(string fileName, params string[] arguments)
@@ -39,11 +39,11 @@ namespace Taskington.Base.SystemOperations
         private static void RunRoboCopy(params string[] arguments) =>
             RunProcess("robocopy", arguments);
 
-        public static void SyncDirectory(string fromDir, string toDir) =>
-            RunRoboCopy(fromDir, toDir, "/MIR", "/FFT", "/NFL", "/NJH", "/NJS" /*, "/L"*/);
+        public static void SyncDirectory(SyncDirectoryMessage message) =>
+            RunRoboCopy(message.From, message.To, "/MIR", "/FFT", "/NFL", "/NJH", "/NJS" /*, "/L"*/);
 
-        public void SyncFile(string fromDir, string toDir, string file) =>
-            RunRoboCopy(fromDir, toDir, file, "/NFL", "/NJH", "/NJS" /*, "/L"*/);
+        public void SyncFile(SyncFileMessage message) =>
+            RunRoboCopy(message.From, message.To, message.FileName, "/NFL", "/NJH", "/NJS" /*, "/L"*/);
 
         internal static Placeholders LoadWindowsSystemPlaceholders()
         {

@@ -35,7 +35,7 @@ namespace Taskington.Base.Plans
                     {
                         PlanMessages.PlanIsRunningUpdated.Push(plan, true);
 
-                        var placeholders = SystemOperationsMessages.LoadSystemPlaceholders.Request().First();
+                        var placeholders = new LoadSystemPlaceholdersMessage().Request().First();
 
                         int stepsFinished = 0;
                         PlanMessages.PlanProgressUpdated.Push(plan, 0);

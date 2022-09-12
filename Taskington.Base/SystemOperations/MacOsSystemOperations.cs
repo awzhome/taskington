@@ -9,9 +9,9 @@ internal class MacOsSystemOperations
 {
     public MacOsSystemOperations()
     {
-        SystemOperationsMessages.SyncDirectory.Subscribe((direction, from, to) => SyncDirectory(from, to));
-        SystemOperationsMessages.SyncFile.Subscribe(SyncFile);
-        SystemOperationsMessages.LoadSystemPlaceholders.Subscribe(LoadMacOsSystemPlaceholders);
+        SyncDirectoryMessage.Subscribe(SyncDirectory);
+        SyncFileMessage.Subscribe(SyncFile);
+        LoadSystemPlaceholdersMessage.Subscribe(LoadMacOsSystemPlaceholders);
     }
 
     private static void RunProcess(string fileName, params string[] arguments)
@@ -38,17 +38,17 @@ internal class MacOsSystemOperations
     private static void RunRSync(params string[] arguments) =>
         RunProcess("rsync", arguments);
 
-    public static void SyncDirectory(string fromDir, string toDir)
+    public static void SyncDirectory(SyncDirectoryMessage message)
     {
-        if (!Directory.Exists(toDir))
+        if (!Directory.Exists(message.To))
         {
-            Directory.CreateDirectory(toDir);
+            Directory.CreateDirectory(message.To);
         }
-        RunRSync("-r", "--delete", "-t", $"{fromDir}/", toDir);
+        RunRSync("-r", "--delete", "-t", $"{message.From}/", message.To);
     }
 
-    public void SyncFile(string fromDir, string toDir, string file) =>
-        RunRSync("-t", Path.Combine(fromDir, file), toDir);
+    public void SyncFile(SyncFileMessage message) =>
+        RunRSync("-t", Path.Combine(message.From, message.FileName), message.To);
 
     internal static Placeholders LoadMacOsSystemPlaceholders()
     {

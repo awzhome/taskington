@@ -36,7 +36,7 @@ namespace Taskington.Base.Steps
 #if SYS_OPS_DRYRUN
             var canExecute = true;
 #else
-            var placeholders = SystemOperationsMessages.LoadSystemPlaceholders.Request().First();
+            var placeholders = new LoadSystemPlaceholdersMessage().Request().First();
 
             var canExecute = !plan.Steps
                 .Where(step => step.StepType == "sync")
@@ -78,7 +78,7 @@ namespace Taskington.Base.Steps
                         if (syncStep.File != null)
                         {
                             statusTextCallback?.Invoke($"Sync file '{Path.GetFileName(syncStep.File)}'");
-                            SystemOperationsMessages.SyncFile.Push(syncStep.From, syncStep.To, syncStep.File);
+                            new SyncFileMessage(syncStep.From, syncStep.To, syncStep.File).Publish();
                         }
                         break;
                 }
@@ -88,7 +88,7 @@ namespace Taskington.Base.Steps
         private static void SyncDirectory(SyncDirection syncDirection, string dir1, string dir2, Action<string>? statusTextCallback)
         {
             statusTextCallback?.Invoke($"Sync directory '{Path.GetFileName(dir1)}'");
-            SystemOperationsMessages.SyncDirectory.Push(syncDirection, dir1, dir2);
+            new SyncDirectoryMessage(syncDirection, dir1, dir2).Publish();
         }
     }
 }

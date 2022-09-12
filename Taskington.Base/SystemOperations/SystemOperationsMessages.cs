@@ -1,11 +1,7 @@
-using Taskington.Base.TinyBus.Endpoints;
+using Taskington.Base.TinyBus;
 
-namespace Taskington.Base.SystemOperations
-{
-    public static class SystemOperationsMessages
-    {
-        public static MessageEndPoint<SyncDirection, string, string> SyncDirectory { get; } = new();
-        public static MessageEndPoint<string, string, string> SyncFile { get; } = new();
-        public static RequestMessageEndPoint<Placeholders> LoadSystemPlaceholders { get; } = new();
-    }
-}
+namespace Taskington.Base.SystemOperations;
+
+public record SyncDirectoryMessage(SyncDirection Direction, string From, string To) : Message<SyncDirectoryMessage>;
+public record SyncFileMessage(string From, string To, string FileName) : Message<SyncFileMessage>;
+public record LoadSystemPlaceholdersMessage : RequestMessage<Placeholders>;

@@ -11,13 +11,14 @@ namespace Taskington.Base.SystemOperations
         {
             this.log = log;
 
-            SystemOperationsMessages.SyncDirectory.Subscribe(SyncDirectory);
-            SystemOperationsMessages.SyncFile.Subscribe(SyncFile);
-            SystemOperationsMessages.LoadSystemPlaceholders.Subscribe(WindowsSystemOperations.LoadWindowsSystemPlaceholders);
+            SyncDirectoryMessage.Subscribe(SyncDirectory);
+            SyncFileMessage.Subscribe(SyncFile);
+            LoadSystemPlaceholdersMessage.Subscribe(WindowsSystemOperations.LoadWindowsSystemPlaceholders);
         }
 
-        public void SyncDirectory(SyncDirection syncDirection, string fromDir, string toDir)
+        public void SyncDirectory(SyncDirectoryMessage message)
         {
+            (SyncDirection syncDirection, string fromDir, string toDir) = message;
             var syncDirectionOutput = syncDirection switch
             {
                 SyncDirection.FromTo => "->",
@@ -29,8 +30,9 @@ namespace Taskington.Base.SystemOperations
             Thread.Sleep(500);
         }
 
-        public void SyncFile(string fromDir, string toDir, string file)
+        public void SyncFile(SyncFileMessage message)
         {
+            (string fromDir, string toDir, string file) = message;
             log.Debug(this, $"SYSOP: Sync file '{file}' '{fromDir}' -> '{toDir}'");
 
             Thread.Sleep(500);
