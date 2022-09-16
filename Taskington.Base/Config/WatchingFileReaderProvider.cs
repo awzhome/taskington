@@ -19,8 +19,8 @@ namespace Taskington.Base.Config
             };
             configFileWatcher.Created += OnFileChanged;
             configFileWatcher.Changed += OnFileChanged;
-            configFileWatcher.Renamed += (sender, e) => ConfigurationMessages.ConfigurationChanged.Push();
-            configFileWatcher.Deleted += (sender, e) => ConfigurationMessages.ConfigurationChanged.Push();
+            configFileWatcher.Renamed += (sender, e) => new ConfigurationChangedMessage().Publish();
+            configFileWatcher.Deleted += (sender, e) => new ConfigurationChangedMessage().Publish();
             configFileWatcher.EnableRaisingEvents = true;
         }
 
@@ -40,7 +40,7 @@ namespace Taskington.Base.Config
                     fileStream.Close();
                 }
 
-                ConfigurationMessages.ConfigurationChanged.Push();
+                new ConfigurationChangedMessage().Publish();
             }
             catch (IOException) { }
         }

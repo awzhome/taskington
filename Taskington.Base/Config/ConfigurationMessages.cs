@@ -1,22 +1,19 @@
 using System.Collections.Generic;
 using Taskington.Base.Plans;
+using Taskington.Base.TinyBus;
 using Taskington.Base.TinyBus.Endpoints;
 
-namespace Taskington.Base.Config
-{
-    public static class ConfigurationMessages
-    {
-        public static MessageEndPoint InitializeConfiguration { get; } = new();
-        public static MessageEndPoint ConfigurationChanged { get; } = new();
-        public static MessageEndPoint ConfigurationReloaded { get; } = new();
-        public static MessageEndPoint<bool> ConfigurationReloadDelayed { get; } = new();
+namespace Taskington.Base.Config;
 
-        public static RequestMessageEndPoint<string, string?> GetConfigValue { get; } = new();
-        public static MessageEndPoint<string, string> SetConfigValue { get; } = new();
-        public static MessageEndPoint SaveConfiguration { get; } = new();
-        public static MessageEndPoint<int, Plan> InsertPlan { get; } = new();
-        public static MessageEndPoint<Plan> RemovePlan { get; } = new();
-        public static MessageEndPoint<Plan, Plan> ReplacePlan { get; } = new();
-        public static RequestMessageEndPoint<IEnumerable<Plan>> GetPlans { get; } = new();
-    }
-}
+public record InitializeConfigurationMessage : Message<InitializeConfigurationMessage>;
+public record ConfigurationChangedMessage : Message<ConfigurationChangedMessage>;
+public record ConfigurationReloadedMessage : Message<ConfigurationReloadedMessage>;
+public record ConfigurationReloadDelayedMessage : Message<ConfigurationReloadDelayedMessage>;
+
+public record GetConfigValueMessage(string Key) : RequestMessage<GetConfigValueMessage, string?>;
+public record SetConfigValueMessage(string Key, string Value) : Message<SetConfigValueMessage>;
+public record SaveConfigurationMessage : Message<SaveConfigurationMessage>;
+public record InsertPlanMessage(int Index, Plan Plan) : Message<InsertPlanMessage>;
+public record RemovePlanMessage(Plan Plan) : Message<RemovePlanMessage>;
+public record ReplacePlanMessage(Plan OldPlan, Plan NewPlan) : Message<ReplacePlanMessage>;
+public record GetPlansMessage : RequestMessage<GetPlansMessage, IEnumerable<Plan>>;

@@ -1,15 +1,14 @@
-open System
 open PPBackup.Console
 open Taskington.Base
 open Taskington.Base.Plans
 open Taskington.Base.Config
-open Taskington.Base.TinyBus.Endpoints
+open Taskington.Base.TinyBus
 
 [<EntryPoint>]
 let main argv =
     let application = Application()
     application.Load()
-    ConfigurationMessages.InitializeConfiguration.Push();
+    InitializeConfigurationMessage().Publish();
 
     let mutable cursorPos = UI.getCursorPos()
     let mutable planName = ""
@@ -50,7 +49,7 @@ let main argv =
         statusTextState <- statusText
         updateProgress())
 
-    let plans = ConfigurationMessages.GetPlans.RequestMany()
+    let plans = GetPlansMessage().RequestMany()
     UI.menu "Taskington" (plans
         |> Seq.map(fun plan ->
             (plan.Name, fun() ->

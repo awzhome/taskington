@@ -12,12 +12,12 @@ namespace Taskington.Base.Log
             this.log = log;
 
             UpdateMinimumLevel();
-            ConfigurationMessages.ConfigurationReloaded.Subscribe(UpdateMinimumLevel);
+            ConfigurationReloadedMessage.Subscribe(_ => UpdateMinimumLevel());
         }
 
         private void UpdateMinimumLevel()
         {
-            var logLevel = ConfigurationMessages.GetConfigValue.Request("log").First();
+            var logLevel = new GetConfigValueMessage("log").Request().First();
             (log as IReconfigurableLog)?.SetMiminumLevel(logLevel switch
             {
                 "verbose" => LogLevel.Verbose,

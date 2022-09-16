@@ -22,15 +22,15 @@ namespace Taskington.Base.Config
             this.configurationReader = configurationReader;
             this.configurationWriter = configurationWriter;
 
-            ConfigurationMessages.InitializeConfiguration.Subscribe(() => Initialize());
-            ConfigurationMessages.ConfigurationChanged.Subscribe(OnConfigurationChanged);
-            ConfigurationMessages.GetConfigValue.Subscribe(key => GetValue(key));
-            ConfigurationMessages.SetConfigValue.Subscribe((key, value) => SetValue(key, value));
-            ConfigurationMessages.InsertPlan.Subscribe((index, plan) => InsertPlan(index, plan));
-            ConfigurationMessages.RemovePlan.Subscribe((plan) => RemovePlan(plan));
-            ConfigurationMessages.ReplacePlan.Subscribe((oldPlan, newPlan) => ReplacePlan(oldPlan, newPlan));
-            ConfigurationMessages.SaveConfiguration.Subscribe(SaveConfiguration);
-            ConfigurationMessages.GetPlans.Subscribe(() => plans);
+            InitializeConfigurationMessage.Subscribe(_ => Initialize());
+            ConfigurationChangedMessage.Subscribe(_ => OnConfigurationChanged());
+            GetConfigValueMessage.Subscribe(message => GetValue(message.Key));
+            SetConfigValueMessage.Subscribe(message => SetValue(message.Key, message.Value));
+            InsertPlanMessage.Subscribe(message => InsertPlan(message.Index, message.Plan));
+            RemovePlanMessage.Subscribe(message => RemovePlan(message.Plan));
+            ReplacePlanMessage.Subscribe(message => ReplacePlan(message.OldPlan, message.NewPlan));
+            SaveConfigurationMessage.Subscribe(_ => SaveConfiguration());
+            GetPlansMessage.Subscribe(_ => plans);
             PlanMessages.PlanIsRunningUpdated.Subscribe(OnPlanIsRunningUpdated);
         }
 
@@ -60,7 +60,7 @@ namespace Taskington.Base.Config
 
             if (configReloaded)
             {
-                ConfigurationMessages.ConfigurationReloaded.Push();
+                new ConfigurationReloadedMessage().Publish();
             }
         }
 
@@ -76,7 +76,7 @@ namespace Taskington.Base.Config
             {
                 if (!reloadDelayed)
                 {
-                    ConfigurationMessages.ConfigurationReloadDelayed.Push(true);
+                    new ConfigurationReloadDelayedMessage().Publish();
                 }
                 reloadDelayed = true;
                 return false;
@@ -110,14 +110,14 @@ namespace Taskington.Base.Config
                     runningPlans.Remove(plan);
                     if (runningPlans.Count == 0 && reloadDelayed)
                     {
-                        ConfigurationMessages.ConfigurationReloadDelayed.Push(true);
+                        new ConfigurationReloadDelayedMessage().Publish();
                         reloadDelayed = false;
                         configReloaded = TryReloadConfiguration();
                     }
                 }
                 if (configReloaded)
                 {
-                    ConfigurationMessages.ConfigurationReloaded.Push();
+                    new ConfigurationReloadedMessage().Publish();
                 }
             }
         }

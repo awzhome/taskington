@@ -32,7 +32,7 @@ namespace Taskington.Gui.ViewModels
             AppNotifications = new ObservableCollection<AppNotification>();
 
             Plans = new ObservableCollection<PlanViewModel>();
-            ConfigurationMessages.ConfigurationReloaded.Subscribe(UpdatePlanViewModels);
+            ConfigurationReloadedMessage.Subscribe(_ => UpdatePlanViewModels());
             UpdatePlanViewModels();
 
             AddPlanCommand = ReactiveCommand.CreateFromTask(AddPlan);
@@ -49,7 +49,7 @@ namespace Taskington.Gui.ViewModels
                 RightText = $"v{AppInfo.Version}"
             });
 
-            ConfigurationMessages.InitializeConfiguration.Push();
+            new InitializeConfigurationMessage().Publish();
         }
 
         private void UpdatePlanViewModels()
@@ -59,7 +59,7 @@ namespace Taskington.Gui.ViewModels
                 var removedPlanModels = Plans.Where(plan => plan.IsRemoved);
 
                 Plans.Clear();
-                var plans = ConfigurationMessages.GetPlans.Request().SelectMany(v => v);
+                var plans = new GetPlansMessage().Request().SelectMany(v => v);
                 foreach (var plan in plans)
                 {
                     Plans.Add(CreatePlanViewModel(plan));
@@ -83,8 +83,8 @@ namespace Taskington.Gui.ViewModels
         private async Task AddPlan()
         {
             var newPlan = new Plan(Plan.OnSelectionRunType) { Name = "New plan" };
-            ConfigurationMessages.InsertPlan.Push(Plans.Count, newPlan);
-            ConfigurationMessages.SaveConfiguration.Push();
+            new InsertPlanMessage(Plans.Count, newPlan).Publish();
+            new SaveConfigurationMessage().Publish();
             var newPlanViewModel = CreatePlanViewModel(newPlan);
             Plans.Add(newPlanViewModel);
             PlanMessages.NotifyInitialPlanStates.Push(newPlan);
@@ -98,14 +98,14 @@ namespace Taskington.Gui.ViewModels
             if (shouldSave)
             {
                 var editedPlan = editPlanViewModel.ConvertToPlan();
-                ConfigurationMessages.ReplacePlan.Push(planViewModel.Plan, editedPlan);
+                new ReplacePlanMessage(planViewModel.Plan, editedPlan).Publish();
                 int existingIndex = Plans.IndexOf(planViewModel);
                 if (existingIndex >= 0)
                 {
                     Plans[existingIndex] = new PlanViewModel(editedPlan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand, UndoPlanRemovalCommand);
                     PlanMessages.NotifyInitialPlanStates.Push(editedPlan);
                 }
-                ConfigurationMessages.SaveConfiguration.Push();
+                new SaveConfigurationMessage().Publish();
             }
         }
 
@@ -113,19 +113,19 @@ namespace Taskington.Gui.ViewModels
         {
             planViewModel.IsRemoved = true;
             planViewModel.PreviousIndex = Plans.IndexOf(planViewModel);
-            ConfigurationMessages.RemovePlan.Push(planViewModel.Plan);
-            ConfigurationMessages.SaveConfiguration.Push();
+            new RemovePlanMessage(planViewModel.Plan).Publish();
+            new SaveConfigurationMessage().Publish();
         }
 
         private void UndoPlanRemoval(PlanViewModel planViewModel)
         {
             Plans.Remove(planViewModel);
-            ConfigurationMessages.InsertPlan.Push(planViewModel.PreviousIndex, planViewModel.Plan);
+            new InsertPlanMessage(planViewModel.PreviousIndex, planViewModel.Plan).Publish();
             Plans.Insert(
                 planViewModel.PreviousIndex,
                 new PlanViewModel(planViewModel.Plan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand, UndoPlanRemovalCommand));
             PlanMessages.NotifyInitialPlanStates.Push(planViewModel.Plan);
-            ConfigurationMessages.SaveConfiguration.Push();
+            new SaveConfigurationMessage().Publish();
         }
     }
 }
