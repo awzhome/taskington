@@ -31,7 +31,7 @@ namespace Taskington.Base.Config
             ReplacePlanMessage.Subscribe(message => ReplacePlan(message.OldPlan, message.NewPlan));
             SaveConfigurationMessage.Subscribe(_ => SaveConfiguration());
             GetPlansMessage.Subscribe(_ => plans);
-            PlanMessages.PlanIsRunningUpdated.Subscribe(OnPlanIsRunningUpdated);
+            PlanRunningUpdateMessage.Subscribe(message => OnPlanIsRunningUpdated(message.Plan, message.IsRunning));
         }
 
         private readonly List<Plan> plans = new();

@@ -63,7 +63,7 @@ namespace Taskington.Gui.ViewModels
                 foreach (var plan in plans)
                 {
                     Plans.Add(CreatePlanViewModel(plan));
-                    PlanMessages.NotifyInitialPlanStates.Push(plan);
+                    new NotifyInitialPlanStatesMessage(plan).Publish();
                 }
                 foreach (var plan in removedPlanModels)
                 {
@@ -77,7 +77,7 @@ namespace Taskington.Gui.ViewModels
 
         private void ExecutePlan(PlanViewModel planViewModel)
         {
-            PlanMessages.ExecutePlan.Push(planViewModel.Plan);
+            new ExecutePlanMessage(planViewModel.Plan).Publish();
         }
 
         private async Task AddPlan()
@@ -87,7 +87,7 @@ namespace Taskington.Gui.ViewModels
             new SaveConfigurationMessage().Publish();
             var newPlanViewModel = CreatePlanViewModel(newPlan);
             Plans.Add(newPlanViewModel);
-            PlanMessages.NotifyInitialPlanStates.Push(newPlan);
+            new NotifyInitialPlanStatesMessage(newPlan).Publish();
             await EditPlan(newPlanViewModel);
         }
 
@@ -103,7 +103,7 @@ namespace Taskington.Gui.ViewModels
                 if (existingIndex >= 0)
                 {
                     Plans[existingIndex] = new PlanViewModel(editedPlan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand, UndoPlanRemovalCommand);
-                    PlanMessages.NotifyInitialPlanStates.Push(editedPlan);
+                    new NotifyInitialPlanStatesMessage(editedPlan).Publish();
                 }
                 new SaveConfigurationMessage().Publish();
             }
@@ -124,7 +124,7 @@ namespace Taskington.Gui.ViewModels
             Plans.Insert(
                 planViewModel.PreviousIndex,
                 new PlanViewModel(planViewModel.Plan, ExecutePlanCommand, EditPlanCommand, RemovePlanCommand, UndoPlanRemovalCommand));
-            PlanMessages.NotifyInitialPlanStates.Push(planViewModel.Plan);
+            new NotifyInitialPlanStatesMessage(planViewModel.Plan).Publish();
             new SaveConfigurationMessage().Publish();
         }
     }

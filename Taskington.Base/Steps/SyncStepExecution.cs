@@ -11,9 +11,8 @@ namespace Taskington.Base.Steps
     {
         public SyncStepExecution()
         {
-            PlanMessages.ExecuteStep.Subscribe(Execute,
-                (PlanStep step, Placeholders placeholders, Action<int> progressCallback, Action<string> statusTextCallback) => step.StepType == "sync");
-            PlanMessages.PreCheckPlanExecution.Subscribe(PreCheckPlanExecution);
+            ExecuteStepMessage.Subscribe(Execute, m => m.Step.StepType == "sync");
+            PreCheckPlanExecutionMessage.Subscribe(m => PreCheckPlanExecution(m.Plan));
         }
 
         private IEnumerable<string> GetRelevantPathsOfStep(PlanStep step)
@@ -45,12 +44,13 @@ namespace Taskington.Base.Steps
                 .Any(result => result.Placeholder.StartsWith("drive:") && result.Resolved == null);
 
 #endif
-            PlanMessages.PlanCanExecuteUpdated.Push(plan, canExecute);
+            new PlanCanExecuteUpdateMessage(plan, canExecute).Publish();
         }
 #pragma warning restore CA1822 // Mark members as static
 
-        public void Execute(PlanStep step, Placeholders placeholders, Action<int> progressCallback, Action<string> statusTextCallback)
+        public void Execute(ExecuteStepMessage message)
         {
+            (PlanStep step, Placeholders placeholders, Action<int> progressCallback, Action<string> statusTextCallback) = message;
             var syncStep = new SyncStep(step, placeholders);
             if (syncStep.From != null && syncStep.To != null)
             {

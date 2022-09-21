@@ -4,16 +4,16 @@ namespace Taskington.Base.Plans
     {
         public InvalidPlanExecution()
         {
-            PlanMessages.NotifyInitialPlanStates.Subscribe(NotifyInitialStates);
+            NotifyInitialPlanStatesMessage.Subscribe(m => NotifyInitialStates(m.Plan));
         }
 
         private void NotifyInitialStates(Plan plan)
         {
             if (!plan.IsValid)
             {
-                PlanMessages.PlanCanExecuteUpdated.Push(plan, false);
-                PlanMessages.PlanIsRunningUpdated.Push(plan, false);
-                PlanMessages.PlanHasErrorsUpdated.Push(plan, true, plan.ValidationMessage);
+                new PlanCanExecuteUpdateMessage(plan, false).Publish();
+                new PlanRunningUpdateMessage(plan, false).Publish();
+                new PlanErrorUpdateMessage(plan, true, plan.ValidationMessage).Publish();
             }
         }
     }

@@ -33,20 +33,20 @@ let main argv =
             else
                 printfn "%s" statusTextState
 
-    PlanMessages.PlanIsRunningUpdated.Subscribe (fun plan isRunning ->
-        if isRunning then
+    PlanRunningUpdateMessage.Subscribe (fun message ->
+        if message.IsRunning then
             initProgress()
-            planName <- plan.Name
-        isRunningState <- isRunning)
-    PlanMessages.PlanProgressUpdated.Subscribe (fun plan progress ->
-        progressState <- progress
+            planName <- message.Plan.Name
+        isRunningState <- message.IsRunning)
+    PlanProgressUpdateMessage.Subscribe (fun message ->
+        progressState <- message.Progress
         updateProgress())
-    PlanMessages.PlanHasErrorsUpdated.Subscribe (fun plan hasErrors errorText ->
-        hasErrorsState <- hasErrors
-        statusTextState <- errorText
+    PlanErrorUpdateMessage.Subscribe (fun message ->
+        hasErrorsState <- message.HasErrors
+        statusTextState <- message.ValidationText
         updateProgress())
-    PlanMessages.PlanStatusTextUpdated.Subscribe (fun plan statusText ->
-        statusTextState <- statusText
+    PlanStatusTextUpdateMessage.Subscribe (fun message ->
+        statusTextState <- message.StatusText
         updateProgress())
 
     let plans = GetPlansMessage().RequestMany()
@@ -54,7 +54,7 @@ let main argv =
         |> Seq.map(fun plan ->
             (plan.Name, fun() ->
                 cursorPos <- UI.getCursorPos()
-                PlanMessages.ExecutePlan.Push(plan)
+                ExecutePlanMessage(plan).Publish()
             )))
 
     0
