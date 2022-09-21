@@ -88,10 +88,10 @@ namespace Taskington.Gui.ViewModels
         }
 
         private IEditStepViewModel CreateEditStepViewModel(PlanStep step) =>
-            StepUIMessages.NewEditViewModel.Request(step, this, placeholders).FirstOrDefault() ?? new EditGeneralStepViewModel(step);
+            new NewEditViewModelMessage(step, this, placeholders).Request().FirstOrDefault() ?? new EditGeneralStepViewModel(step);
 
         private List<NewStepTemplate> CollectNewStepTemplates() =>
-            new(StepUIMessages.NewStepTemplates.RequestMany());
+            new(new NewStepTemplatesMessage().RequestMany());
 
         private void InitializeFromBasicModel()
         {

@@ -13,12 +13,13 @@ namespace Taskington.Gui.UIProviders
 
         public SyncStepUI()
         {
-            StepUIMessages.NewEditViewModel.Subscribe(CreateEditViewModel, (step, parentModel, placeholders) => step.StepType == StepType);
-            StepUIMessages.NewStepTemplates.Subscribe(GetNewStepTemplates);
+            NewEditViewModelMessage.Subscribe(CreateEditViewModel, m => m.Step.StepType == StepType);
+            NewStepTemplatesMessage.Subscribe(GetNewStepTemplates);
         }
 
-        public IEditStepViewModel CreateEditViewModel(PlanStep step, IEditPlanViewModel parentModel, Placeholders placeholders)
+        public IEditStepViewModel CreateEditViewModel(NewEditViewModelMessage message)
         {
+            (PlanStep step, IEditPlanViewModel parentModel, Placeholders placeholders) = message;
             return new EditSyncStepViewModel(step, placeholders)
             {
                 OpenFolderDialogInteraction = parentModel.OpenFolderDialog,
