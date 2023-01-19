@@ -43,8 +43,9 @@ namespace Taskington.Base.Plans
                         foreach (var step in plan.Steps)
                         {
                             new ExecuteStepMessage(step, placeholders,
-                                progress => new PlanProgressUpdateMessage(plan, planProgress + progress / plan.Steps.Count()).Publish(),
-                                text => new PlanStatusTextUpdateMessage(plan, text)).Publish();
+                                    progress => new PlanProgressUpdateMessage(plan, planProgress + progress / plan.Steps.Count()).Publish(),
+                                    text => new PlanStatusTextUpdateMessage(plan, text).Publish()
+                                ).Publish();
                             stepsFinished++;
                             planProgress = stepsFinished * 100 / plan.Steps.Count();
                             new PlanProgressUpdateMessage(plan, planProgress).Publish();
