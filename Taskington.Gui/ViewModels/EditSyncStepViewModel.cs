@@ -1,6 +1,7 @@
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -69,6 +70,7 @@ namespace Taskington.Gui.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref selectedType, value);
+                this.RaisePropertyChanged(nameof(FromCaption));
                 SubType = selectedType?.Type;
                 Icon = selectedType?.Type switch
                 {
@@ -77,7 +79,11 @@ namespace Taskington.Gui.ViewModels
                     SyncSubDirsType => "fas fa-sitemap",
                     _ => ""
                 };
-                leftTextPart.Text = $"Synchronize {selectedType?.Caption} from ";
+                leftTextPart.Text = selectedType?.Type switch
+                {
+                    SyncFileType => $"Synchronize {selectedType?.Caption} ",
+                    _ => $"Synchronize {selectedType?.Caption} from ",
+                };
                 middleTextPart.Text = " to ";
             }
         }
@@ -106,6 +112,20 @@ namespace Taskington.Gui.ViewModels
             }
         }
 
+        public string? FromCaption
+        {
+            get => selectedType?.Type switch
+            {
+                SyncFileType => "File:",
+                _ => "From:"
+            };
+        }
+
+        public string? ToCaption
+        {
+            get => "To:";
+        }
+
         public bool? showPutPlaceholderIntoFromButton = false;
         public bool? ShowPutPlaceholderIntoFromButton
         {
@@ -132,7 +152,11 @@ namespace Taskington.Gui.ViewModels
         private void InitializeFromBasicModel(PlanStep step)
         {
             SelectedType = SyncTypes.FirstOrDefault(entry => entry.Type == step.DefaultProperty);
-            From = step["from"];
+            From = selectedType?.Type switch
+            {
+                SyncFileType => Path.Combine(step["from"] ?? "", step["name"] ?? ""),
+                _ => step["from"]
+            };
             To = step["to"];
 
             CaptionFragments = new[] { leftTextPart, fromPathPart, middleTextPart, toPathPart };
@@ -141,7 +165,18 @@ namespace Taskington.Gui.ViewModels
         public override PlanStep ConvertToStep()
         {
             var step = base.ConvertToStep();
-            step["from"] = from;
+            if (selectedType?.Type == SyncFileType)
+            {
+                if (from != null)
+                {
+                    step["from"] = Path.GetDirectoryName(from);
+                    step["name"] = Path.GetFileName(from);
+                }
+            }
+            else
+            {
+                step["from"] = from;
+            }
             step["to"] = to;
             return step;
         }
