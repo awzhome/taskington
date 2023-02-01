@@ -74,7 +74,7 @@ namespace Taskington.Gui.ViewModels
                 SubType = selectedType?.Type;
                 Icon = selectedType?.Type switch
                 {
-                    SyncFileType => "fas fa-copy",
+                    SyncFileType => "fas fa-file",
                     SyncDirType => "fas fa-folder-open",
                     SyncSubDirsType => "fas fa-sitemap",
                     _ => ""

@@ -32,7 +32,7 @@ namespace Taskington.Gui.UIProviders
             yield return new()
             {
                 Caption = "Synchronize file",
-                Icon = "fas fa-copy",
+                Icon = "fas fa-file",
                 Creator = () => new PlanStep("sync")
                 {
                     DefaultProperty = "file"

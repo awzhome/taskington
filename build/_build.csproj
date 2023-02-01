@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="AWZhome.GutenTag" Version="1.0.0-preview.28" />
-    <PackageReference Include="Nuke.Common" Version="6.0.1" />
+    <PackageReference Include="Nuke.Common" Version="6.3.0" />
   </ItemGroup>
 
 </Project>

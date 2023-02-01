@@ -14,9 +14,9 @@ namespace Taskington.Gui
 
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
-                .AfterSetup(_ => IconProvider.Register<FontAwesomeIconProvider>())
                 .UsePlatformDetect()
                 .LogToTrace()
+                .WithIcons(container => container.Register<FontAwesomeIconProvider>())
                 .UseReactiveUI();
     }
 }

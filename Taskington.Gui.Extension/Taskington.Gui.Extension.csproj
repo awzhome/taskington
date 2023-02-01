@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -13,7 +13,7 @@
 		<FileVersion>0.1.0.240</FileVersion>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="ReactiveUI" Version="13.2.10" />
+		<PackageReference Include="ReactiveUI" Version="18.4.20" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />

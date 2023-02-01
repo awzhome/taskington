@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
@@ -33,11 +33,11 @@
 		<Content Include="Assets\AppIcon.ico" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="0.10.13" />
-		<PackageReference Include="Avalonia.Desktop" Version="0.10.13" />
-		<PackageReference Include="Avalonia.Diagnostics" Version="0.10.13" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.13" />
-		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="3.7.1" />
+		<PackageReference Include="Avalonia" Version="0.10.18" />
+		<PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
+		<PackageReference Include="Avalonia.Diagnostics" Version="0.10.18" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
+		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="5.8.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
