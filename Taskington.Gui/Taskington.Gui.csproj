@@ -1,46 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <AssemblyName>taskington-gui</AssemblyName>
-    <PackageId>Taskington.Gui</PackageId>
-    <Authors>Andreas Weizel</Authors>
-    <Company>Andreas Weizel</Company>
-    <Product>Taskington</Product>
-    <Description>Taskington GUI Frontend</Description>
-    <Copyright>Copyright (c) 2021 Andreas Weizel</Copyright>
-    <AssemblyVersion>0.1.0.200</AssemblyVersion>
-    <FileVersion>0.1.0.200</FileVersion>
-    <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
-  </PropertyGroup>
-  <ItemGroup>
-    <AvaloniaResource Include="Assets\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="**\*.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <AvaloniaResource Include="**\*.xaml">
-      <SubType>Designer</SubType>
-    </AvaloniaResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Assets\AppIcon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\AppIcon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.13" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.13" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.13" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.13" />
-    <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="3.7.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
-    <ProjectReference Include="..\Taskington.Gui.Extension\Taskington.Gui.Extension.csproj" />
-    <ProjectReference Include="..\Taskington.Update.Windows\Taskington.Update.Windows.csproj" />
-  </ItemGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<AssemblyName>taskington-gui</AssemblyName>
+		<PackageId>Taskington.Gui</PackageId>
+		<Authors>Andreas Weizel</Authors>
+		<Company>Andreas Weizel</Company>
+		<Product>Taskington</Product>
+		<Description>Taskington GUI Frontend</Description>
+		<Copyright>Copyright (c) Andreas Weizel</Copyright>
+		<AssemblyVersion>0.1.0.240</AssemblyVersion>
+		<FileVersion>0.1.0.240</FileVersion>
+		<ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+	</PropertyGroup>
+	<ItemGroup>
+		<AvaloniaResource Include="Assets\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="**\*.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<AvaloniaResource Include="**\*.xaml">
+			<SubType>Designer</SubType>
+		</AvaloniaResource>
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="Assets\AppIcon.ico" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="Assets\AppIcon.ico" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="0.10.13" />
+		<PackageReference Include="Avalonia.Desktop" Version="0.10.13" />
+		<PackageReference Include="Avalonia.Diagnostics" Version="0.10.13" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.13" />
+		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="3.7.1" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
+		<ProjectReference Include="..\Taskington.Gui.Extension\Taskington.Gui.Extension.csproj" />
+		<ProjectReference Include="..\Taskington.Update.Windows\Taskington.Update.Windows.csproj" />
+	</ItemGroup>
 </Project>

@@ -1,25 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <AssemblyName>taskington-console</AssemblyName>
-    <PackageId>Taskington.Console</PackageId>
-    <Authors>Andreas Weizel</Authors>
-    <Product>Taskington</Product>
-    <Description>Taskington Console Frontend</Description>
-    <Version>0.1-preview.200</Version>
-    <AssemblyVersion>0.1.0.200</AssemblyVersion>
-    <FileVersion>0.1.0.200</FileVersion>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include="UI.fs" />
-    <Compile Include="Program.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
-  </ItemGroup>
-
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<AssemblyName>taskington-console</AssemblyName>
+		<PackageId>Taskington.Console</PackageId>
+		<Authors>Andreas Weizel</Authors>
+		<Copyright>Copyright (c) Andreas Weizel</Copyright>
+		<Product>Taskington</Product>
+		<Description>Taskington Console Frontend</Description>
+		<Version>0.1-preview.240</Version>
+		<AssemblyVersion>0.1.0.240</AssemblyVersion>
+		<FileVersion>0.1.0.240</FileVersion>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Include="UI.fs" />
+		<Compile Include="Program.fs" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
+	</ItemGroup>
 </Project>

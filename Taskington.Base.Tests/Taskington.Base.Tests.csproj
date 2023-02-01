@@ -1,38 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Copyright>Copyright (c) 2020 Andreas Weizel</Copyright>
-    <Authors>Andreas Weizel</Authors>
-    <Product>Taskington</Product>
-    <Description>Taskington Base Framework Tests</Description>
-	<Nullable>enable</Nullable>
-	<Version>0.1-preview.200</Version>
-	<OutputType>Library</OutputType>
-	<AssemblyVersion>0.1.0.200</AssemblyVersion>
-	<FileVersion>0.1.0.200</FileVersion>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
-    <PackageReference Include="NSubstitute" Version="4.2.1" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Executors\" />
-    <Folder Include="TinyBus\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="TinyBus\" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Copyright>Copyright (c) Andreas Weizel</Copyright>
+		<Authors>Andreas Weizel</Authors>
+		<Product>Taskington</Product>
+		<Description>Taskington Base Framework Tests</Description>
+		<Nullable>enable</Nullable>
+		<Version>0.1-preview.240</Version>
+		<OutputType>Library</OutputType>
+		<AssemblyVersion>0.1.0.240</AssemblyVersion>
+		<FileVersion>0.1.0.240</FileVersion>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+		<PackageReference Include="NSubstitute" Version="4.2.1" />
+		<PackageReference Include="xunit" Version="2.4.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Executors\" />
+		<Folder Include="TinyBus\" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="TinyBus\" />
+	</ItemGroup>
 </Project>
