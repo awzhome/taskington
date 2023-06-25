@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+cd Taskington.Base.Tests
+dotnet test

@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		.github\workflows\ci.yml = .github\workflows\ci.yml
+		.projectversion = .projectversion
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskington.Base.Tests", "Taskington.Base.Tests\Taskington.Base.Tests.csproj", "{0D5F7529-F557-4701-B327-D3A2D1C9270C}"
@@ -17,15 +18,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskington.Base.Tests", "Ta
 		{FE025C2F-0DEF-4533-AF68-F841E9042178} = {FE025C2F-0DEF-4533-AF68-F841E9042178}
 	EndProjectSection
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Taskington.Console", "Taskington.Console\Taskington.Console.fsproj", "{C39E7CDE-9C95-4D43-98C1-505EF9728A6E}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Taskington.Console", "Taskington.Console\Taskington.Console.fsproj", "{C39E7CDE-9C95-4D43-98C1-505EF9728A6E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskington.Gui", "Taskington.Gui\Taskington.Gui.csproj", "{92CFEBA2-6378-4DC1-9E1B-2CB7F53C72B6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{04E341BA-3340-4B5D-9655-F282EB2213FC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskington.Gui.Extension", "Taskington.Gui.Extension\Taskington.Gui.Extension.csproj", "{0B0FE87F-585A-4132-9EC5-A6424EC0CFB7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskington.Update.Windows", "Taskington.Update.Windows\Taskington.Update.Windows.csproj", "{FAED5E44-8A25-4E2E-ADA4-B6CC0A4AE901}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskington.Update.Windows", "Taskington.Update.Windows\Taskington.Update.Windows.csproj", "{FAED5E44-8A25-4E2E-ADA4-B6CC0A4AE901}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "buildtools", "buildtools", "{F87D4F8C-951C-47E6-9D86-BDDDA2AB5741}"
+	ProjectSection(SolutionItems) = preProject
+		buildtools\publish-macos-arm = buildtools\publish-macos-arm
+		buildtools\test = buildtools\test
+		buildtools\versionize = buildtools\versionize
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,8 +55,6 @@ Global
 		{92CFEBA2-6378-4DC1-9E1B-2CB7F53C72B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92CFEBA2-6378-4DC1-9E1B-2CB7F53C72B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92CFEBA2-6378-4DC1-9E1B-2CB7F53C72B6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{04E341BA-3340-4B5D-9655-F282EB2213FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{04E341BA-3340-4B5D-9655-F282EB2213FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B0FE87F-585A-4132-9EC5-A6424EC0CFB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B0FE87F-585A-4132-9EC5-A6424EC0CFB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B0FE87F-585A-4132-9EC5-A6424EC0CFB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,5 +69,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EA870483-EEEB-43BF-BDA8-1961C8D29B93}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F87D4F8C-951C-47E6-9D86-BDDDA2AB5741} = {5D18743A-0EB4-452D-9A52-D94CDEE3759E}
 	EndGlobalSection
 EndGlobal

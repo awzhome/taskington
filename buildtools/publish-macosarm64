@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+dotnet publish Taskington.Gui/Taskington.Gui.csproj --configuration Release -r osx-arm64 --self-contained true -p:PublishTrimmed=true -p:UseAppHost=true --output ./output/publish-macosarm64

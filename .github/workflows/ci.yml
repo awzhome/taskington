@@ -26,14 +26,21 @@ jobs:
           dotnet-version: 6.0.x
 
       - name: Check .NET Core version
+        shell: bash
         run: |
           dotnet --version
+      
+      - name: Versionize
+        shell: bash
+        run: buildtools/versionize
 
-      - name: Build
-        run: ./build win64
+      - name: Build Windows Installer
+        shell: bash
+        run: buildtools/installer-win64
 
       - name: Test
-        run: ./build test
+        shell: bash
+        run: buildtools/test
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3

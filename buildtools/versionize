@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+
+PROJECTVERSION=`sed -n 1p .projectversion`
+PROJECTNUMVERSION=`sed -n 2p .projectversion`
+
+update_csproj() {
+    sed -i '' "s/<Version>.*<\/Version>/<Version>$PROJECTVERSION<\/Version>/g" $1
+    sed -i '' "s/<AssemblyVersion>.*<\/AssemblyVersion>/<AssemblyVersion>$PROJECTNUMVERSION<\/AssemblyVersion>/g" $1
+    sed -i '' "s/<FileVersion>.*<\/FileVersion>/<FileVersion>$PROJECTNUMVERSION<\/FileVersion>/g" $1
+}
+
+update_appinfo() {
+    sed -i '' "s/public static string Version = \".*\";/public static string Version = \"$PROJECTVERSION\";/g" $1
+}
+
+for file in **/*.csproj; do
+    update_csproj $file
+done
+
+update_appinfo Taskington.Gui/AppInfo.cs
