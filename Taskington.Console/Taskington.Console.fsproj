@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
@@ -9,9 +9,6 @@
 		<Copyright>Copyright (c) Andreas Weizel</Copyright>
 		<Product>Taskington</Product>
 		<Description>Taskington Console Frontend</Description>
-		<Version>0.1-preview.240</Version>
-		<AssemblyVersion>0.1.0.240</AssemblyVersion>
-		<FileVersion>0.1.0.240</FileVersion>
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Include="UI.fs" />
@@ -19,5 +16,13 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<GeneratePathProperty>
+			</GeneratePathProperty>
+		</PackageReference>
 	</ItemGroup>
 </Project>

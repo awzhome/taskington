@@ -30,10 +30,6 @@ jobs:
         run: |
           dotnet --version
       
-      - name: Versionize
-        shell: bash
-        run: buildtools/versionize
-
       - name: Build Windows Installer
         shell: bash
         run: buildtools/installer-win64

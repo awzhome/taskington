@@ -46,7 +46,7 @@ namespace Taskington.Gui.ViewModels
             {
                 NotificationType = AppNotificationType.AppInfo,
                 LeftText = AppInfo.Copyright,
-                RightText = $"v{AppInfo.Version}"
+                RightText = $"v{GitVersionInformation.SemVer}"
             });
 
             new InitializeConfigurationMessage().Publish();
