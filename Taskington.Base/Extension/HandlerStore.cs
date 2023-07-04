@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
+using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.Extension
 {
@@ -14,7 +14,16 @@ namespace Taskington.Base.Extension
 
         public void Add(params object?[] handlers)
         {
-            storedHandlers.AddRange(handlers);
+            foreach (var handler in handlers)
+            {
+                storedHandlers.Add(handler);
+                if (handler is not null)
+                {
+                    DeclarativeSubscriptions.SubscribeAsDeclared(handler);
+                }
+            }
         }
+
+
     }
 }
