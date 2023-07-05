@@ -27,7 +27,7 @@ public static class DeclarativeSubscriptions
             return;
         }
 
-        var messageType = (definition.ConstructorArguments.FirstOrDefault().Value as Type) ?? method.GetParameters().First().ParameterType;
+        var messageType = method.GetParameters().First().ParameterType;
         if (messageType is not null)
         {
             if (IsMessage(messageType, method))

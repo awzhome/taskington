@@ -9,45 +9,26 @@ public record TestOneWayMessage(string Param) : Message<TestOneWayMessage>
 {
     public static void CleanUp() => UnsubscribeAll();
 }
+
+public record TestDerivedOneWayMessage : TestOneWayMessage
+{
+    public TestDerivedOneWayMessage(string param) : base(param)
+    {
+    }
+}
+
 public record TestRequestMessage(string Param) : RequestMessage<TestRequestMessage, int>
 {
     public static void CleanUp() => UnsubscribeAll();
 }
 
-public class ExplicitTestSyncHandler
+public class TestSyncHandler
 {
     public bool MessageHandled { get; set; }
     public string? MessageText { get; set; }
     public int ReturnedValue { get; set; }
 
-    public ExplicitTestSyncHandler(int returnedValue = 0)
-    {
-        ReturnedValue = returnedValue;
-    }
-
-    [HandlesMessage(typeof(TestOneWayMessage))]
-    public void HandleOneWayMessage(TestOneWayMessage message)
-    {
-        MessageHandled = true;
-        MessageText = message.Param;
-    }
-
-    [HandlesMessage(typeof(TestRequestMessage))]
-    public int HandleRequestMessage(TestRequestMessage message)
-    {
-        MessageHandled = true;
-        MessageText = message.Param;
-        return ReturnedValue;
-    }
-}
-
-public class ImplicitTestSyncHandler
-{
-    public bool MessageHandled { get; set; }
-    public string? MessageText { get; set; }
-    public int ReturnedValue { get; set; }
-
-    public ImplicitTestSyncHandler(int returnedValue = 0)
+    public TestSyncHandler(int returnedValue = 0)
     {
         ReturnedValue = returnedValue;
     }
@@ -79,7 +60,7 @@ public class DeclarativeTypedSyncMessageTests
     [Fact]
     public void OneWayMessage()
     {
-        var handler = new ExplicitTestSyncHandler();
+        var handler = new TestSyncHandler();
         DeclarativeSubscriptions.SubscribeAsDeclared(handler);
 
         (new TestOneWayMessage("ParameterText")).Publish();
@@ -88,31 +69,12 @@ public class DeclarativeTypedSyncMessageTests
         Assert.Equal("ParameterText", handler.MessageText);
     }
 
-    [Fact]
-    public void RequestMessageExplicit()
-    {
-        var handler1 = new ExplicitTestSyncHandler(42);
-        var handler2 = new ExplicitTestSyncHandler(43);
-
-        DeclarativeSubscriptions.SubscribeAsDeclared(handler1);
-        DeclarativeSubscriptions.SubscribeAsDeclared(handler2);
-
-        var requestedValues = (new TestRequestMessage("ParameterText")).Request().ToList();
-
-        Assert.True(handler1.MessageHandled);
-        Assert.True(handler2.MessageHandled);
-        Assert.Equal("ParameterText", handler1.MessageText);
-        Assert.Equal("ParameterText", handler2.MessageText);
-        Assert.Collection(requestedValues,
-            v => Assert.Equal(42, v),
-            v => Assert.Equal(43, v));
-    }
 
     [Fact]
-    public void RequestMessageImplicit()
+    public void RequestMessage()
     {
-        var handler1 = new ImplicitTestSyncHandler(42);
-        var handler2 = new ImplicitTestSyncHandler(43);
+        var handler1 = new TestSyncHandler(42);
+        var handler2 = new TestSyncHandler(43);
 
         DeclarativeSubscriptions.SubscribeAsDeclared(handler1);
         DeclarativeSubscriptions.SubscribeAsDeclared(handler2);
@@ -128,4 +90,3 @@ public class DeclarativeTypedSyncMessageTests
             v => Assert.Equal(43, v));
     }
 }
-
