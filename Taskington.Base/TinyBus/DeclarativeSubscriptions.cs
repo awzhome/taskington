@@ -25,7 +25,7 @@ public static class DeclarativeSubscriptions
     {
         if (method.GetParameters().Length != 1)
         {
-            return;
+            throw new InvalidOperationException($"Invalid subscriber declaration: Wrong parameter count: {method}");
         }
 
         var messageType = method.GetParameters().First().ParameterType;
@@ -52,6 +52,10 @@ public static class DeclarativeSubscriptions
             {
                 var subscribeMethod = GetRequestSubscribeMethod(messageType, typeof(RequestMessage<,>).MakeGenericType(messageType, method.ReturnType), method.ReturnType);
                 subscribeMethod?.Invoke(null, new[] { method.CreateDelegate(typeof(Func<,>).MakeGenericType(messageType, method.ReturnType), handler) });
+            }
+            else
+            {
+                throw new InvalidOperationException($"Invalid subscriber declaration: Not a message type: {method}");
             }
         }
     }

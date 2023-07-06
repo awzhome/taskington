@@ -2,123 +2,114 @@ using System;
 using System.Threading.Tasks;
 using Taskington.Base.TinyBus;
 using Xunit;
-using static Taskington.Base.Tests.TinyBus.DeclarativeTypedSyncMessageTests;
 
-namespace Taskington.Base.Tests.TinyBus
+namespace Taskington.Base.Tests.TinyBus;
+
+public class DeclarativeTypedAsyncMessageTests
 {
-    public class DeclarativeTypedAsyncMessageTests
+    public record TestOneWayMessage(string Param) : AsyncMessage<TestOneWayMessage>
     {
-        public record TestOneWayMessage(string Param) : AsyncMessage<TestOneWayMessage>
+        public static void CleanUp() => UnsubscribeAll();
+    }
+
+    public record TestRequestMessage(string Param) : AsyncRequestMessage<TestRequestMessage, int>
+    {
+        public static void CleanUp() => UnsubscribeAll();
+    }
+
+    public class NoTask<T>
+    {
+        // Just some class with 1 generic parameter, which looks similar to Task<T>
+    }
+
+    public DeclarativeTypedAsyncMessageTests()
+    {
+        TestOneWayMessage.CleanUp();
+        TestRequestMessage.CleanUp();
+    }
+
+    public class TestAsyncHandler
+    {
+        public bool MessageHandled { get; set; }
+        public string? MessageText { get; set; }
+        public int ReturnedValue { get; set; }
+        public int ReturnDelay { get; set; }
+
+        public TestAsyncHandler(int returnedValue = 0, int returnDelay = 3000)
         {
-            public static void CleanUp() => UnsubscribeAll();
+            ReturnedValue = returnedValue;
+            ReturnDelay = returnDelay;
         }
 
-        public record TestRequestMessage(string Param) : AsyncRequestMessage<TestRequestMessage, int>
+        [HandlesMessage]
+        public async Task HandleOneWayMessage(TestOneWayMessage message)
         {
-            public static void CleanUp() => UnsubscribeAll();
+            MessageHandled = true;
+            MessageText = message.Param;
+            await Task.Delay(ReturnDelay);
         }
 
-        public class NoTask<T>
+        [HandlesMessage]
+        public async Task<int> HandleRequestMessage(TestRequestMessage message)
         {
-            // Just some class with 1 generic parameter, which looks similar to Task<T>
+            MessageHandled = true;
+            MessageText = message.Param;
+            await Task.Delay(ReturnDelay);
+            return ReturnedValue;
         }
+    }
 
-        public DeclarativeTypedAsyncMessageTests()
+    public class FakeTestAsyncHandler
+    {
+        public bool MessageHandled { get; set; }
+        public string? MessageText { get; set; }
+
+        [HandlesMessage]
+        public NoTask<int> HandleRequestMessageFake(TestRequestMessage message)
         {
-            TestOneWayMessage.CleanUp();
-            TestRequestMessage.CleanUp();
+            MessageHandled = true;
+            MessageText = message.Param;
+            return new NoTask<int>();
         }
+    }
 
-        public class TestAsyncHandler
-        {
-            public bool MessageHandled { get; set; }
-            public string? MessageText { get; set; }
-            public int ReturnedValue { get; set; }
-            public int ReturnDelay { get; set; }
+    [Fact]
+    public async void OneWayMessage()
+    {
+        var handler = new TestAsyncHandler();
+        DeclarativeSubscriptions.SubscribeAsDeclared(handler);
 
-            public TestAsyncHandler(int returnedValue = 0, int returnDelay = 3000)
-            {
-                ReturnedValue = returnedValue;
-                ReturnDelay = returnDelay;
-            }
+        await new TestOneWayMessage("ParameterText").Publish();
 
-            [HandlesMessage]
-            public async Task HandleOneWayMessage(TestOneWayMessage message)
-            {
-                MessageHandled = true;
-                MessageText = message.Param;
-                await Task.Delay(ReturnDelay);
-            }
+        Assert.True(handler.MessageHandled, "MessageHandled");
+        Assert.Equal("ParameterText", handler.MessageText);
+    }
 
-            [HandlesMessage]
-            public async Task<int> HandleRequestMessage(TestRequestMessage message)
-            {
-                MessageHandled = true;
-                MessageText = message.Param;
-                await Task.Delay(ReturnDelay);
-                return ReturnedValue;
-            }
-        }
+    [Fact]
+    public async void RequestMessage()
+    {
+        var handler1 = new TestAsyncHandler(42);
+        var handler2 = new TestAsyncHandler(43, 100);
 
-        public class FakeTestAsyncHandler
-        {
-            public bool MessageHandled { get; set; }
-            public string? MessageText { get; set; }
+        DeclarativeSubscriptions.SubscribeAsDeclared(handler1);
+        DeclarativeSubscriptions.SubscribeAsDeclared(handler2);
 
-            [HandlesMessage]
-            public NoTask<int> HandleRequestMessageFake(TestRequestMessage message)
-            {
-                MessageHandled = true;
-                MessageText = message.Param;
-                return new NoTask<int>();
-            }
-        }
+        var requestedValues = await new TestRequestMessage("ParameterText").Request();
 
-        [Fact]
-        public async void OneWayMessage()
-        {
-            var handler = new TestAsyncHandler();
-            DeclarativeSubscriptions.SubscribeAsDeclared(handler);
+        Assert.True(handler1.MessageHandled, "MessageHandled");
+        Assert.True(handler2.MessageHandled, "MessageHandled");
+        Assert.Equal("ParameterText", handler1.MessageText);
+        Assert.Equal("ParameterText", handler2.MessageText);
+        Assert.Collection(requestedValues,
+            v => Assert.Equal(42, v),
+            v => Assert.Equal(43, v));
+    }
 
-            await new TestOneWayMessage("ParameterText").Publish();
-
-            Assert.True(handler.MessageHandled, "MessageHandled");
-            Assert.Equal("ParameterText", handler.MessageText);
-        }
-
-        [Fact]
-        public async void RequestMessage()
-        {
-            var handler1 = new TestAsyncHandler(42);
-            var handler2 = new TestAsyncHandler(43, 100);
-
-            DeclarativeSubscriptions.SubscribeAsDeclared(handler1);
-            DeclarativeSubscriptions.SubscribeAsDeclared(handler2);
-
-            var requestedValues = await new TestRequestMessage("ParameterText").Request();
-
-            Assert.True(handler1.MessageHandled, "MessageHandled");
-            Assert.True(handler2.MessageHandled, "MessageHandled");
-            Assert.Equal("ParameterText", handler1.MessageText);
-            Assert.Equal("ParameterText", handler2.MessageText);
-            Assert.Collection(requestedValues,
-                v => Assert.Equal(42, v),
-                v => Assert.Equal(43, v));
-        }
-
-        [Fact]
-        public async void RequestMessage_WrongHandlerReturnType()
-        {
-            var handler1 = new FakeTestAsyncHandler();
-
-            DeclarativeSubscriptions.SubscribeAsDeclared(handler1);
-
-            var requestedValues = await (new TestRequestMessage("ParameterText")).Request();
-
-            Assert.False(handler1.MessageHandled, "MessageHandled");
-            Assert.Null(handler1.MessageText);
-            Assert.Empty(requestedValues);
-        }
+    [Fact]
+    public void RequestMessage_WrongHandlerReturnType()
+    {
+        var handler = new FakeTestAsyncHandler();
+        Assert.Throws<InvalidOperationException>(() => DeclarativeSubscriptions.SubscribeAsDeclared(handler));
     }
 }
 
