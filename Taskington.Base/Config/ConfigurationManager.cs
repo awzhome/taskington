@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Taskington.Base.Plans;
+using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.Config
 {
@@ -22,23 +23,15 @@ namespace Taskington.Base.Config
             this.configurationReader = configurationReader;
             this.configurationWriter = configurationWriter;
 
-            InitializeConfigurationMessage.Subscribe(_ => Initialize());
-            ConfigurationChangedMessage.Subscribe(_ => OnConfigurationChanged());
-            GetConfigValueMessage.Subscribe(message => GetValue(message.Key));
-            SetConfigValueMessage.Subscribe(message => SetValue(message.Key, message.Value));
-            InsertPlanMessage.Subscribe(message => InsertPlan(message.Index, message.Plan));
-            RemovePlanMessage.Subscribe(message => RemovePlan(message.Plan));
-            ReplacePlanMessage.Subscribe(message => ReplacePlan(message.OldPlan, message.NewPlan));
-            SaveConfigurationMessage.Subscribe(_ => SaveConfiguration());
             GetPlansMessage.Subscribe(_ => plans);
-            PlanRunningUpdateMessage.Subscribe(message => OnPlanIsRunningUpdated(message.Plan, message.IsRunning));
         }
 
         private readonly List<Plan> plans = new();
 
         private readonly Dictionary<string, string?> configValues = new();
 
-        public void Initialize()
+        [HandlesMessage]
+        public void Initialize(InitializeConfigurationMessage _)
         {
             if (!isInitialized)
             {
@@ -50,7 +43,8 @@ namespace Taskington.Base.Config
             }
         }
 
-        private void OnConfigurationChanged()
+        [HandlesMessage]
+        public void OnConfigurationChanged(ConfigurationChangedMessage _)
         {
             bool configReloaded = false;
             lock (configurationLock)
@@ -93,13 +87,14 @@ namespace Taskington.Base.Config
             plans.AddRange(configuration.Plans);
         }
 
-        private void OnPlanIsRunningUpdated(Plan plan, bool isRunning)
+        [HandlesMessage]
+        public void OnPlanIsRunningUpdated(PlanRunningUpdateMessage message)
         {
-            if (isRunning)
+            if (message.IsRunning)
             {
                 lock (configurationLock)
                 {
-                    runningPlans.Add(plan);
+                    runningPlans.Add(message.Plan);
                 }
             }
             else
@@ -107,7 +102,7 @@ namespace Taskington.Base.Config
                 bool configReloaded = false;
                 lock (configurationLock)
                 {
-                    runningPlans.Remove(plan);
+                    runningPlans.Remove(message.Plan);
                     if (runningPlans.Count == 0 && reloadDelayed)
                     {
                         new ConfigurationReloadDelayedMessage().Publish();
@@ -122,56 +117,62 @@ namespace Taskington.Base.Config
             }
         }
 
-        public void SaveConfiguration()
+        [HandlesMessage]
+        public void SaveConfiguration(SaveConfigurationMessage _)
         {
             configurationWriter.Write(new Configuration(
                 configValues.Select(entry => (entry.Key, entry.Value)),
                 plans));
         }
 
-        public void InsertPlan(int index, Plan newPlan)
+        [HandlesMessage]
+        public void InsertPlan(InsertPlanMessage message)
         {
-            if (index > -1)
+            if (message.Index > -1)
             {
-                plans.Insert(index, newPlan);
+                plans.Insert(message.Index, message.Plan);
             }
             else
             {
-                plans.Add(newPlan);
+                plans.Add(message.Plan);
             }
         }
 
-        public void RemovePlan(Plan plan)
+        [HandlesMessage]
+        public void RemovePlan(RemovePlanMessage message)
         {
-            int index = plans.IndexOf(plan);
+            int index = plans.IndexOf(message.Plan);
             if (index > -1)
             {
                 plans.RemoveAt(index);
             }
         }
 
-        public void ReplacePlan(Plan oldPlan, Plan newPlan)
+        [HandlesMessage]
+        public void ReplacePlan(ReplacePlanMessage message)
         {
-            int index = plans.IndexOf(oldPlan);
+            int index = plans.IndexOf(message.OldPlan);
             if (index > -1)
             {
                 plans.RemoveAt(index);
-                plans.Insert(index, newPlan);
+                plans.Insert(index, message.NewPlan);
             }
             else
             {
-                plans.Add(newPlan);
+                plans.Add(message.NewPlan);
             }
         }
 
-        public void SetValue(string key, string value)
+        [HandlesMessage]
+        public void SetValue(SetConfigValueMessage message)
         {
-            configValues[key] = value;
+            configValues[message.Key] = message.Value;
         }
 
-        public string? GetValue(string key)
+        [HandlesMessage]
+        public string? GetValue(GetConfigValueMessage message)
         {
-            if (configValues.TryGetValue(key, out string? configValue))
+            if (configValues.TryGetValue(message.Key, out string? configValue))
             {
                 return configValue;
             }
