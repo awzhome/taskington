@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Taskington.Base.TinyBus;
 using Xunit;
+using static Taskington.Base.Tests.TinyBus.DeclarativeTypedSyncMessageTests;
 
 namespace Taskington.Base.Tests.TinyBus
 {
@@ -15,6 +16,11 @@ namespace Taskington.Base.Tests.TinyBus
         public record TestRequestMessage(string Param) : AsyncRequestMessage<TestRequestMessage, int>
         {
             public static void CleanUp() => UnsubscribeAll();
+        }
+
+        public class NoTask<T>
+        {
+            // Just some class with 1 generic parameter, which looks similar to Task<T>
         }
 
         public DeclarativeTypedAsyncMessageTests()
@@ -54,6 +60,20 @@ namespace Taskington.Base.Tests.TinyBus
             }
         }
 
+        public class FakeTestAsyncHandler
+        {
+            public bool MessageHandled { get; set; }
+            public string? MessageText { get; set; }
+
+            [HandlesMessage]
+            public NoTask<int> HandleRequestMessageFake(TestRequestMessage message)
+            {
+                MessageHandled = true;
+                MessageText = message.Param;
+                return new NoTask<int>();
+            }
+        }
+
         [Fact]
         public async void OneWayMessage()
         {
@@ -84,6 +104,20 @@ namespace Taskington.Base.Tests.TinyBus
             Assert.Collection(requestedValues,
                 v => Assert.Equal(42, v),
                 v => Assert.Equal(43, v));
+        }
+
+        [Fact]
+        public async void RequestMessage_WrongHandlerReturnType()
+        {
+            var handler1 = new FakeTestAsyncHandler();
+
+            DeclarativeSubscriptions.SubscribeAsDeclared(handler1);
+
+            var requestedValues = await (new TestRequestMessage("ParameterText")).Request();
+
+            Assert.False(handler1.MessageHandled, "MessageHandled");
+            Assert.Null(handler1.MessageText);
+            Assert.Empty(requestedValues);
         }
     }
 }
