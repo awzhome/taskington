@@ -20,5 +20,5 @@
     },
     "omnisharp.useModernNet": true,
     "omnisharp.organizeImportsOnFormat": true,
-    "dotnet.defaultSolution": "Taskington.Installer.Windows.sln",
+    "dotnet.defaultSolution": "Taskington.sln",
 }
