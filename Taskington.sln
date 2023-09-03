@@ -16,8 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskington.Base.Tests", "Taskington.Base.Tests\Taskington.Base.Tests.csproj", "{0D5F7529-F557-4701-B327-D3A2D1C9270C}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Taskington.Console", "Taskington.Console\Taskington.Console.fsproj", "{C39E7CDE-9C95-4D43-98C1-505EF9728A6E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskington.Gui", "Taskington.Gui\Taskington.Gui.csproj", "{92CFEBA2-6378-4DC1-9E1B-2CB7F53C72B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskington.Gui.Extension", "Taskington.Gui.Extension\Taskington.Gui.Extension.csproj", "{0B0FE87F-585A-4132-9EC5-A6424EC0CFB7}"
@@ -38,10 +36,6 @@ Global
 		{0D5F7529-F557-4701-B327-D3A2D1C9270C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D5F7529-F557-4701-B327-D3A2D1C9270C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D5F7529-F557-4701-B327-D3A2D1C9270C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C39E7CDE-9C95-4D43-98C1-505EF9728A6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C39E7CDE-9C95-4D43-98C1-505EF9728A6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C39E7CDE-9C95-4D43-98C1-505EF9728A6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C39E7CDE-9C95-4D43-98C1-505EF9728A6E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{92CFEBA2-6378-4DC1-9E1B-2CB7F53C72B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{92CFEBA2-6378-4DC1-9E1B-2CB7F53C72B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92CFEBA2-6378-4DC1-9E1B-2CB7F53C72B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -60,7 +54,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EA870483-EEEB-43BF-BDA8-1961C8D29B93}
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal
