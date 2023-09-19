@@ -1,9 +1,6 @@
-using Taskington.Base.TinyBus;
+namespace Taskington.Base.Extension;
 
-namespace Taskington.Base.Extension
+public interface ITaskingtonExtension<T>
 {
-    public interface ITaskingtonExtension
-    {
-        object? InitializeEnvironment(IBaseEnvironment baseEnvironment);
-    }
+    object? InitializeEnvironment(T baseEnvironment);
 }

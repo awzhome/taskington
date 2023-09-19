@@ -5,7 +5,7 @@ using Taskington.Base.Extension;
 
 namespace Taskington.Update.Windows;
 
-public class UpdateServices : ITaskingtonExtension
+public class UpdateServices : ITaskingtonExtension<IBaseEnvironment>
 {
     public object? InitializeEnvironment(IBaseEnvironment baseEnvironment)
     {
