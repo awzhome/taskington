@@ -6,6 +6,11 @@ namespace Taskington.Base.Config
 {
     public class ScriptFileConfigurationProvider : WatchingFileReaderProvider
     {
+        public ScriptFileConfigurationProvider(IConfigurationManager configurationManager) : base(configurationManager)
+        {
+
+        }
+
         protected override IEnumerable<string> GetFileNames()
         {
             return Directory.GetFiles(GetConfigDirectory(), "*.taskington");

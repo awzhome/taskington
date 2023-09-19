@@ -1,41 +1,41 @@
 using System.Threading;
 using Taskington.Base.Log;
 
-namespace Taskington.Base.SystemOperations
+namespace Taskington.Base.SystemOperations;
+
+class DryRunSystemOperations : ISystemOperations
 {
-    class DryRunSystemOperations
+    private readonly ILog log;
+
+    public DryRunSystemOperations(ILog log)
     {
-        private readonly ILog log;
+        this.log = log;
+    }
 
-        public DryRunSystemOperations(ILog log)
+    public void SyncDirectory(SyncDirection direction, string from, string to)
+    {
+        var directionOutput = direction switch
         {
-            this.log = log;
+            SyncDirection.FromTo => "->",
+            SyncDirection.Both => "<->",
+            _ => "?-?"
+        };
+        log.Debug(this, $"SYSOP: Sync dir '{from}' {directionOutput} '{to}");
 
-            SyncDirectoryMessage.Subscribe(SyncDirectory);
-            SyncFileMessage.Subscribe(SyncFile);
-            LoadSystemPlaceholdersMessage.Subscribe(WindowsSystemOperations.LoadWindowsSystemPlaceholders);
-        }
+        Thread.Sleep(500);
+    }
 
-        public void SyncDirectory(SyncDirectoryMessage message)
-        {
-            (SyncDirection syncDirection, string fromDir, string toDir) = message;
-            var syncDirectionOutput = syncDirection switch
-            {
-                SyncDirection.FromTo => "->",
-                SyncDirection.Both => "<->",
-                _ => "?-?"
-            };
-            log.Debug(this, $"SYSOP: Sync dir '{fromDir}' {syncDirectionOutput} '{toDir}");
 
-            Thread.Sleep(500);
-        }
+    public void SyncFile(string fromDir, string toDir, string fileName)
+    {
+        log.Debug(this, $"SYSOP: Sync file '{fileName}' '{fromDir}' -> '{toDir}'");
 
-        public void SyncFile(SyncFileMessage message)
-        {
-            (string fromDir, string toDir, string file) = message;
-            log.Debug(this, $"SYSOP: Sync file '{file}' '{fromDir}' -> '{toDir}'");
+        Thread.Sleep(500);
+    }
 
-            Thread.Sleep(500);
-        }
+    public Placeholders LoadSystemPlaceholders()
+    {
+        // No-op
+        return new Placeholders();
     }
 }

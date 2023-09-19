@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using System.Linq;
 using Taskington.Gui.ViewModels;
 using Taskington.Gui.Views;
 
@@ -18,13 +19,21 @@ namespace Taskington.Gui
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var application = new Taskington.Base.Application();
-                application.Load(GetType().Assembly, typeof(Taskington.Update.Windows.UpdateServices).Assembly);
+                var guiEnvironment = application.Load(GetType().Assembly, typeof(Taskington.Update.Windows.UpdateServices).Assembly).OfType<IGuiEnvironment>().FirstOrDefault();
 
-                var mainViewModel = new MainWindowViewModel();
-                desktop.MainWindow = new MainWindow
+                if (guiEnvironment is not null)
                 {
-                    DataContext = mainViewModel
-                };
+                    var baseEnvironment = application.BaseEnvironment;
+                    var mainViewModel = new MainWindowViewModel(
+                        baseEnvironment.ConfigurationManager,
+                        baseEnvironment.PlanExecution,
+                        baseEnvironment.SystemOperations,
+                        guiEnvironment.StepUIs);
+                    desktop.MainWindow = new MainWindow
+                    {
+                        DataContext = mainViewModel
+                    };
+                }
             }
 
             base.OnFrameworkInitializationCompleted();

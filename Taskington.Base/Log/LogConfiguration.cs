@@ -1,30 +1,35 @@
 using System.Linq;
 using Taskington.Base.Config;
 
-namespace Taskington.Base.Log
+namespace Taskington.Base.Log;
+
+public interface ILogConfiguration
 {
-    class LogConfiguration
+    void UpdateMinimumLevel(string? defaultLevel = default);
+}
+
+class LogConfiguration : ILogConfiguration
+{
+    private readonly ILog log;
+    private readonly IConfigurationManager configurationManager;
+
+    public LogConfiguration(ILog log, IConfigurationManager configurationManager)
     {
-        private readonly ILog log;
+        this.log = log;
+        this.configurationManager = configurationManager;
+        UpdateMinimumLevel("info");
+        configurationManager.ConfigurationReloaded += (sender, e) => UpdateMinimumLevel();
+    }
 
-        public LogConfiguration(ILog log)
+    public void UpdateMinimumLevel(string? defaultLevel = default)
+    {
+        var logLevel = defaultLevel ?? configurationManager.GetValue("log");
+        (log as IReconfigurableLog)?.SetMiminumLevel(logLevel switch
         {
-            this.log = log;
-
-            UpdateMinimumLevel("info");
-            ConfigurationReloadedMessage.Subscribe(_ => UpdateMinimumLevel());
-        }
-
-        private void UpdateMinimumLevel(string? defaultLevel = default)
-        {
-            var logLevel = defaultLevel ?? new GetConfigValueMessage("log").Request().First();
-            (log as IReconfigurableLog)?.SetMiminumLevel(logLevel switch
-            {
-                "verbose" => LogLevel.Verbose,
-                "warning" => LogLevel.Warning,
-                "error" => LogLevel.Error,
-                _ => LogLevel.Info,
-            });
-        }
+            "verbose" => LogLevel.Verbose,
+            "warning" => LogLevel.Warning,
+            "error" => LogLevel.Error,
+            _ => LogLevel.Info,
+        });
     }
 }
