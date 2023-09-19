@@ -7,29 +7,21 @@ namespace Taskington.Base;
 
 public class Application
 {
-    private readonly ExtensionHost extensionHost;
+    private readonly ExtensionHost<IBaseEnvironment> extensionHost;
 
     public Application()
     {
         BaseEnvironment = new BaseEnvironment();
-        extensionHost = new ExtensionHost(BaseEnvironment);
+        extensionHost = new ExtensionHost<IBaseEnvironment>(BaseEnvironment, BaseEnvironment.Log);
     }
 
     public IBaseEnvironment BaseEnvironment { get; }
 
-    public IEnumerable<object> Load(params Assembly[] extensionAssemblies)
+    public void Load(params Assembly[] extensionAssemblies)
     {
-        var environments = new List<object>();
-
         foreach (var extensionAssembly in extensionAssemblies)
         {
-            var environment = extensionHost.LoadExtensionFrom(extensionAssembly);
-            if (environment is not null)
-            {
-                environments.Add(environment);
-            }
+            extensionHost.LoadExtensionFrom(extensionAssembly);
         }
-
-        return environments;
     }
 }

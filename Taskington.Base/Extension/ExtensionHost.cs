@@ -2,23 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Taskington.Base.Log;
 
 namespace Taskington.Base.Extension;
 
-internal class ExtensionHost
+public class ExtensionHost<T>
 {
-    private readonly IBaseEnvironment baseEnvironment;
+    private readonly T baseEnvironment;
+    private readonly ILog log;
+
     private readonly List<object> environments = new();
 
 
-    public ExtensionHost(IBaseEnvironment baseEnvironment)
+    public ExtensionHost(T baseEnvironment, ILog log)
     {
         this.baseEnvironment = baseEnvironment;
+        this.log = log;
     }
 
-    public object? LoadExtensionFrom(Assembly assembly)
+    public void LoadExtensionFrom(Assembly assembly)
     {
-        var log = baseEnvironment.Log;
         log.Info(this, "Load extension from {Assembly}", assembly.FullName ?? "");
 
         foreach (var attribute in assembly.CustomAttributes.Where(
@@ -29,18 +32,17 @@ internal class ExtensionHost
                 var extensionType = attribute.ConstructorArguments.First().Value as Type;
                 if (extensionType != null)
                 {
-                    if (typeof(ITaskingtonExtension).IsAssignableFrom(extensionType)
+                    if (typeof(ITaskingtonExtension<T>).IsAssignableFrom(extensionType)
                         && extensionType.GetConstructors().Any(ctor => !ctor.GetParameters().Any()))
                     {
-                        if (Activator.CreateInstance(extensionType) is ITaskingtonExtension extensionInstance)
+                        if (Activator.CreateInstance(extensionType) is ITaskingtonExtension<T> extensionInstance)
                         {
                             var environment = extensionInstance.InitializeEnvironment(baseEnvironment);
                             if (environment is not null)
                             {
                                 environments.Add(environment);
                             }
-                            log.Info(this, "Loaded extension from {Assembly}", assembly.FullName ?? "");
-                            return environment;
+                            log.Info(this, "Loaded extension from {Assembly} (environment: {Environment})", assembly.FullName ?? "", typeof(T).Name);
                         }
                     }
                     else
@@ -54,7 +56,5 @@ internal class ExtensionHost
                 log.Error($"Error loading extension from from '{assembly.GetName()}'", ex);
             }
         }
-
-        return null;
     }
 }
