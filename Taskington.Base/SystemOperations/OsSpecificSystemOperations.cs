@@ -1,10 +1,12 @@
 namespace Taskington.Base.SystemOperations;
 
 using System.Runtime.InteropServices;
+using Taskington.Base.Log;
+
 
 public static class OsSpecificSystemOperations
 {
-    public static object? Create()
+    public static ISystemOperations Create(ILog log)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -15,6 +17,6 @@ public static class OsSpecificSystemOperations
             return new MacOsSystemOperations();
         }
 
-        return null;
+        return new DryRunSystemOperations(log);
     }
 }

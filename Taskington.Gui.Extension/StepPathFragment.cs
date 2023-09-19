@@ -1,6 +1,7 @@
-namespace Taskington.Gui.Extension;
 using System.Collections.ObjectModel;
 using Taskington.Base.SystemOperations;
+
+namespace Taskington.Gui.Extension;
 
 public enum PathFragmentColor
 {

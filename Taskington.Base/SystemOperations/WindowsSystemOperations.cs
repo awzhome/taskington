@@ -5,16 +5,8 @@ using System.Linq;
 
 namespace Taskington.Base.SystemOperations
 {
-    internal class WindowsSystemOperations
+    internal class WindowsSystemOperations : ISystemOperations
     {
-
-        public WindowsSystemOperations()
-        {
-            SyncDirectoryMessage.Subscribe(SyncDirectory);
-            SyncFileMessage.Subscribe(SyncFile);
-            LoadSystemPlaceholdersMessage.Subscribe(LoadWindowsSystemPlaceholders);
-        }
-
         private static void RunProcess(string fileName, params string[] arguments)
         {
             var process = new Process()
@@ -39,13 +31,17 @@ namespace Taskington.Base.SystemOperations
         private static void RunRoboCopy(params string[] arguments) =>
             RunProcess("robocopy", arguments);
 
-        public static void SyncDirectory(SyncDirectoryMessage message) =>
-            RunRoboCopy(message.From, message.To, "/MIR", "/FFT", "/NFL", "/NJH", "/NJS" /*, "/L"*/);
+        public void SyncDirectory(SyncDirection direction, string from, string to)
+        {
+            RunRoboCopy(from, to, "/MIR", "/FFT", "/NFL", "/NJH", "/NJS" /*, "/L"*/);
+        }
 
-        public void SyncFile(SyncFileMessage message) =>
-            RunRoboCopy(message.From, message.To, message.FileName, "/NFL", "/NJH", "/NJS" /*, "/L"*/);
+        public void SyncFile(string from, string to, string fileName)
+        {
+            RunRoboCopy(from, to, fileName, "/NFL", "/NJH", "/NJS" /*, "/L"*/);
+        }
 
-        internal static Placeholders LoadWindowsSystemPlaceholders()
+        public Placeholders LoadSystemPlaceholders()
         {
             var placeholders = new Placeholders();
             var systemDrives = DriveInfo.GetDrives();

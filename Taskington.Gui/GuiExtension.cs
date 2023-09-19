@@ -1,23 +1,16 @@
+using Taskington.Base;
 using Taskington.Base.Extension;
 using Taskington.Gui.UIProviders;
 
 [assembly: TaskingtonExtension(typeof(Taskington.Gui.GuiExtension))]
 
-namespace Taskington.Gui
-{
-    class GuiExtension : ITaskingtonExtension
-    {
-        //public static void Bind(IAppServiceBinder binder)
-        //{
-        //    binder
-        //        .Bind<MainWindowViewModel>()
-        //        .Bind<ModelEventDispatcher>()
-        //        .Bind<IStepTypeUI, SyncStepUI>();
-        //}
+namespace Taskington.Gui;
 
-        public void Initialize(IHandlerStore handlerStore)
-        {
-            handlerStore.Add(new SyncStepUI());
-        }
+class GuiExtension : ITaskingtonExtension
+{
+    public object? InitializeEnvironment(IBaseEnvironment baseEnvironment)
+    {
+        return new GuiEnvironment();
     }
+
 }

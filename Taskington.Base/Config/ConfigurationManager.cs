@@ -1,183 +1,197 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using Taskington.Base.Plans;
 using Taskington.Base.TinyBus;
 
-namespace Taskington.Base.Config
+namespace Taskington.Base.Config;
+
+public interface IConfigurationManager
 {
-    public class ConfigurationManager
+    event EventHandler? ConfigurationReloaded;
+    event EventHandler? ConfigurationReloadDelayed;
+
+    void Initialize();
+    void SetValue(string key, string? value);
+    string? GetValue(string key);
+    void SaveConfiguration();
+    void ReloadConfiguration();
+
+    void InsertPlan(int index, Plan plan);
+    void RemovePlan(Plan plan);
+    void ReplacePlan(Plan oldPlan, Plan newPlan);
+
+    IEnumerable<Plan> Plans { get; }
+}
+
+public class ConfigurationManager : IConfigurationManager
+{
+    private static readonly object configurationLock = new();
+
+    private bool isInitialized = false;
+    private bool reloadDelayed = false;
+    private readonly HashSet<Plan> runningPlans = new();
+    private readonly YamlConfigurationReader configurationReader;
+    private readonly YamlConfigurationWriter configurationWriter;
+
+    public event EventHandler? ConfigurationReloaded;
+    public event EventHandler? ConfigurationReloadDelayed;
+
+    internal ConfigurationManager(
+        YamlConfigurationReader configurationReader,
+        YamlConfigurationWriter configurationWriter,
+        IPlanExecution planExecution)
     {
-        private static readonly object configurationLock = new();
+        this.configurationReader = configurationReader;
+        this.configurationWriter = configurationWriter;
+        planExecution.PlanRunningUpdated += OnPlanIsRunningUpdated;
+    }
 
-        private bool isInitialized = false;
-        private bool reloadDelayed = false;
-        private readonly HashSet<Plan> runningPlans = new();
+    private readonly List<Plan> plans = new();
 
-        private readonly YamlConfigurationReader configurationReader;
-        private readonly YamlConfigurationWriter configurationWriter;
+    private readonly Dictionary<string, string?> configValues = new();
 
-        public ConfigurationManager(
-            YamlConfigurationReader configurationReader,
-            YamlConfigurationWriter configurationWriter)
+    public IEnumerable<Plan> Plans => plans;
+
+    public void Initialize()
+    {
+        if (!isInitialized)
         {
-            this.configurationReader = configurationReader;
-            this.configurationWriter = configurationWriter;
+            lock (configurationLock)
+            {
+                ReadConfiguration();
+            }
+            isInitialized = true;
+        }
+    }
 
-            GetPlansMessage.Subscribe(_ => plans);
+    public void ReloadConfiguration()
+    {
+        bool configReloaded = false;
+        lock (configurationLock)
+        {
+            configReloaded = TryReloadConfiguration();
         }
 
-        private readonly List<Plan> plans = new();
-
-        private readonly Dictionary<string, string?> configValues = new();
-
-        [HandlesMessage]
-        public void Initialize(InitializeConfigurationMessage _)
+        if (configReloaded)
         {
-            if (!isInitialized)
+            ConfigurationReloadDelayed?.Invoke(this, new());
+        }
+    }
+
+    private bool TryReloadConfiguration()
+    {
+        if (runningPlans.Count == 0)
+        {
+            plans.Clear();
+            ReadConfiguration();
+            return true;
+        }
+        else
+        {
+            if (!reloadDelayed)
             {
-                lock (configurationLock)
-                {
-                    ReadConfiguration();
-                }
-                isInitialized = true;
+                ConfigurationReloadDelayed?.Invoke(this, new());
+            }
+            reloadDelayed = true;
+            return false;
+        }
+    }
+
+    private void ReadConfiguration()
+    {
+        var configuration = configurationReader.Read();
+        foreach (var (key, value) in configuration.ConfigValues)
+        {
+            configValues.Add(key, value);
+        }
+        plans.AddRange(configuration.Plans);
+    }
+
+    private void OnPlanIsRunningUpdated(object? sender, PlanRunningUpdatedEventArgs e)
+    {
+        if (e.Running)
+        {
+            lock (configurationLock)
+            {
+                runningPlans.Add(e.Plan);
             }
         }
-
-        [HandlesMessage]
-        public void OnConfigurationChanged(ConfigurationChangedMessage _)
+        else
         {
             bool configReloaded = false;
             lock (configurationLock)
             {
-                configReloaded = TryReloadConfiguration();
+                runningPlans.Remove(e.Plan);
+                if (runningPlans.Count == 0 && reloadDelayed)
+                {
+                    ConfigurationReloadDelayed?.Invoke(this, new());
+                    reloadDelayed = false;
+                    configReloaded = TryReloadConfiguration();
+                }
             }
-
             if (configReloaded)
             {
-                new ConfigurationReloadedMessage().Publish();
+                ConfigurationReloaded?.Invoke(this, new());
             }
         }
+    }
 
-        private bool TryReloadConfiguration()
+    public void SaveConfiguration()
+    {
+        configurationWriter.Write(new Configuration(
+            configValues.Select(entry => (entry.Key, entry.Value)),
+            plans));
+    }
+
+    public void InsertPlan(int index, Plan plan)
+    {
+        if (index > -1)
         {
-            if (runningPlans.Count == 0)
-            {
-                plans.Clear();
-                ReadConfiguration();
-                return true;
-            }
-            else
-            {
-                if (!reloadDelayed)
-                {
-                    new ConfigurationReloadDelayedMessage().Publish();
-                }
-                reloadDelayed = true;
-                return false;
-            }
+            plans.Insert(index, plan);
         }
-
-        private void ReadConfiguration()
+        else
         {
-            var configuration = configurationReader.Read();
-            foreach (var (key, value) in configuration.ConfigValues)
-            {
-                configValues.Add(key, value);
-            }
-            plans.AddRange(configuration.Plans);
+            plans.Add(plan);
         }
+    }
 
-        [HandlesMessage]
-        public void OnPlanIsRunningUpdated(PlanRunningUpdateMessage message)
+    public void RemovePlan(Plan plan)
+    {
+        int index = plans.IndexOf(plan);
+        if (index > -1)
         {
-            if (message.IsRunning)
-            {
-                lock (configurationLock)
-                {
-                    runningPlans.Add(message.Plan);
-                }
-            }
-            else
-            {
-                bool configReloaded = false;
-                lock (configurationLock)
-                {
-                    runningPlans.Remove(message.Plan);
-                    if (runningPlans.Count == 0 && reloadDelayed)
-                    {
-                        new ConfigurationReloadDelayedMessage().Publish();
-                        reloadDelayed = false;
-                        configReloaded = TryReloadConfiguration();
-                    }
-                }
-                if (configReloaded)
-                {
-                    new ConfigurationReloadedMessage().Publish();
-                }
-            }
+            plans.RemoveAt(index);
         }
+    }
 
-        [HandlesMessage]
-        public void SaveConfiguration(SaveConfigurationMessage _)
+    public void ReplacePlan(Plan oldPlan, Plan newPlan)
+    {
+        int index = plans.IndexOf(oldPlan);
+        if (index > -1)
         {
-            configurationWriter.Write(new Configuration(
-                configValues.Select(entry => (entry.Key, entry.Value)),
-                plans));
+            plans.RemoveAt(index);
+            plans.Insert(index, newPlan);
         }
-
-        [HandlesMessage]
-        public void InsertPlan(InsertPlanMessage message)
+        else
         {
-            if (message.Index > -1)
-            {
-                plans.Insert(message.Index, message.Plan);
-            }
-            else
-            {
-                plans.Add(message.Plan);
-            }
+            plans.Add(newPlan);
         }
+    }
 
-        [HandlesMessage]
-        public void RemovePlan(RemovePlanMessage message)
+    public void SetValue(string key, string? value)
+    {
+        configValues[key] = value;
+    }
+
+    public string? GetValue(string key)
+    {
+        if (configValues.TryGetValue(key, out string? configValue))
         {
-            int index = plans.IndexOf(message.Plan);
-            if (index > -1)
-            {
-                plans.RemoveAt(index);
-            }
+            return configValue;
         }
 
-        [HandlesMessage]
-        public void ReplacePlan(ReplacePlanMessage message)
-        {
-            int index = plans.IndexOf(message.OldPlan);
-            if (index > -1)
-            {
-                plans.RemoveAt(index);
-                plans.Insert(index, message.NewPlan);
-            }
-            else
-            {
-                plans.Add(message.NewPlan);
-            }
-        }
-
-        [HandlesMessage]
-        public void SetValue(SetConfigValueMessage message)
-        {
-            configValues[message.Key] = message.Value;
-        }
-
-        [HandlesMessage]
-        public string? GetValue(GetConfigValueMessage message)
-        {
-            if (configValues.TryGetValue(message.Key, out string? configValue))
-            {
-                return configValue;
-            }
-
-            return null;
-        }
+        return null;
     }
 }

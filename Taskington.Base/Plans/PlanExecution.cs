@@ -1,67 +1,79 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Taskington.Base.Extension;
+using Taskington.Base.Steps;
 using Taskington.Base.SystemOperations;
 
-namespace Taskington.Base.Plans
+namespace Taskington.Base.Plans;
+
+internal class PlanExecution : IPlanExecution
 {
-    internal class PlanExecution
+    private readonly ISystemOperations systemOperations;
+    private readonly IKeyedRegistry<IStepExecution> stepExecutions;
+
+    public event EventHandler<PlanProgressUpdatedEventArgs>? PlanProgressUpdated;
+    public event EventHandler<PlanStatusTextUpdatedEventArgs>? PlanStatusTextUpdated;
+    public event EventHandler<PlanErrorUpdatedEventArgs>? PlanErrorUpdated;
+    public event EventHandler<PlanCanExecuteUpdatedEventArgs>? PlanCanExecuteUpdated;
+    public event EventHandler<PlanRunningUpdatedEventArgs>? PlanRunningUpdated;
+    public event EventHandler<PlanPreCheckRequestedEventArgs>? PlanPreCheckRequested;
+
+    internal PlanExecution(ISystemOperations systemOperations, IKeyedRegistry<IStepExecution> stepExecutions)
     {
-        internal PlanExecution()
-        {
-            NotifyInitialPlanStatesMessage.Subscribe(m => NotifyInitialStates(m.Plan));
-            ExecutePlanMessage.Subscribe(m => Execute(m.Plan));
-        }
+        this.systemOperations = systemOperations;
+        this.stepExecutions = stepExecutions;
+    }
 
-        private void NotifyInitialStates(Plan plan)
+    public void NotifyInitialStates(Plan plan)
+    {
+        if (plan.RunType == Plan.OnSelectionRunType)
         {
-            if (plan.RunType == Plan.OnSelectionRunType)
-            {
-                new PreCheckPlanExecutionMessage(plan).Publish();
-                new PlanStatusTextUpdateMessage(plan, "Not run yet").Publish();
-                new PlanRunningUpdateMessage(plan, false).Publish();
-                new PlanErrorUpdateMessage(plan, false, null).Publish();
-            }
+            var planPreCheckRequestedEventArgs = new PlanPreCheckRequestedEventArgs(plan);
+            PlanPreCheckRequested?.Invoke(this, planPreCheckRequestedEventArgs);
+            PlanCanExecuteUpdated?.Invoke(this, new(plan, planPreCheckRequestedEventArgs.CanExecute));
+            PlanStatusTextUpdated?.Invoke(this, new(plan, "Not run yet"));
+            PlanRunningUpdated?.Invoke(this, new(plan, false));
+            PlanErrorUpdated?.Invoke(this, new(plan, false, null));
         }
+    }
 
-        private void Execute(Plan plan)
+    public void Execute(Plan plan)
+    {
+        if (plan.IsValid)
         {
-            if (plan.IsValid)
+            Task.Run(() =>
             {
-                Task.Run(() =>
+                try
                 {
-                    try
-                    {
-                        new PlanRunningUpdateMessage(plan, true).Publish();
+                    PlanRunningUpdated?.Invoke(this, new(plan, true));
 
-                        var placeholders = new LoadSystemPlaceholdersMessage().Request().First();
+                    var placeholders = systemOperations.LoadSystemPlaceholders();
 
-                        int stepsFinished = 0;
-                        new PlanProgressUpdateMessage(plan, 0).Publish();
-                        int planProgress = 0;
-                        foreach (var step in plan.Steps)
-                        {
-                            new ExecuteStepMessage(step, placeholders,
-                                    progress => new PlanProgressUpdateMessage(plan, planProgress + progress / plan.Steps.Count()).Publish(),
-                                    text => new PlanStatusTextUpdateMessage(plan, text).Publish()
-                                ).Publish();
-                            stepsFinished++;
-                            planProgress = stepsFinished * 100 / plan.Steps.Count();
-                            new PlanProgressUpdateMessage(plan, planProgress).Publish();
-                        }
-                    }
-                    catch (Exception ex)
+                    int stepsFinished = 0;
+                    PlanProgressUpdated?.Invoke(this, new(plan, 0));
+                    int planProgress = 0;
+                    foreach (var step in plan.Steps)
                     {
-                        new PlanErrorUpdateMessage(plan, true, ex.Message).Publish();
+                        stepExecutions.Get(step.StepType)?.Execute(step, placeholders,
+                            progress => PlanProgressUpdated?.Invoke(this, new(plan, planProgress + progress / plan.Steps.Count())),
+                            text => PlanStatusTextUpdated?.Invoke(this, new(plan, text)));
+                        stepsFinished++;
+                        planProgress = stepsFinished * 100 / plan.Steps.Count();
+                        PlanProgressUpdated?.Invoke(this, new(plan, planProgress));
                     }
-                    finally
-                    {
-                        new PlanRunningUpdateMessage(plan, false).Publish();
-                        new PlanStatusTextUpdateMessage(plan, "Finished successfully").Publish();
-                    }
-                });
-            }
+                }
+                catch (Exception ex)
+                {
+                    PlanErrorUpdated?.Invoke(this, new(plan, true, ex.Message));
+                }
+                finally
+                {
+                    PlanRunningUpdated?.Invoke(this, new(plan, false));
+                    PlanStatusTextUpdated?.Invoke(this, new(plan, "Finished successfully"));
+                }
+            });
         }
     }
 }
+

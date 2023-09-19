@@ -5,15 +5,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-internal class MacOsSystemOperations
+internal class MacOsSystemOperations : ISystemOperations
 {
-    public MacOsSystemOperations()
-    {
-        SyncDirectoryMessage.Subscribe(SyncDirectory);
-        SyncFileMessage.Subscribe(SyncFile);
-        LoadSystemPlaceholdersMessage.Subscribe(LoadMacOsSystemPlaceholders);
-    }
-
     private static void RunProcess(string fileName, params string[] arguments)
     {
         var process = new Process()
@@ -38,19 +31,21 @@ internal class MacOsSystemOperations
     private static void RunRSync(params string[] arguments) =>
         RunProcess("rsync", arguments);
 
-    public static void SyncDirectory(SyncDirectoryMessage message)
+    public void SyncDirectory(SyncDirection direction, string from, string to)
     {
-        if (!Directory.Exists(message.To))
+        if (!Directory.Exists(to))
         {
-            Directory.CreateDirectory(message.To);
+            Directory.CreateDirectory(to);
         }
-        RunRSync("-r", "--delete", "-t", $"{message.From}/", message.To);
+        RunRSync("-r", "--delete", "-t", $"{from}/", to);
     }
 
-    public void SyncFile(SyncFileMessage message) =>
-        RunRSync("-t", Path.Combine(message.From, message.FileName), message.To);
+    public void SyncFile(string fromDir, string toDir, string fileName)
+    {
+        RunRSync("-t", Path.Combine(fromDir, fileName), toDir);
+    }
 
-    internal static Placeholders LoadMacOsSystemPlaceholders()
+    public Placeholders LoadSystemPlaceholders()
     {
         var placeholders = new Placeholders();
         placeholders["AppDataRoaming"] = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);

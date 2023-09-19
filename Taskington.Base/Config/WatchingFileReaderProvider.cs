@@ -7,11 +7,13 @@ namespace Taskington.Base.Config
     public abstract class WatchingFileReaderProvider : IStreamReaderProvider, IDisposable
     {
         private FileSystemWatcher? configFileWatcher;
+        private readonly IConfigurationManager configurationManager;
+
 
         protected static string AppRoamingPath =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "taskington");
 
-        public WatchingFileReaderProvider()
+        public WatchingFileReaderProvider(IConfigurationManager configurationManager)
         {
             configFileWatcher = new FileSystemWatcher(GetConfigDirectory(), WatchedFilesFilter)
             {
@@ -19,9 +21,11 @@ namespace Taskington.Base.Config
             };
             configFileWatcher.Created += OnFileChanged;
             configFileWatcher.Changed += OnFileChanged;
-            configFileWatcher.Renamed += (sender, e) => new ConfigurationChangedMessage().Publish();
-            configFileWatcher.Deleted += (sender, e) => new ConfigurationChangedMessage().Publish();
+            configFileWatcher.Renamed += (sender, e) => configurationManager.ReloadConfiguration();
+            configFileWatcher.Deleted += (sender, e) => configurationManager.ReloadConfiguration();
             configFileWatcher.EnableRaisingEvents = true;
+            this.configurationManager = configurationManager;
+
         }
 
         ~WatchingFileReaderProvider()
@@ -40,7 +44,7 @@ namespace Taskington.Base.Config
                     fileStream.Close();
                 }
 
-                new ConfigurationChangedMessage().Publish();
+                configurationManager.ReloadConfiguration();
             }
             catch (IOException) { }
         }
