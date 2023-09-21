@@ -1,21 +1,30 @@
 using Taskington.Base.Extension;
 using Taskington.Gui.Extension;
 using Taskington.Gui.UIProviders;
+using Taskington.Gui.ViewModels;
 
 namespace Taskington.Gui;
 
-public interface IGuiEnvironment
+internal interface IFullGuiEnvironment : IGuiEnvironment
 {
-    IKeyedRegistry<IStepUI> StepUIs { get; }
+    IAppNotificationViewModel AppNotificationViewModel { get; }
 }
 
-internal class GuiEnvironment : IGuiEnvironment
+internal class GuiEnvironment : IFullGuiEnvironment
 {
     public GuiEnvironment()
     {
         StepUIs = new KeyedRegistry<IStepUI>();
-        var syncStepUI = new SyncStepUI(StepUIs);
+        AppNotificationViewModel = new AppNotificationViewModel();
+        AppNotifications = AppNotificationViewModel;
+
+        SyncStepUI = new SyncStepUI(StepUIs);
     }
 
     public IKeyedRegistry<IStepUI> StepUIs { get; }
+
+    public IAppNotifications AppNotifications { get; }
+    public IAppNotificationViewModel AppNotificationViewModel { get; }
+
+    internal SyncStepUI SyncStepUI { get; }
 }
