@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using Taskington.Base.Extension;
 
@@ -17,11 +18,15 @@ public class Application
 
     public IBaseEnvironment BaseEnvironment { get; }
 
-    public void Load(params Assembly[] extensionAssemblies)
+    public IEnumerable<object> Load(params Assembly[] extensionAssemblies)
     {
         foreach (var extensionAssembly in extensionAssemblies)
         {
-            extensionHost.LoadExtensionFrom(extensionAssembly);
+            var enviroment = extensionHost.LoadExtensionFrom(extensionAssembly);
+            if (enviroment is not null)
+            {
+                yield return enviroment;
+            }
         }
     }
 }

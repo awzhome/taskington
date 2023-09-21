@@ -20,7 +20,7 @@ public class ExtensionHost<T>
         this.log = log;
     }
 
-    public void LoadExtensionFrom(Assembly assembly)
+    public object? LoadExtensionFrom(Assembly assembly)
     {
         log.Info(this, "Load extension from {Assembly}", assembly.FullName ?? "");
 
@@ -43,6 +43,7 @@ public class ExtensionHost<T>
                                 environments.Add(environment);
                             }
                             log.Info(this, "Loaded extension from {Assembly} (environment: {Environment})", assembly.FullName ?? "", typeof(T).Name);
+                            return environment;
                         }
                     }
                     else
@@ -56,5 +57,7 @@ public class ExtensionHost<T>
                 log.Error($"Error loading extension from from '{assembly.GetName()}'", ex);
             }
         }
+
+        return null;
     }
 }
