@@ -11,16 +11,13 @@ namespace Taskington.Base.Steps;
 internal class SyncStepExecution : IStepExecution
 {
     private readonly ISystemOperations systemOperations;
-    private readonly IKeyedRegistry<IStepExecution> stepExecutions;
 
 
     public SyncStepExecution(IPlanExecution planExecution, ISystemOperations systemOperations, IKeyedRegistry<IStepExecution> stepExecutions)
     {
         this.systemOperations = systemOperations;
-        this.stepExecutions = stepExecutions;
 
         stepExecutions.Add("sync", this);
-
         planExecution.PlanPreCheckRequested += OnPlanPreCheckRequested;
     }
 

@@ -15,6 +15,8 @@ public interface IBaseEnvironment
     IPlanExecution PlanExecution { get; }
     IKeyedRegistry<IStepExecution> StepExecutions { get; }
     ISystemOperations SystemOperations { get; }
+    IStreamReaderProvider StreamReaderProvider { get; }
+    IStreamWriterProvider StreamWriterProvider { get; }
 }
 
 internal class BaseEnvironment : IBaseEnvironment
@@ -23,13 +25,17 @@ internal class BaseEnvironment : IBaseEnvironment
     {
         Log = new FileLog();
         var configurationProvider = new YamlFileConfigurationProvider();
-        var configurationReader = new YamlConfigurationReader(configurationProvider);
-        var configurationWriter = new YamlConfigurationWriter(configurationProvider);
+        StreamReaderProvider = configurationProvider;
+        StreamWriterProvider = configurationProvider;
+        ConfigurationReader = new YamlConfigurationReader(configurationProvider);
+        ConfigurationWriter = new YamlConfigurationWriter(configurationProvider);
         SystemOperations = OsSpecificSystemOperations.Create(Log);
         StepExecutions = new KeyedRegistry<IStepExecution>();
         PlanExecution = new PlanExecution(SystemOperations, StepExecutions);
-        ConfigurationManager = new ConfigurationManager(configurationReader, configurationWriter, PlanExecution);
+        ConfigurationManager = new ConfigurationManager(ConfigurationReader, ConfigurationWriter, PlanExecution);
         LogConfiguration = new LogConfiguration(Log, ConfigurationManager);
+
+        SyncStepExecution = new SyncStepExecution(PlanExecution, SystemOperations, StepExecutions);
     }
 
     public ILog Log { get; }
@@ -38,4 +44,10 @@ internal class BaseEnvironment : IBaseEnvironment
     public IPlanExecution PlanExecution { get; }
     public IKeyedRegistry<IStepExecution> StepExecutions { get; }
     public ISystemOperations SystemOperations { get; }
+    public IStreamReaderProvider StreamReaderProvider { get; }
+    public IStreamWriterProvider StreamWriterProvider { get; }
+
+    public SyncStepExecution SyncStepExecution { get; }
+    public YamlConfigurationReader ConfigurationReader { get; }
+    public YamlConfigurationWriter ConfigurationWriter { get; }
 }
