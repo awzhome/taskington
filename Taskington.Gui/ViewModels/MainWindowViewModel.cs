@@ -20,9 +20,10 @@ class MainWindowViewModel : ViewModelBase
     private readonly IPlanExecution planExecution;
     private readonly ISystemOperations systemOperations;
     private readonly IKeyedRegistry<IStepUI> stepUIs;
+    private readonly IAppNotificationViewModel appNotificationViewModel;
+
 
     public ObservableCollection<PlanViewModel> Plans { get; }
-    public ObservableCollection<AppNotification> AppNotifications { get; }
 
     public ReactiveCommand<Unit, Unit> AddPlanCommand { get; }
     public ReactiveCommand<PlanViewModel, Unit> ExecutePlanCommand { get; }
@@ -31,11 +32,18 @@ class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<PlanViewModel, Unit> RemovePlanCommand { get; }
     public ReactiveCommand<PlanViewModel, Unit> UndoPlanRemovalCommand { get; }
 
-    public MainWindowViewModel(IConfigurationManager configurationManager, IPlanExecution planExecution, ISystemOperations systemOperations, IKeyedRegistry<IStepUI> stepUIs)
-    {
-        modelEventDispatcher = new(this, planExecution);
+    public ObservableCollection<AppNotification> AppNotifications => appNotificationViewModel.Notifications;
 
-        AppNotifications = new ObservableCollection<AppNotification>();
+    public MainWindowViewModel(
+        IConfigurationManager configurationManager,
+        IPlanExecution planExecution,
+        ISystemOperations systemOperations,
+        IKeyedRegistry<IStepUI> stepUIs,
+        IAppNotificationViewModel appNotificationViewModel)
+    {
+        this.appNotificationViewModel = appNotificationViewModel;
+
+        modelEventDispatcher = new(this, planExecution);
 
         Plans = new ObservableCollection<PlanViewModel>();
         configurationManager.ConfigurationReloaded += (s, e) => UpdatePlanViewModels();

@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using System.Linq;
+using Taskington.Gui.Extension;
 using Taskington.Gui.ViewModels;
 using Taskington.Gui.Views;
 
@@ -22,16 +23,17 @@ namespace Taskington.Gui
                 var guiEnvironment = application.Load(
                         GetType().Assembly,
                         typeof(Taskington.Update.Windows.UpdateServices).Assembly)
-                    .OfType<IGuiEnvironment>().FirstOrDefault();
+                    .OfType<IFullGuiEnvironment>().FirstOrDefault();
 
                 if (guiEnvironment is not null)
                 {
                     var baseEnvironment = application.BaseEnvironment;
                     var mainViewModel = new MainWindowViewModel(
-                    baseEnvironment.ConfigurationManager,
-                    baseEnvironment.PlanExecution,
-                    baseEnvironment.SystemOperations,
-                    guiEnvironment.StepUIs);
+                        baseEnvironment.ConfigurationManager,
+                        baseEnvironment.PlanExecution,
+                        baseEnvironment.SystemOperations,
+                        guiEnvironment.StepUIs,
+                        guiEnvironment.AppNotificationViewModel);
                     desktop.MainWindow = new MainWindow
                     {
                         DataContext = mainViewModel
