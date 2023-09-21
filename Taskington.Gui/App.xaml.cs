@@ -19,19 +19,24 @@ namespace Taskington.Gui
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var application = new Taskington.Base.Application();
-                application.Load(typeof(Taskington.Update.Windows.UpdateServices).Assembly);
+                var guiEnvironment = application.Load(
+                        GetType().Assembly,
+                        typeof(Taskington.Update.Windows.UpdateServices).Assembly)
+                    .OfType<IGuiEnvironment>().FirstOrDefault();
 
-                var baseEnvironment = application.BaseEnvironment;
-                var guiEnvironment = new GuiEnvironment();
-                var mainViewModel = new MainWindowViewModel(
+                if (guiEnvironment is not null)
+                {
+                    var baseEnvironment = application.BaseEnvironment;
+                    var mainViewModel = new MainWindowViewModel(
                     baseEnvironment.ConfigurationManager,
                     baseEnvironment.PlanExecution,
                     baseEnvironment.SystemOperations,
                     guiEnvironment.StepUIs);
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = mainViewModel
-                };
+                    desktop.MainWindow = new MainWindow
+                    {
+                        DataContext = mainViewModel
+                    };
+                }
             }
 
             base.OnFrameworkInitializationCompleted();
