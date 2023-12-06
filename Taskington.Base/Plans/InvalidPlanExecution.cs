@@ -1,19 +1,28 @@
+using System;
+
 namespace Taskington.Base.Plans
 {
-    class InvalidPlanExecution
+    class InvalidPlanExecution : IPlanExecution
     {
-        public InvalidPlanExecution()
+        public event EventHandler<PlanProgressUpdatedEventArgs>? PlanProgressUpdated;
+        public event EventHandler<PlanStatusTextUpdatedEventArgs>? PlanStatusTextUpdated;
+        public event EventHandler<PlanErrorUpdatedEventArgs>? PlanErrorUpdated;
+        public event EventHandler<PlanCanExecuteUpdatedEventArgs>? PlanCanExecuteUpdated;
+        public event EventHandler<PlanRunningUpdatedEventArgs>? PlanRunningUpdated;
+        public event EventHandler<PlanPreCheckRequestedEventArgs>? PlanPreCheckRequested;
+
+        public void Execute(Plan plan)
         {
-            NotifyInitialPlanStatesMessage.Subscribe(m => NotifyInitialStates(m.Plan));
+            // No-op
         }
 
-        private void NotifyInitialStates(Plan plan)
+        public void NotifyInitialStates(Plan plan)
         {
             if (!plan.IsValid)
             {
-                new PlanCanExecuteUpdateMessage(plan, false).Publish();
-                new PlanRunningUpdateMessage(plan, false).Publish();
-                new PlanErrorUpdateMessage(plan, true, plan.ValidationMessage).Publish();
+                PlanCanExecuteUpdated?.Invoke(this, new(plan, false));
+                PlanRunningUpdated?.Invoke(this, new(plan, false));
+                PlanErrorUpdated?.Invoke(this, new(plan, true, plan.ValidationMessage));
             }
         }
     }

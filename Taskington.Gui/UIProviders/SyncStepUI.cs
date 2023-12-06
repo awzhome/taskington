@@ -1,61 +1,56 @@
 using System.Collections.Generic;
+using Taskington.Base.Extension;
 using Taskington.Base.Steps;
 using Taskington.Base.SystemOperations;
 using Taskington.Gui.Extension;
-using Taskington.Gui.Extension.Messages;
 using Taskington.Gui.ViewModels;
 
-namespace Taskington.Gui.UIProviders
+namespace Taskington.Gui.UIProviders;
+
+class SyncStepUI : IStepUI
 {
-    class SyncStepUI
+    public SyncStepUI(IKeyedRegistry<IStepUI> stepUIs)
     {
-        public const string StepType = "sync";
+        stepUIs.Add("sync", this);
+    }
 
-        public SyncStepUI()
+    public IEditStepViewModel CreateEditViewModel(PlanStep step, IEditPlanViewModel parentModel, Placeholders placeholders)
+    {
+        return new EditSyncStepViewModel(step, placeholders)
         {
-            NewEditViewModelMessage.Subscribe(CreateEditViewModel, m => m.Step.StepType == StepType);
-            NewStepTemplatesMessage.Subscribe(GetNewStepTemplates);
-        }
+            OpenFolderDialogInteraction = parentModel.OpenFolderDialog,
+            OpenFileDialogInteraction = parentModel.OpenFileDialog
+        };
+    }
 
-        public IEditStepViewModel CreateEditViewModel(NewEditViewModelMessage message)
+    public IEnumerable<NewStepTemplate> GetNewStepTemplates()
+    {
+        yield return new()
         {
-            (PlanStep step, IEditPlanViewModel parentModel, Placeholders placeholders) = message;
-            return new EditSyncStepViewModel(step, placeholders)
+            Caption = "Synchronize file",
+            Icon = "fas fa-file",
+            Creator = () => new PlanStep("sync")
             {
-                OpenFolderDialogInteraction = parentModel.OpenFolderDialog,
-                OpenFileDialogInteraction = parentModel.OpenFileDialog
-            };
-        }
-
-        public IEnumerable<NewStepTemplate> GetNewStepTemplates()
+                DefaultProperty = "file"
+            }
+        };
+        yield return new()
         {
-            yield return new()
+            Caption = "Synchronize directory",
+            Icon = "fas fa-folder-open",
+            Creator = () => new PlanStep("sync")
             {
-                Caption = "Synchronize file",
-                Icon = "fas fa-file",
-                Creator = () => new PlanStep("sync")
-                {
-                    DefaultProperty = "file"
-                }
-            };
-            yield return new()
+                DefaultProperty = "dir"
+            }
+        };
+        yield return new()
+        {
+            Caption = "Synchronize sub-directories",
+            Icon = "fas fa-sitemap",
+            Creator = () => new PlanStep("sync")
             {
-                Caption = "Synchronize directory",
-                Icon = "fas fa-folder-open",
-                Creator = () => new PlanStep("sync")
-                {
-                    DefaultProperty = "dir"
-                }
-            };
-            yield return new()
-            {
-                Caption = "Synchronize sub-directories",
-                Icon = "fas fa-sitemap",
-                Creator = () => new PlanStep("sync")
-                {
-                    DefaultProperty = "sub-dirs"
-                }
-            };
-        }
+                DefaultProperty = "sub-dirs"
+            }
+        };
     }
 }

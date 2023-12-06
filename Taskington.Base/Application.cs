@@ -1,27 +1,31 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using Taskington.Base.Extension;
-using Taskington.Base.Log;
 
-namespace Taskington.Base
+namespace Taskington.Base;
+
+public class Application
 {
-    public class Application
+    private readonly ExtensionHost<IBaseEnvironment> extensionHost;
+
+    public Application()
     {
-        private readonly ExtensionContainer extensionContainer;
-        private readonly ILog log;
+        BaseEnvironment = new BaseEnvironment();
+        extensionHost = new ExtensionHost<IBaseEnvironment>(BaseEnvironment, BaseEnvironment.Log);
+    }
 
-        public Application()
+    public IBaseEnvironment BaseEnvironment { get; }
+
+    public IEnumerable<object> Load(params Assembly[] extensionAssemblies)
+    {
+        foreach (var extensionAssembly in extensionAssemblies)
         {
-            log = new FileLog();
-
-            extensionContainer = new ExtensionContainer(log);
-        }
-
-        public void Load(params Assembly[] extensionAssemblies)
-        {
-            extensionContainer.LoadExtensionFrom(GetType().Assembly);
-            foreach (var extensionAssembly in extensionAssemblies)
+            var enviroment = extensionHost.LoadExtensionFrom(extensionAssembly);
+            if (enviroment is not null)
             {
-                extensionContainer.LoadExtensionFrom(extensionAssembly);
+                yield return enviroment;
             }
         }
     }
