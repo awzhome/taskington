@@ -31,7 +31,7 @@
     <Grid RowDefinitions="Auto,Auto,*">
         <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
             <Label Grid.Column="0">Synchronize</Label>
-            <ComboBox Grid.Column="1" Items="{Binding SyncTypes}" SelectedItem="{Binding SelectedType}">
+            <ComboBox Grid.Column="1" ItemsSource="{Binding SyncTypes}" SelectedItem="{Binding SelectedType}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Caption}" />

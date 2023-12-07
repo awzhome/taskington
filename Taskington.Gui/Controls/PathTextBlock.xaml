@@ -26,7 +26,7 @@
         </v:DynamicConverter>
     </UserControl.Resources>
 
-    <ItemsControl Items="{Binding PathFragments}">
+    <ItemsControl ItemsSource="{Binding PathFragments}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                 <StackPanel Orientation="Horizontal" />

@@ -2,13 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Taskington.Gui"
              Name="Taskington"
+             RequestedThemeVariant="Dark"
              x:Class="Taskington.Gui.App">
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
 
     <Application.Styles>
-        <FluentTheme Mode="Dark"/>
+        <FluentTheme />
         <Style Selector="Window">
             <Setter Property="Background" Value="#151515" />
         </Style>

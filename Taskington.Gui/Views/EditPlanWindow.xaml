@@ -75,12 +75,12 @@
             </Grid>
 
             <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
-                <ListBox Grid.Column="0" Items="{Binding Steps}" SelectedItem="{Binding SelectedItem}">
+                <ListBox Grid.Column="0" ItemsSource="{Binding Steps}" SelectedItem="{Binding SelectedItem}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <i:Icon Value="{Binding Icon}" />
-                                <ItemsControl Items="{Binding CaptionFragments}" Margin="8,0,0,0">
+                                <ItemsControl ItemsSource="{Binding CaptionFragments}" Margin="8,0,0,0">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Horizontal" />
@@ -95,7 +95,7 @@
                 <StackPanel Grid.Column="1" Classes="listActions" Orientation="Vertical">
                     <Button i:Attached.Icon="fas fa-plus" Click="OpenButtonMenu" ToolTip.Tip="Add step" >
                         <Button.ContextMenu>
-                            <ContextMenu Items="{Binding NewStepTemplates}">
+                            <ContextMenu ItemsSource="{Binding NewStepTemplates}">
                                 <ContextMenu.Styles>
                                     <Style Selector="MenuItem">
                                         <Setter Property="Header" Value="{Binding Caption}"/>
