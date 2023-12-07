@@ -24,7 +24,7 @@ namespace Taskington.Gui.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        private async Task ShowPlanEditDialogAsync(InteractionContext<EditPlanViewModel, bool> interaction)
+        private async Task ShowPlanEditDialogAsync(IInteractionContext<EditPlanViewModel, bool> interaction)
         {
             var dialog = new EditPlanWindow
             {

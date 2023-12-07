@@ -37,7 +37,7 @@ namespace Taskington.Gui.Views
             senderControl?.ContextMenu?.Open(senderControl);
         }
 
-        private async Task OpenFolderDialogAsync(InteractionContext<string?, string?> interaction)
+        private async Task OpenFolderDialogAsync(IInteractionContext<string?, string?> interaction)
         {
             var dialog = new OpenFolderDialog
             {
@@ -49,7 +49,7 @@ namespace Taskington.Gui.Views
             interaction.SetOutput(result);
         }
 
-        private async Task OpenFileDialogAsync(InteractionContext<string?, string?> interaction)
+        private async Task OpenFileDialogAsync(IInteractionContext<string?, string?> interaction)
         {
             var dialog = new OpenFileDialog
             {
