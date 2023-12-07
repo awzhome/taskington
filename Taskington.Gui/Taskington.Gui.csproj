@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<AssemblyName>taskington-gui</AssemblyName>
 		<PackageId>Taskington.Gui</PackageId>
@@ -34,8 +34,8 @@
 		<PackageReference Include="Avalonia" Version="11.0.6" />
 		<PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
 		<PackageReference Include="Avalonia.Diagnostics" Version="11.0.6" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.5" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.5" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6" />
 		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.0.0" />
 		<PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
