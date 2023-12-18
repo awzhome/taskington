@@ -39,7 +39,7 @@ jobs:
         run: buildtools/test
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Windows x64 Installer
           path: output/Taskington-*-win64.msi
