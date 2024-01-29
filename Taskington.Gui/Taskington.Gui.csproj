@@ -31,10 +31,10 @@
 		<Content Include="Assets\AppIcon.ico" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="11.0.6" />
+		<PackageReference Include="Avalonia" Version="11.0.7" />
 		<PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
 		<PackageReference Include="Avalonia.Diagnostics" Version="11.0.6" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.7" />
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6" />
 		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.0.1" />
 		<PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
