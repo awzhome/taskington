@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Taskington.Gui/bin/Debug/net6.0/taskington-gui.dll",
+            "program": "${workspaceFolder}/Taskington.Gui/bin/Debug/net8.0/taskington-gui.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Taskington.Gui",
             "console": "internalConsole",
