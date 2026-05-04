@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<AssemblyName>taskington-gui</AssemblyName>
 		<PackageId>Taskington.Gui</PackageId>
@@ -41,6 +41,5 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
 		<ProjectReference Include="..\Taskington.Gui.Extension\Taskington.Gui.Extension.csproj" />
-		<ProjectReference Include="..\Taskington.Update.Windows\Taskington.Update.Windows.csproj" />
 	</ItemGroup>
 </Project>
