@@ -11,11 +11,7 @@
 		<Copyright>Copyright (c) Andreas Weizel</Copyright>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="ReactiveUI" Version="20.1.1" />
-		<PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
+		<PackageReference Include="ReactiveUI" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
