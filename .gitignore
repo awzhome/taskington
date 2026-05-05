@@ -5,6 +5,7 @@ output/
 *.user
 .vs/
 .ionide/
+.idea/
 .fake/
 build.fsx.lock
 .nuke/temp/
