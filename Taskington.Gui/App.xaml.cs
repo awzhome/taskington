@@ -20,9 +20,7 @@ namespace Taskington.Gui
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var application = new Taskington.Base.Application();
-                var guiEnvironment = application.Load(
-                        GetType().Assembly,
-                        typeof(Taskington.Update.Windows.UpdateServices).Assembly)
+                var guiEnvironment = application.Load(GetType().Assembly)
                     .OfType<IFullGuiEnvironment>().FirstOrDefault();
 
                 if (guiEnvironment is not null)
@@ -34,10 +32,7 @@ namespace Taskington.Gui
                         baseEnvironment.SystemOperations,
                         guiEnvironment.StepUIs,
                         guiEnvironment.AppNotificationViewModel);
-                    desktop.MainWindow = new MainWindow
-                    {
-                        DataContext = mainViewModel
-                    };
+                    desktop.MainWindow = new MainWindow { DataContext = mainViewModel };
                 }
             }
 

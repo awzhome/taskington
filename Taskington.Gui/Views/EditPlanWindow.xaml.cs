@@ -6,6 +6,7 @@ using Avalonia.ReactiveUI;
 using Taskington.Gui.ViewModels;
 using System;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using System.Threading.Tasks;
 using System.Reactive;
 using System.Linq;
@@ -39,27 +40,46 @@ namespace Taskington.Gui.Views
 
         private async Task OpenFolderDialogAsync(IInteractionContext<string?, string?> interaction)
         {
-            var dialog = new OpenFolderDialog
+            var topLevel = GetTopLevel(this);
+            if (topLevel is null)
             {
-                Title = "Select directory",
-                Directory = interaction.Input
-            };
+                return;
+            }
 
-            var result = await dialog.ShowAsync(this);
-            interaction.SetOutput(result);
+            var folders = await topLevel.StorageProvider.OpenFolderPickerAsync(
+                new FolderPickerOpenOptions
+                {
+                    Title = "Select directory",
+                    SuggestedStartLocation = interaction.Input is not null
+                        ? await topLevel.StorageProvider.TryGetFolderFromPathAsync(interaction.Input)
+                        : null
+                });
+
+            var selectedFolder = folders.FirstOrDefault()?.Path.AbsolutePath;
+            if (selectedFolder is not null)
+            {
+                interaction.SetOutput(selectedFolder);
+            }
         }
 
         private async Task OpenFileDialogAsync(IInteractionContext<string?, string?> interaction)
         {
-            var dialog = new OpenFileDialog
+            var topLevel = GetTopLevel(this);
+            if (topLevel is null)
             {
-                Title = "Select file",
-                AllowMultiple = false,
-                InitialFileName = interaction.Input
-            };
+                return;
+            }
 
-            var result = await dialog.ShowAsync(this);
-            interaction.SetOutput(result?.FirstOrDefault());
+            var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = "Select file", AllowMultiple = false, SuggestedFileName = interaction.Input,
+            });
+            
+            var selectedFile = files.FirstOrDefault()?.Path.AbsolutePath;
+            if (selectedFile is not null)
+            {
+                interaction.SetOutput(selectedFile);
+            }
         }
     }
 }
