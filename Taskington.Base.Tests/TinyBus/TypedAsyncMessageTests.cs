@@ -22,7 +22,7 @@ public class TypedAsyncMessageTests
     }
 
     [Fact]
-    public async void OneWayMessage()
+    public async Task OneWayMessage()
     {
         var messageHandled = false;
         string? messageText = null;
@@ -40,7 +40,7 @@ public class TypedAsyncMessageTests
     }
 
     [Fact]
-    public async void RequestMessage()
+    public async Task RequestMessage()
     {
         var messageHandled1 = false;
         string? messageText1 = null;
@@ -73,7 +73,7 @@ public class TypedAsyncMessageTests
     }
 
     [Fact]
-    public async void RequestMessageWithPredicate()
+    public async Task RequestMessageWithPredicate()
     {
         var messageHandled1 = false;
         string? messageText1 = null;
@@ -92,7 +92,7 @@ public class TypedAsyncMessageTests
             messageText2 = message.Param;
             await Task.Delay(100);
             return 43;
-        }, text => false);
+        }, _ => false);
 
         var requestedValues = await new TestRequestMessage("ParameterText").Request();
 
@@ -100,8 +100,8 @@ public class TypedAsyncMessageTests
         Assert.False(messageHandled2);
         Assert.Equal("ParameterText", messageText1);
         Assert.Null(messageText2);
-        Assert.Collection(requestedValues,
-            v => Assert.Equal(42, v));
+        var val = Assert.Single(requestedValues);
+        Assert.Equal(42, val);
     }
 }
 

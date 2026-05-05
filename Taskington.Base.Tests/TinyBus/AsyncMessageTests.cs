@@ -17,7 +17,7 @@ public class AsyncMessageTests
     }
 
     [Fact]
-    public async void OneWayMessage()
+    public async Task OneWayMessage()
     {
         var messageHandled = false;
         string? messageText = null;
@@ -35,7 +35,7 @@ public class AsyncMessageTests
     }
 
     [Fact]
-    public async void RequestMessage()
+    public async Task RequestMessage()
     {
         var messageHandled1 = false;
         string? messageText1 = null;
@@ -69,7 +69,7 @@ public class AsyncMessageTests
     }
 
     [Fact]
-    public async void RequestMessageWithPredicate()
+    public async Task RequestMessageWithPredicate()
     {
         var messageHandled1 = false;
         string? messageText1 = null;

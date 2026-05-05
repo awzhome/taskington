@@ -1,7 +1,6 @@
-namespace Taskington.Gui
+namespace Taskington.Gui;
+
+static class AppInfo
 {
-    static class AppInfo
-    {
-        public static string Copyright = "Copyright © Andreas Weizel";
-    }
+    public static string Copyright = "Copyright © Andreas Weizel";
 }

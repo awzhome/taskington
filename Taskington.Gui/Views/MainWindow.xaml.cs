@@ -5,34 +5,33 @@ using Taskington.Gui.ViewModels;
 using ReactiveUI;
 using System.Threading.Tasks;
 
-namespace Taskington.Gui.Views
+namespace Taskington.Gui.Views;
+
+class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
-    class MainWindow : ReactiveWindow<MainWindowViewModel>
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
+        InitializeComponent();
 #if DEBUG
-            this.AttachDevTools();
+        this.AttachDevTools();
 #endif
 
-            this.WhenActivated(d => d(ViewModel!.ShowPlanEditDialog.RegisterHandler(ShowPlanEditDialogAsync)));
-        }
+        this.WhenActivated(d => d(ViewModel!.ShowPlanEditDialog.RegisterHandler(ShowPlanEditDialogAsync)));
+    }
 
-        private void InitializeComponent()
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
+
+    private async Task ShowPlanEditDialogAsync(IInteractionContext<EditPlanViewModel, bool> interaction)
+    {
+        var dialog = new EditPlanWindow
         {
-            AvaloniaXamlLoader.Load(this);
-        }
+            DataContext = interaction.Input
+        };
 
-        private async Task ShowPlanEditDialogAsync(IInteractionContext<EditPlanViewModel, bool> interaction)
-        {
-            var dialog = new EditPlanWindow
-            {
-                DataContext = interaction.Input
-            };
-
-            var result = await dialog.ShowDialog<bool>(this);
-            interaction.SetOutput(result);
-        }
+        var result = await dialog.ShowDialog<bool>(this);
+        interaction.SetOutput(result);
     }
 }

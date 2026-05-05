@@ -6,7 +6,8 @@
              xmlns:vm="using:Taskington.Gui.ViewModels"
              xmlns:ext="using:Taskington.Gui.Extension"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Taskington.Gui.Views.AppNotificationView">
+             x:Class="Taskington.Gui.Views.AppNotificationView"
+             x:DataType="ext:AppNotification">
 
     <UserControl.Resources>
         <SolidColorBrush x:Key="transparentBackground" Color="Transparent" />

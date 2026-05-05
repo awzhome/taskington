@@ -7,36 +7,35 @@ using System.Threading.Tasks;
 using Taskington.Base.Steps;
 using Taskington.Gui.Extension;
 
-namespace Taskington.Gui.ViewModels
+namespace Taskington.Gui.ViewModels;
+
+class EditGeneralStepViewModel : EditStepViewModelBase
 {
-    class EditGeneralStepViewModel : EditStepViewModelBase
+    public EditGeneralStepViewModel(PlanStep step) : base(step)
     {
-        public EditGeneralStepViewModel(PlanStep step) : base(step)
-        {
-            InitializeFromBasicModel(step);
-        }
+        InitializeFromBasicModel(step);
+    }
 
-        private string? readableProperties;
-        public string? ReadableProperties
-        {
-            get => readableProperties;
-            set => this.RaiseAndSetIfChanged(ref readableProperties, value);
-        }
+    private string? readableProperties;
+    public string? ReadableProperties
+    {
+        get => readableProperties;
+        set => this.RaiseAndSetIfChanged(ref readableProperties, value);
+    }
 
-        private void InitializeFromBasicModel(PlanStep baseModel)
-        {
-            StringBuilder readablePropertiesBuilder = new();
-            readablePropertiesBuilder.Append($"{baseModel.StepType} {baseModel.DefaultProperty}{Environment.NewLine}");
-            StringBuilder captionBuilder = new();
-            captionBuilder.Append($"{baseModel.StepType} {baseModel.DefaultProperty} ");
+    private void InitializeFromBasicModel(PlanStep baseModel)
+    {
+        StringBuilder readablePropertiesBuilder = new();
+        readablePropertiesBuilder.Append($"{baseModel.StepType} {baseModel.DefaultProperty}{Environment.NewLine}");
+        StringBuilder captionBuilder = new();
+        captionBuilder.Append($"{baseModel.StepType} {baseModel.DefaultProperty} ");
 
-            foreach (var property in baseModel.Properties)
-            {
-                readablePropertiesBuilder.Append($"    {property.Key} {property.Value}{Environment.NewLine}");
-                captionBuilder.Append($"{property.Key} {property.Value} ");
-            }
-            ReadableProperties = readablePropertiesBuilder.ToString();
-            CaptionFragments = new[] { new StepCaptionFragment { Text = captionBuilder.ToString() } };
+        foreach (var property in baseModel.Properties)
+        {
+            readablePropertiesBuilder.Append($"    {property.Key} {property.Value}{Environment.NewLine}");
+            captionBuilder.Append($"{property.Key} {property.Value} ");
         }
+        ReadableProperties = readablePropertiesBuilder.ToString();
+        CaptionFragments = new[] { new StepCaptionFragment { Text = captionBuilder.ToString() } };
     }
 }

@@ -25,7 +25,7 @@ class SyncStepUI : IStepUI
 
     public IEnumerable<NewStepTemplate> GetNewStepTemplates()
     {
-        yield return new()
+        yield return new NewStepTemplate
         {
             Caption = "Synchronize file",
             Icon = "fas fa-file",
@@ -34,7 +34,7 @@ class SyncStepUI : IStepUI
                 DefaultProperty = "file"
             }
         };
-        yield return new()
+        yield return new NewStepTemplate
         {
             Caption = "Synchronize directory",
             Icon = "fas fa-folder-open",
@@ -43,7 +43,7 @@ class SyncStepUI : IStepUI
                 DefaultProperty = "dir"
             }
         };
-        yield return new()
+        yield return new NewStepTemplate
         {
             Caption = "Synchronize sub-directories",
             Icon = "fas fa-sitemap",

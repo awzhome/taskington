@@ -1,15 +1,14 @@
-namespace Taskington.Base.Log
-{
-    enum LogLevel
-    {
-        Verbose,
-        Info,
-        Warning,
-        Error
-    }
+namespace Taskington.Base.Log;
 
-    interface IReconfigurableLog
-    {
-        void SetMiminumLevel(LogLevel minimumLevel);
-    }
+enum LogLevel
+{
+    Verbose,
+    Info,
+    Warning,
+    Error
+}
+
+interface IReconfigurableLog
+{
+    void SetMiminumLevel(LogLevel minimumLevel);
 }

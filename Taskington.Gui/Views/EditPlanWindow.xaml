@@ -9,6 +9,8 @@
         xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Taskington.Gui.Views.EditPlanWindow"
+        x:Name="Root"
+        x:DataType="vm:EditPlanViewModel"
         Height="800" MinHeight="600" Width="1000" MinWidth="600"
         WindowStartupLocation="CenterOwner"
         TransparencyLevelHint="AcrylicBlur"
@@ -46,11 +48,11 @@
     </Window.Styles>
 
     <Window.DataTemplates>
-        <DataTemplate DataType="{x:Type ext:StepPathFragment}">
+        <DataTemplate DataType="{x:Type ext:StepPathFragment}" x:DataType="ext:StepPathFragment">
             <controls:PathTextBlock DataContext="{Binding}" />
         </DataTemplate>
         
-        <DataTemplate DataType="{x:Type ext:StepCaptionFragment}">
+        <DataTemplate DataType="{x:Type ext:StepCaptionFragment}" x:DataType="ext:StepCaptionFragment">
             <TextBlock Text="{Binding Text}"/>
         </DataTemplate>
     </Window.DataTemplates>
@@ -77,7 +79,7 @@
             <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
                 <ListBox Grid.Column="0" ItemsSource="{Binding Steps}" SelectedItem="{Binding SelectedItem}">
                     <ListBox.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="ext:IEditStepViewModel">
                             <StackPanel Orientation="Horizontal">
                                 <i:Icon Value="{Binding Icon}" />
                                 <ItemsControl ItemsSource="{Binding CaptionFragments}" Margin="8,0,0,0">
@@ -95,9 +97,9 @@
                 <StackPanel Grid.Column="1" Classes="listActions" Orientation="Vertical">
                     <Button i:Attached.Icon="fas fa-plus" Click="OpenButtonMenu" ToolTip.Tip="Add step" >
                         <Button.ContextMenu>
-                            <ContextMenu ItemsSource="{Binding NewStepTemplates}">
+                            <ContextMenu ItemsSource="{Binding NewStepTemplates}" x:DataType="vm:EditPlanViewModel">
                                 <ContextMenu.Styles>
-                                    <Style Selector="MenuItem">
+                                    <Style Selector="MenuItem" x:DataType="ext:NewStepTemplate">
                                         <Setter Property="Header" Value="{Binding Caption}"/>
                                         <Setter Property="Icon">
                                             <Setter.Value>
@@ -106,7 +108,7 @@
                                                 </Template>
                                             </Setter.Value>
                                         </Setter>
-                                        <Setter Property="Command" Value="{Binding $parent[Window].DataContext.AddStepCommand}"/>
+                                        <Setter Property="Command" Value="{Binding #Root.ViewModel.AddStepCommand}"/>
                                         <Setter Property="CommandParameter" Value="{Binding}"/>
                                     </Style>
                                 </ContextMenu.Styles>

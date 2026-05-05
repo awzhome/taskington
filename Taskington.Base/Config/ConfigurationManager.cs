@@ -76,7 +76,7 @@ public class ConfigurationManager : IConfigurationManager
 
         if (configReloaded)
         {
-            ConfigurationReloadDelayed?.Invoke(this, new());
+            ConfigurationReloadDelayed?.Invoke(this, new EventArgs());
         }
     }
 
@@ -92,7 +92,7 @@ public class ConfigurationManager : IConfigurationManager
         {
             if (!reloadDelayed)
             {
-                ConfigurationReloadDelayed?.Invoke(this, new());
+                ConfigurationReloadDelayed?.Invoke(this, new EventArgs());
             }
             reloadDelayed = true;
             return false;
@@ -126,14 +126,14 @@ public class ConfigurationManager : IConfigurationManager
                 runningPlans.Remove(e.Plan);
                 if (runningPlans.Count == 0 && reloadDelayed)
                 {
-                    ConfigurationReloadDelayed?.Invoke(this, new());
+                    ConfigurationReloadDelayed?.Invoke(this, new EventArgs());
                     reloadDelayed = false;
                     configReloaded = TryReloadConfiguration();
                 }
             }
             if (configReloaded)
             {
-                ConfigurationReloaded?.Invoke(this, new());
+                ConfigurationReloaded?.Invoke(this, new EventArgs());
             }
         }
     }

@@ -46,8 +46,8 @@ class EditPlanViewModel : ViewModelBase, IEditPlanViewModel
         MoveStepDownCommand = ReactiveCommand.Create(MoveStepDown,
             this.WhenAnyValue(x => x.SelectedItem, (IEditStepViewModel? selectedItem) => Steps.LastOrDefault() != selectedItem));
 
-        OpenFolderDialog = new();
-        OpenFileDialog = new();
+        OpenFolderDialog = new Interaction<string?, string?>();
+        OpenFileDialog = new Interaction<string?, string?>();
 
         InitializeFromBasicModel();
         SelectedItem = Steps.FirstOrDefault();

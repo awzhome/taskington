@@ -43,7 +43,7 @@ class MainWindowViewModel : ViewModelBase
     {
         this.appNotificationViewModel = appNotificationViewModel;
 
-        modelEventDispatcher = new(this, planExecution);
+        modelEventDispatcher = new ModelEventDispatcher(this, planExecution);
 
         Plans = new ObservableCollection<PlanViewModel>();
         configurationManager.ConfigurationReloaded += (s, e) => UpdatePlanViewModels();
@@ -52,7 +52,7 @@ class MainWindowViewModel : ViewModelBase
 
         AddPlanCommand = ReactiveCommand.CreateFromTask(AddPlan);
         ExecutePlanCommand = ReactiveCommand.Create<PlanViewModel>(ExecutePlan);
-        ShowPlanEditDialog = new();
+        ShowPlanEditDialog = new Interaction<EditPlanViewModel, bool>();
         EditPlanCommand = ReactiveCommand.CreateFromTask<PlanViewModel>(EditPlan);
         RemovePlanCommand = ReactiveCommand.Create<PlanViewModel>(RemovePlan);
         UndoPlanRemovalCommand = ReactiveCommand.Create<PlanViewModel>(UndoPlanRemoval);

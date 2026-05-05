@@ -17,6 +17,7 @@ public class DeclarativeTypedAsyncMessageTests
         public static void CleanUp() => UnsubscribeAll();
     }
 
+    // ReSharper disable once UnusedTypeParameter
     public class NoTask<T>
     {
         // Just some class with 1 generic parameter, which looks similar to Task<T>
@@ -61,7 +62,9 @@ public class DeclarativeTypedAsyncMessageTests
 
     public class FakeTestAsyncHandler
     {
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public bool MessageHandled { get; set; }
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string? MessageText { get; set; }
 
         [HandlesMessage]
@@ -74,7 +77,7 @@ public class DeclarativeTypedAsyncMessageTests
     }
 
     [Fact]
-    public async void OneWayMessage()
+    public async Task OneWayMessage()
     {
         var handler = new TestAsyncHandler();
         DeclarativeSubscriptions.SubscribeAsDeclared(handler);
@@ -86,7 +89,7 @@ public class DeclarativeTypedAsyncMessageTests
     }
 
     [Fact]
-    public async void RequestMessage()
+    public async Task RequestMessage()
     {
         var handler1 = new TestAsyncHandler(42);
         var handler2 = new TestAsyncHandler(43, 100);

@@ -6,37 +6,36 @@ using Taskington.Gui.Extension;
 using Taskington.Gui.ViewModels;
 using Taskington.Gui.Views;
 
-namespace Taskington.Gui
+namespace Taskington.Gui;
+
+class App : Application
 {
-    class App : Application
+    public override void Initialize()
     {
-        public override void Initialize()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        AvaloniaXamlLoader.Load(this);
+    }
 
-        public override void OnFrameworkInitializationCompleted()
+    public override void OnFrameworkInitializationCompleted()
+    {
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            var application = new Taskington.Base.Application();
+            var guiEnvironment = application.Load(GetType().Assembly)
+                .OfType<IFullGuiEnvironment>().FirstOrDefault();
+
+            if (guiEnvironment is not null)
             {
-                var application = new Taskington.Base.Application();
-                var guiEnvironment = application.Load(GetType().Assembly)
-                    .OfType<IFullGuiEnvironment>().FirstOrDefault();
-
-                if (guiEnvironment is not null)
-                {
-                    var baseEnvironment = application.BaseEnvironment;
-                    var mainViewModel = new MainWindowViewModel(
-                        baseEnvironment.ConfigurationManager,
-                        baseEnvironment.PlanExecution,
-                        baseEnvironment.SystemOperations,
-                        guiEnvironment.StepUIs,
-                        guiEnvironment.AppNotificationViewModel);
-                    desktop.MainWindow = new MainWindow { DataContext = mainViewModel };
-                }
+                var baseEnvironment = application.BaseEnvironment;
+                var mainViewModel = new MainWindowViewModel(
+                    baseEnvironment.ConfigurationManager,
+                    baseEnvironment.PlanExecution,
+                    baseEnvironment.SystemOperations,
+                    guiEnvironment.StepUIs,
+                    guiEnvironment.AppNotificationViewModel);
+                desktop.MainWindow = new MainWindow { DataContext = mainViewModel };
             }
-
-            base.OnFrameworkInitializationCompleted();
         }
+
+        base.OnFrameworkInitializationCompleted();
     }
 }

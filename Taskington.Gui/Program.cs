@@ -3,22 +3,21 @@ using Avalonia.ReactiveUI;
 using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.FontAwesome;
 
-namespace Taskington.Gui
+namespace Taskington.Gui;
+
+class Program
 {
-    class Program
+    public static void Main(string[] args) => BuildAvaloniaApp()
+        .StartWithClassicDesktopLifetime(args);
+
+    public static AppBuilder BuildAvaloniaApp()
     {
-        public static void Main(string[] args) => BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
+        IconProvider.Current
+            .Register<FontAwesomeIconProvider>();
 
-        public static AppBuilder BuildAvaloniaApp()
-        {
-            IconProvider.Current
-                .Register<FontAwesomeIconProvider>();
-
-            return AppBuilder.Configure<App>()
-                .UsePlatformDetect()
-                .LogToTrace()
-                .UseReactiveUI();
-        }
+        return AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .LogToTrace()
+            .UseReactiveUI();
     }
 }
