@@ -5,6 +5,6 @@ namespace Taskington.Gui.Extension;
 
 public interface IGuiEnvironment
 {
-    IKeyedRegistry<IStepUI> StepUIs { get; }
+    IKeyedRegistry<IStepUi> StepUIs { get; }
     IAppNotifications AppNotifications { get; }
 }

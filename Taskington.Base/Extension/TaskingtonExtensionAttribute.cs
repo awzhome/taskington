@@ -3,12 +3,7 @@ using System;
 namespace Taskington.Base.Extension;
 
 [AttributeUsage(AttributeTargets.Assembly)]
-public class TaskingtonExtensionAttribute : Attribute
+public class TaskingtonExtensionAttribute(Type binder) : Attribute
 {
-    public Type Binder { get; set; }
-
-    public TaskingtonExtensionAttribute(Type binder)
-    {
-        Binder = binder;
-    }
+    public Type Binder { get; set; } = binder;
 }

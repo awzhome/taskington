@@ -7,9 +7,9 @@ using Taskington.Gui.ViewModels;
 
 namespace Taskington.Gui.UIProviders;
 
-class SyncStepUI : IStepUI
+class SyncStepUi : IStepUi
 {
-    public SyncStepUI(IKeyedRegistry<IStepUI> stepUIs)
+    public SyncStepUi(IKeyedRegistry<IStepUi> stepUIs)
     {
         stepUIs.Add("sync", this);
     }

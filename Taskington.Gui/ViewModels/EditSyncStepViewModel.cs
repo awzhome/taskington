@@ -56,12 +56,12 @@ class EditSyncStepViewModel : EditStepViewModelBase
         InitializeFromBasicModel(step);
     }
 
-    public List<SyncTypeEntry> SyncTypes { get; } = new()
-    {
+    public List<SyncTypeEntry> SyncTypes { get; } =
+    [
         new SyncTypeEntry { Type = SyncFileType, Caption = "file" },
         new SyncTypeEntry { Type = SyncDirType, Caption = "directory" },
         new SyncTypeEntry { Type = SyncSubDirsType, Caption = "sub-directories" }
-    };
+    ];
 
     private SyncTypeEntry? selectedType;
     public SyncTypeEntry? SelectedType
@@ -159,7 +159,7 @@ class EditSyncStepViewModel : EditStepViewModelBase
         };
         To = step["to"];
 
-        CaptionFragments = new[] { leftTextPart, fromPathPart, middleTextPart, toPathPart };
+        CaptionFragments = [leftTextPart, fromPathPart, middleTextPart, toPathPart];
     }
 
     public override PlanStep ConvertToStep()

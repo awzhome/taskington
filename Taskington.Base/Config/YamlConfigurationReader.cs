@@ -8,15 +8,8 @@ using YamlDotNet.RepresentationModel;
 
 namespace Taskington.Base.Config;
 
-public class YamlConfigurationReader
+public class YamlConfigurationReader(IStreamReaderProvider configurationProvider)
 {
-    private readonly IStreamReaderProvider configurationProvider;
-
-    public YamlConfigurationReader(IStreamReaderProvider configurationProvider)
-    {
-        this.configurationProvider = configurationProvider;
-    }
-
     public Configuration Read()
     {
         var configValues = new List<(string, string?)>();
@@ -50,7 +43,7 @@ public class YamlConfigurationReader
                     {
                         foreach (var planEntry in planEntries.OfType<YamlMappingNode>())
                         {
-                            List<PlanStep> steps = new();
+                            List<PlanStep> steps = [];
                             var planType = (GetChildNode(planEntry.Children, "on") as YamlScalarNode)?.Value ?? Plan.OnSelectionRunType;
                             var plan = new Plan(planType)
                             {

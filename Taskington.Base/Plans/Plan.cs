@@ -24,7 +24,7 @@ public class Plan : Model.Model
 
     public string RunType { get; set; }
 
-    public IEnumerable<PlanStep> Steps { get; set; } = Enumerable.Empty<PlanStep>();
+    public IEnumerable<PlanStep> Steps { get; set; } = [];
 
     public bool IsValid => !Steps.OfType<InvalidPlanStep>().Any();
 

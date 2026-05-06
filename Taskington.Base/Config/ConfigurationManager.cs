@@ -31,7 +31,7 @@ public class ConfigurationManager : IConfigurationManager
 
     private bool isInitialized = false;
     private bool reloadDelayed = false;
-    private readonly HashSet<Plan> runningPlans = new();
+    private readonly HashSet<Plan> runningPlans = [];
     private readonly YamlConfigurationReader configurationReader;
     private readonly YamlConfigurationWriter configurationWriter;
 
@@ -48,7 +48,7 @@ public class ConfigurationManager : IConfigurationManager
         planExecution.PlanRunningUpdated += OnPlanIsRunningUpdated;
     }
 
-    private readonly List<Plan> plans = new();
+    private readonly List<Plan> plans = [];
 
     private readonly Dictionary<string, string?> configValues = new();
 

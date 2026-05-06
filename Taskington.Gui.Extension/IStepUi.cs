@@ -4,7 +4,7 @@ using Taskington.Base.SystemOperations;
 
 namespace Taskington.Gui.Extension;
 
-public interface IStepUI
+public interface IStepUi
 {
     IEditStepViewModel CreateEditViewModel(PlanStep step, IEditPlanViewModel parentModel, Placeholders placeholders);
     IEnumerable<NewStepTemplate> GetNewStepTemplates();

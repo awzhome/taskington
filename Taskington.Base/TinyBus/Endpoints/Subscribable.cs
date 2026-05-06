@@ -7,7 +7,7 @@ public class Subscribable<F, P>
     where F : notnull
     where P : notnull
 {
-    private readonly List<SubscriberInfo<F, P>> subscriptions = new();
+    private readonly List<SubscriberInfo<F, P>> subscriptions = [];
 
     protected List<SubscriberInfo<F, P>> Subscriptions => subscriptions;
 

@@ -7,22 +7,15 @@ using Taskington.Base.Steps;
 
 namespace Taskington.Base.Config;
 
-public class ScriptConfigurationReader
+public class ScriptConfigurationReader(IStreamReaderProvider configurationProvider)
 {
-    private readonly IStreamReaderProvider configurationProvider;
-
-    public ScriptConfigurationReader(IStreamReaderProvider configurationProvider)
-    {
-        this.configurationProvider = configurationProvider;
-    }
-
     public IEnumerable<Plan> Read()
     {
-        List<Plan> plans = new List<Plan>();
+        List<Plan> plans = [];
 
         configurationProvider.ReadConfigurationStreams(reader =>
         {
-            List<PlanStep> steps = new();
+            List<PlanStep> steps = [];
             Plan plan = new(Plan.OnSelectionRunType)
             {
                 Steps = steps

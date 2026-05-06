@@ -15,79 +15,42 @@ public interface IPlanExecution
     void Execute(Plan plan);
 }
 
-public class PlanProgressUpdatedEventArgs : EventArgs
+public class PlanProgressUpdatedEventArgs(Plan plan, int progress) : EventArgs
 {
-    public PlanProgressUpdatedEventArgs(Plan plan, int progress)
-    {
-        Plan = plan;
-        Progress = progress;
-    }
-
-    public Plan Plan { get; }
-    public int Progress { get; }
+    public Plan Plan { get; } = plan;
+    public int Progress { get; } = progress;
 }
 
-public class PlanStatusTextUpdatedEventArgs : EventArgs
+public class PlanStatusTextUpdatedEventArgs(Plan plan, string statusText) : EventArgs
 {
-    public PlanStatusTextUpdatedEventArgs(Plan plan, string statusText)
-    {
-        Plan = plan;
-        StatusText = statusText;
-    }
-
-    public Plan Plan { get; }
-    public string StatusText { get; }
+    public Plan Plan { get; } = plan;
+    public string StatusText { get; } = statusText;
 }
 
-public class PlanErrorUpdatedEventArgs : EventArgs
+public class PlanErrorUpdatedEventArgs(Plan plan, bool hasErrors, string? errorText) : EventArgs
 {
-    public PlanErrorUpdatedEventArgs(Plan plan, bool hasErrors, string? errorText)
-    {
-        Plan = plan;
-        HasErrors = hasErrors;
-        ErrorText = errorText;
-    }
-
-    public Plan Plan { get; }
-    public bool HasErrors { get; }
-    public string? ErrorText { get; }
-
+    public Plan Plan { get; } = plan;
+    public bool HasErrors { get; } = hasErrors;
+    public string? ErrorText { get; } = errorText;
 }
 
-public class PlanCanExecuteUpdatedEventArgs : EventArgs
+public class PlanCanExecuteUpdatedEventArgs(Plan plan, bool canExecute) : EventArgs
 {
-    public PlanCanExecuteUpdatedEventArgs(Plan plan, bool canExecute)
-    {
-        Plan = plan;
-        CanExecute = canExecute;
-    }
-
-    public Plan Plan { get; }
-    public bool CanExecute { get; }
+    public Plan Plan { get; } = plan;
+    public bool CanExecute { get; } = canExecute;
 }
 
-public class PlanRunningUpdatedEventArgs : EventArgs
+public class PlanRunningUpdatedEventArgs(Plan plan, bool running) : EventArgs
 {
-    public PlanRunningUpdatedEventArgs(Plan plan, bool running)
-    {
-        Plan = plan;
-        Running = running;
-    }
-
-    public Plan Plan { get; }
-    public bool Running { get; }
+    public Plan Plan { get; } = plan;
+    public bool Running { get; } = running;
 }
 
-public class PlanPreCheckRequestedEventArgs : EventArgs
+public class PlanPreCheckRequestedEventArgs(Plan plan) : EventArgs
 {
     private bool canExecute = true;
 
-    public PlanPreCheckRequestedEventArgs(Plan plan)
-    {
-        Plan = plan;
-    }
-
-    public Plan Plan { get; }
+    public Plan Plan { get; } = plan;
 
     public bool CanExecute
     {

@@ -19,7 +19,7 @@ class MainWindowViewModel : ViewModelBase
     private readonly IConfigurationManager configurationManager;
     private readonly IPlanExecution planExecution;
     private readonly ISystemOperations systemOperations;
-    private readonly IKeyedRegistry<IStepUI> stepUIs;
+    private readonly IKeyedRegistry<IStepUi> stepUIs;
     private readonly IAppNotificationViewModel appNotificationViewModel;
 
 
@@ -38,14 +38,14 @@ class MainWindowViewModel : ViewModelBase
         IConfigurationManager configurationManager,
         IPlanExecution planExecution,
         ISystemOperations systemOperations,
-        IKeyedRegistry<IStepUI> stepUIs,
+        IKeyedRegistry<IStepUi> stepUIs,
         IAppNotificationViewModel appNotificationViewModel)
     {
         this.appNotificationViewModel = appNotificationViewModel;
 
         modelEventDispatcher = new ModelEventDispatcher(this, planExecution);
 
-        Plans = new ObservableCollection<PlanViewModel>();
+        Plans = [];
         configurationManager.ConfigurationReloaded += (s, e) => UpdatePlanViewModels();
 
         UpdatePlanViewModels();

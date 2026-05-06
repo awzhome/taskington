@@ -42,15 +42,8 @@ public class PathFragment
     public PathFragmentColor Color { get; } = PathFragmentColor.BrightYellow;
 }
 
-public class StepPathFragment : StepCaptionFragment
+public class StepPathFragment(Placeholders placeholders) : StepCaptionFragment
 {
-    private readonly Placeholders placeholders;
-
-    public StepPathFragment(Placeholders placeholders)
-    {
-        this.placeholders = placeholders;
-    }
-
     public override string? Text
     {
         get => base.Text;
@@ -66,7 +59,7 @@ public class StepPathFragment : StepCaptionFragment
         }
     }
 
-    public ObservableCollection<PathFragment> PathFragments { get; } = new();
+    public ObservableCollection<PathFragment> PathFragments { get; } = [];
 
     private void ExtractFragments(string input)
     {

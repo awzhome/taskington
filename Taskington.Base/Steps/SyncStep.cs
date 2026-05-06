@@ -9,17 +9,9 @@ enum SynchronizedObject
     File
 }
 
-internal class SyncStep
+internal class SyncStep(PlanStep step, Placeholders placeholders)
 {
-    private readonly Placeholders placeholders;
-
-    public SyncStep(PlanStep step, Placeholders placeholders)
-    {
-        PlanStep = step;
-        this.placeholders = placeholders;
-    }
-
-    public PlanStep PlanStep { get; private set; }
+    public PlanStep PlanStep { get; private set; } = step;
 
     public SynchronizedObject SynchronizedObject => PlanStep.DefaultProperty switch
     {

@@ -1,13 +1,7 @@
 namespace Taskington.Base.TinyBus;
 
-public class SubscriberInfo<F, P>
+public class SubscriberInfo<F, P>(F subscriber, P? predicate = default)
 {
-    public F Subscriber { get; }
-    public P? Predicate { get; }
-
-    public SubscriberInfo(F subscriber, P? predicate = default)
-    {
-        Subscriber = subscriber;
-        Predicate = predicate;
-    }
+    public F Subscriber { get; } = subscriber;
+    public P? Predicate { get; } = predicate;
 }

@@ -7,28 +7,18 @@ using Taskington.Base.Steps;
 
 namespace Taskington.Gui.ViewModels;
 
-class PlanViewModel : NotifiableObject
+class PlanViewModel(
+    Plan plan,
+    ReactiveCommand<PlanViewModel, Unit> executePlanCommand,
+    ReactiveCommand<PlanViewModel, Unit> editPlanCommand,
+    ReactiveCommand<PlanViewModel, Unit> removePlanCommand,
+    ReactiveCommand<PlanViewModel, Unit> undoPlanRemovalCommand)
+    : NotifiableObject
 {
-    private readonly Plan plan;
-
-    public PlanViewModel(Plan plan,
-        ReactiveCommand<PlanViewModel, Unit> executePlanCommand,
-        ReactiveCommand<PlanViewModel, Unit> editPlanCommand,
-        ReactiveCommand<PlanViewModel, Unit> removePlanCommand,
-        ReactiveCommand<PlanViewModel, Unit> undoPlanRemovalCommand)
-    {
-        this.plan = plan;
-
-        ExecutePlanCommand = executePlanCommand;
-        EditPlanCommand = editPlanCommand;
-        RemovePlanCommand = removePlanCommand;
-        UndoPlanRemovalCommand = undoPlanRemovalCommand;
-    }
-
-    public ReactiveCommand<PlanViewModel, Unit> ExecutePlanCommand { get; }
-    public ReactiveCommand<PlanViewModel, Unit> EditPlanCommand { get; }
-    public ReactiveCommand<PlanViewModel, Unit> RemovePlanCommand { get; }
-    public ReactiveCommand<PlanViewModel, Unit> UndoPlanRemovalCommand { get; }
+    public ReactiveCommand<PlanViewModel, Unit> ExecutePlanCommand { get; } = executePlanCommand;
+    public ReactiveCommand<PlanViewModel, Unit> EditPlanCommand { get; } = editPlanCommand;
+    public ReactiveCommand<PlanViewModel, Unit> RemovePlanCommand { get; } = removePlanCommand;
+    public ReactiveCommand<PlanViewModel, Unit> UndoPlanRemovalCommand { get; } = undoPlanRemovalCommand;
 
     public Plan Plan => plan;
 

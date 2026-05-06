@@ -31,7 +31,7 @@ plans: []
             ("key4", null)
         };
 
-        configWriter.Write(new Configuration(configValues, Enumerable.Empty<Plan>()));
+        configWriter.Write(new Configuration(configValues, []));
         Assert.Equal(yaml, configProvider.Content);
     }
 
@@ -67,8 +67,7 @@ plans:
             {
                 Name = "Test Plan 1",
                 ["somekey"] = "somevalue",
-                Steps = new List<PlanStep>(new[]
-                {
+                Steps = new List<PlanStep>([
                     new PlanStep("sync")
                     {
                         DefaultProperty = "dir",
@@ -81,24 +80,23 @@ plans:
                         ["from"] = "path5/path6/file7",
                         ["to"] = "path8/path9/file0"
                     }
-                })
+                ])
             },
             new Plan("automatically")
             {
                 Name = "Test Plan 2",
-                Steps = new List<PlanStep>(new[]
-                {
+                Steps = new List<PlanStep>([
                     new PlanStep("sync")
                     {
                         DefaultProperty = "dir",
                         ["from"] = "path11/path12",
                         ["to"] = "path13/path14"
                     }
-                })
+                ])
             }
         };
 
-        configWriter.Write(new Configuration(Enumerable.Empty<(string, string?)>(), plans));
+        configWriter.Write(new Configuration([], plans));
         Assert.Equal(yaml, configProvider.Content);
     }
 
@@ -126,7 +124,7 @@ plans:
             }
         };
 
-        configWriter.Write(new Configuration(Enumerable.Empty<(string, string?)>(), plans));
+        configWriter.Write(new Configuration([], plans));
         Assert.Equal(yaml, configProvider.Content);
     }
 
@@ -142,7 +140,7 @@ plans: []
         var configWriter = new YamlConfigurationWriter(configProvider);
         var plans = Enumerable.Empty<Plan>();
 
-        configWriter.Write(new Configuration(Enumerable.Empty<(string, string?)>(), plans));
+        configWriter.Write(new Configuration([], plans));
         Assert.Equal(yaml, configProvider.Content);
     }
 }

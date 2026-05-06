@@ -12,28 +12,18 @@ public class DeclarativeTypedSyncMessageTests
         public static void CleanUp() => UnsubscribeAll();
     }
 
-    public record TestDerivedOneWayMessage : TestOneWayMessage
-    {
-        public TestDerivedOneWayMessage(string param) : base(param)
-        {
-        }
-    }
+    public record TestDerivedOneWayMessage(string Param) : TestOneWayMessage(Param);
 
     public record TestRequestMessage(string Param) : RequestMessage<TestRequestMessage, int>
     {
         public static void CleanUp() => UnsubscribeAll();
     }
 
-    public class TestSyncHandler
+    public class TestSyncHandler(int returnedValue = 0)
     {
         public bool MessageHandled { get; set; }
         public string? MessageText { get; set; }
-        public int ReturnedValue { get; set; }
-
-        public TestSyncHandler(int returnedValue = 0)
-        {
-            ReturnedValue = returnedValue;
-        }
+        public int ReturnedValue { get; set; } = returnedValue;
 
         [HandlesMessage]
         public void HandleOneWayMessage(TestOneWayMessage message)

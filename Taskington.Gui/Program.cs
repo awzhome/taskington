@@ -5,12 +5,12 @@ using Projektanker.Icons.Avalonia.FontAwesome;
 
 namespace Taskington.Gui;
 
-class Program
+static class Program
 {
     public static void Main(string[] args) => BuildAvaloniaApp()
         .StartWithClassicDesktopLifetime(args);
 
-    public static AppBuilder BuildAvaloniaApp()
+    private static AppBuilder BuildAvaloniaApp()
     {
         IconProvider.Current
             .Register<FontAwesomeIconProvider>();

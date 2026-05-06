@@ -6,15 +6,8 @@ using YamlDotNet.Serialization;
 
 namespace Taskington.Base.Config;
 
-public class YamlConfigurationWriter
+public class YamlConfigurationWriter(IStreamWriterProvider configWriterProvider)
 {
-    private readonly IStreamWriterProvider configWriterProvider;
-
-    public YamlConfigurationWriter(IStreamWriterProvider configWriterProvider)
-    {
-        this.configWriterProvider = configWriterProvider;
-    }
-
     public void Write(Configuration configuration)
     {
         configWriterProvider.WriteConfigurationStreams(writer =>

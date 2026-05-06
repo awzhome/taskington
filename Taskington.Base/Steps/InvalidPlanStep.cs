@@ -1,11 +1,6 @@
 namespace Taskington.Base.Steps;
 
-public class InvalidPlanStep : PlanStep
+public class InvalidPlanStep(string errorMessage) : PlanStep("invalid")
 {
-    public InvalidPlanStep(string errorMessage) : base("invalid")
-    {
-        ErrorMessage = errorMessage;
-    }
-
-    public string ErrorMessage { get; }
+    public string ErrorMessage { get; } = errorMessage;
 }

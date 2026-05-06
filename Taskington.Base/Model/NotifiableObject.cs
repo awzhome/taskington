@@ -7,12 +7,12 @@ public abstract class NotifiableObject : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public void NotifyPropertyChange([CallerMemberName] string propertyName = "")
+    protected void NotifyPropertyChange([CallerMemberName] string propertyName = "")
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public void SetAndNotify<T>(ref T member, T newValue, [CallerMemberName] string propertyName = "")
+    protected void SetAndNotify<T>(ref T member, T newValue, [CallerMemberName] string propertyName = "")
     {
         member = newValue;
         NotifyPropertyChange(propertyName);

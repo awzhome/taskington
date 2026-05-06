@@ -29,18 +29,12 @@ public class DeclarativeTypedAsyncMessageTests
         TestRequestMessage.CleanUp();
     }
 
-    public class TestAsyncHandler
+    public class TestAsyncHandler(int returnedValue = 0, int returnDelay = 3000)
     {
         public bool MessageHandled { get; set; }
         public string? MessageText { get; set; }
-        public int ReturnedValue { get; set; }
-        public int ReturnDelay { get; set; }
-
-        public TestAsyncHandler(int returnedValue = 0, int returnDelay = 3000)
-        {
-            ReturnedValue = returnedValue;
-            ReturnDelay = returnDelay;
-        }
+        public int ReturnedValue { get; set; } = returnedValue;
+        public int ReturnDelay { get; set; } = returnDelay;
 
         [HandlesMessage]
         public async Task HandleOneWayMessage(TestOneWayMessage message)

@@ -36,6 +36,6 @@ class EditGeneralStepViewModel : EditStepViewModelBase
             captionBuilder.Append($"{property.Key} {property.Value} ");
         }
         ReadableProperties = readablePropertiesBuilder.ToString();
-        CaptionFragments = new[] { new StepCaptionFragment { Text = captionBuilder.ToString() } };
+        CaptionFragments = [new StepCaptionFragment { Text = captionBuilder.ToString() }];
     }
 }

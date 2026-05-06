@@ -9,8 +9,7 @@ public class ExtractPlaceholdersTests
     [Fact]
     public void PlaceholderFillsInput()
     {
-        var placeholders = new Placeholders();
-        placeholders["dir"] = "bla";
+        var placeholders = new Placeholders { ["dir"] = "bla" };
 
         var extracted = placeholders.ExtractPlaceholders("${dir}");
         Assert.Single(extracted);
@@ -20,8 +19,7 @@ public class ExtractPlaceholdersTests
     [Fact]
     public void PlaceholderAtBeginningWithOtherParts()
     {
-        var placeholders = new Placeholders();
-        placeholders["dir"] = "bla";
+        var placeholders = new Placeholders { ["dir"] = "bla" };
 
         var extracted = placeholders.ExtractPlaceholders(@"${dir}\file.txt");
         Assert.Single(extracted);
@@ -31,8 +29,7 @@ public class ExtractPlaceholdersTests
     [Fact]
     public void PlaceholderAtEndWithOtherParts()
     {
-        var placeholders = new Placeholders();
-        placeholders["file"] = "text.txt";
+        var placeholders = new Placeholders { ["file"] = "text.txt" };
 
         var extracted = placeholders.ExtractPlaceholders(@"bla\${file}");
         Assert.Single(extracted);
@@ -42,8 +39,7 @@ public class ExtractPlaceholdersTests
     [Fact]
     public void PlaceholderInTheMiddleWithOtherParts()
     {
-        var placeholders = new Placeholders();
-        placeholders["file"] = "text";
+        var placeholders = new Placeholders { ["file"] = "text" };
 
         var extracted = placeholders.ExtractPlaceholders(@"bla\${file}.txt");
         Assert.Single(extracted);
@@ -63,9 +59,7 @@ public class ExtractPlaceholdersTests
     [Fact]
     public void MultiplePlaceholders()
     {
-        var placeholders = new Placeholders();
-        placeholders["dir"] = "bla";
-        placeholders["file"] = "text.txt";
+        var placeholders = new Placeholders { ["dir"] = "bla", ["file"] = "text.txt" };
 
         var extracted = placeholders.ExtractPlaceholders(@"${dir}\${file}");
         Assert.Collection(extracted,
@@ -76,8 +70,7 @@ public class ExtractPlaceholdersTests
     [Fact]
     public void MultiplePlaceholdersWith1stUnknown()
     {
-        var placeholders = new Placeholders();
-        placeholders["file"] = "text.txt";
+        var placeholders = new Placeholders { ["file"] = "text.txt" };
 
         var extracted = placeholders.ExtractPlaceholders(@"${dir}\${file}");
         Assert.Collection(extracted,
@@ -88,8 +81,7 @@ public class ExtractPlaceholdersTests
     [Fact]
     public void SamePlaceHolderMultipleTimes()
     {
-        var placeholders = new Placeholders();
-        placeholders["dir"] = "bla";
+        var placeholders = new Placeholders { ["dir"] = "bla" };
 
         var extracted = placeholders.ExtractPlaceholders(@"${dir}\${dir}");
         Assert.Single(extracted);
@@ -99,8 +91,7 @@ public class ExtractPlaceholdersTests
     [Fact]
     public void NoPlaceholder()
     {
-        var placeholders = new Placeholders();
-        placeholders["dir"] = "bla";
+        var placeholders = new Placeholders { ["dir"] = "bla" };
 
         var extracted = placeholders.ExtractPlaceholders(@"bla\bla");
         Assert.Empty(extracted);
@@ -110,8 +101,7 @@ public class ExtractPlaceholdersTests
     [Fact]
     public void SyntaxErrorMissingBrace()
     {
-        var placeholders = new Placeholders();
-        placeholders["dir"] = "bla";
+        var placeholders = new Placeholders { ["dir"] = "bla" };
         Assert.Equal(@"${dir\file.txt", placeholders.ResolvePlaceholders(@"${dir\file.txt"));
 
         var extracted = placeholders.ExtractPlaceholders(@"${dir\file.txt");
@@ -121,9 +111,7 @@ public class ExtractPlaceholdersTests
     [Fact]
     public void SyntaxErrorMissingBraceWithOtherVariableStarting()
     {
-        var placeholders = new Placeholders();
-        placeholders["dir"] = "bla";
-        placeholders["file"] = "text";
+        var placeholders = new Placeholders { ["dir"] = "bla", ["file"] = "text" };
 
         var extracted = placeholders.ExtractPlaceholders(@"${dir\${file}.txt");
         Assert.Single(extracted);

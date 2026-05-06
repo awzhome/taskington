@@ -18,7 +18,7 @@ class DynamicConverter : IValueConverter
 {
     public object? Default { get; set; }
 
-    public List<Convert> Mappings { get; } = new();
+    public List<Convert> Mappings { get; } = [];
 
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {

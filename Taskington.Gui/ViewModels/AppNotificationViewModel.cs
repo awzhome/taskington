@@ -12,7 +12,7 @@ internal interface IAppNotificationViewModel : IAppNotifications
 
 internal class AppNotificationViewModel : IAppNotificationViewModel
 {
-    public ObservableCollection<AppNotification> Notifications { get; } = new();
+    public ObservableCollection<AppNotification> Notifications { get; } = [];
 
     public void Add(AppNotification notification)
     {

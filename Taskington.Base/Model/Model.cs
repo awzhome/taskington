@@ -3,17 +3,12 @@ using System.Linq;
 
 namespace Taskington.Base.Model;
 
-public abstract class Model
+public abstract class Model(IEnumerable<KeyValuePair<string, string>> initialProperties)
 {
-    private readonly Dictionary<string, string> properties;
+    private readonly Dictionary<string, string> properties = new(initialProperties);
 
-    public Model() : this(Enumerable.Empty<KeyValuePair<string, string>>())
+    protected Model() : this([])
     {
-    }
-
-    public Model(IEnumerable<KeyValuePair<string, string>> initialProperties)
-    {
-        properties = new Dictionary<string, string>(initialProperties);
     }
 
     public string? this[string name]

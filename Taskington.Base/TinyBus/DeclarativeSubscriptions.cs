@@ -34,24 +34,28 @@ public static class DeclarativeSubscriptions
             if (IsAsyncMessage(messageType, method))
             {
                 var subscribeMethod = GetRequestSubscribeMethod(messageType, typeof(AsyncMessage<>).MakeGenericType(messageType), typeof(Task));
-                subscribeMethod?.Invoke(null, new[] { method.CreateDelegate(typeof(Func<,>).MakeGenericType(messageType, method.ReturnType), handler) });
+                subscribeMethod?.Invoke(null, [method.CreateDelegate(typeof(Func<,>).MakeGenericType(messageType, method.ReturnType), handler)
+                ]);
             }
             else if (IsAsyncRequestMessage(messageType, method))
             {
                 var subscribeMethod = GetRequestSubscribeMethod(
                     messageType,
                     typeof(AsyncRequestMessage<,>).MakeGenericType(messageType, method.ReturnType.GetGenericArguments().First()), method.ReturnType);
-                subscribeMethod?.Invoke(null, new[] { method.CreateDelegate(typeof(Func<,>).MakeGenericType(messageType, method.ReturnType), handler) });
+                subscribeMethod?.Invoke(null, [method.CreateDelegate(typeof(Func<,>).MakeGenericType(messageType, method.ReturnType), handler)
+                ]);
             }
             else if (IsSyncMessage(messageType, method))
             {
                 var subscribeMethod = GetOneWaySubscribeMethod(messageType, typeof(Message<>).MakeGenericType(messageType));
-                subscribeMethod?.Invoke(null, new[] { method.CreateDelegate(typeof(Action<>).MakeGenericType(messageType), handler) });
+                subscribeMethod?.Invoke(null, [method.CreateDelegate(typeof(Action<>).MakeGenericType(messageType), handler)
+                ]);
             }
             else if (IsSyncRequestMessage(messageType, method))
             {
                 var subscribeMethod = GetRequestSubscribeMethod(messageType, typeof(RequestMessage<,>).MakeGenericType(messageType, method.ReturnType), method.ReturnType);
-                subscribeMethod?.Invoke(null, new[] { method.CreateDelegate(typeof(Func<,>).MakeGenericType(messageType, method.ReturnType), handler) });
+                subscribeMethod?.Invoke(null, [method.CreateDelegate(typeof(Func<,>).MakeGenericType(messageType, method.ReturnType), handler)
+                ]);
             }
             else
             {
@@ -121,12 +125,12 @@ public static class DeclarativeSubscriptions
 
     private static MethodInfo? GetOneWaySubscribeMethod(Type messageType, Type baseMessageType)
     {
-        return baseMessageType.GetMethod("Subscribe", new[] { typeof(Action<>).MakeGenericType(messageType) });
+        return baseMessageType.GetMethod("Subscribe", [typeof(Action<>).MakeGenericType(messageType)]);
     }
 
     private static MethodInfo? GetRequestSubscribeMethod(Type messageType, Type baseMessageType, Type returnType)
     {
-        return baseMessageType.GetMethod("Subscribe", new[] { typeof(Func<,>).MakeGenericType(messageType, returnType) });
+        return baseMessageType.GetMethod("Subscribe", [typeof(Func<,>).MakeGenericType(messageType, returnType)]);
     }
 }
 

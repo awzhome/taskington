@@ -10,7 +10,7 @@ public interface IListRegistry<T>
 
 public class ListRegistry<T> : IListRegistry<T>
 {
-    private List<T> instances = new();
+    private List<T> instances = [];
 
     public IEnumerable<T> All => instances;
 
