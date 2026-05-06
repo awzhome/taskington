@@ -1,3 +1,7 @@
 #!/usr/bin/env sh
 
-dotnet publish Taskington.Gui/Taskington.Gui.csproj --configuration Release -r win-x64 --self-contained true -p:PublishTrimmed=true -p:UseAppHost=true --output ./output/publish-win64
+ASSEMBLYVERSION=`buildtools/versionize --next`
+FULLASSEMBLYVERSION=`buildtools/versionize --assembly`
+INFOVERSION=`buildtools/versionize`
+
+dotnet publish Taskington.Gui/Taskington.Gui.csproj --configuration Release -r win-x64 --self-contained true -p:PublishTrimmed=true -p:UseAppHost=true -p:Version=$ASSEMBLYVERSION -p:FileVersion=$FULLASSEMBLYVERSION -p:InformationalVersion=$INFOVERSION -p:CIBuild=true --output ./output/publish-win64
