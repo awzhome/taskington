@@ -12,6 +12,7 @@
 		<Description>Taskington GUI Frontend</Description>
 		<Copyright>Copyright (c) Andreas Weizel</Copyright>
 		<ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 	</PropertyGroup>
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />

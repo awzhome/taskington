@@ -9,6 +9,7 @@
 		<Product>Taskington</Product>
 		<Description>Taskington GUI Extension Framework</Description>
 		<Copyright>Copyright (c) Andreas Weizel</Copyright>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="ReactiveUI" />
