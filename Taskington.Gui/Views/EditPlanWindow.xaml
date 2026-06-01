@@ -96,7 +96,7 @@
                 <StackPanel Grid.Column="1" Classes="listActions" Orientation="Vertical">
                     <Button Click="OpenButtonMenu" ToolTip.Tip="Add step">
                         <Button.Content>
-                            <controls:FontAwesomeIcon Icon="&#x2b;"></controls:FontAwesomeIcon>
+                            <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.Plus}"></controls:FontAwesomeIcon>
                         </Button.Content>
                         <Button.ContextMenu>
                             <ContextMenu ItemsSource="{Binding NewStepTemplates}" x:DataType="vm:EditPlanViewModel">
@@ -120,25 +120,25 @@
                     <Button Classes="withVSeparator"
                             Command="{Binding DuplicateStepCommand}" ToolTip.Tip="Duplicate step">
                         <Button.Content>
-                            <controls:FontAwesomeIcon Icon="&#xf0c5;"></controls:FontAwesomeIcon>
+                            <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.Copy}"></controls:FontAwesomeIcon>
                         </Button.Content>
                     </Button>
                     <Button Command="{Binding MoveStepUpCommand}"
                             ToolTip.Tip="Move step up">
                         <Button.Content>
-                            <controls:FontAwesomeIcon Icon="&#xf062;"></controls:FontAwesomeIcon>
+                            <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.ArrowUp}"></controls:FontAwesomeIcon>
                         </Button.Content>
                     </Button>
                     <Button Command="{Binding MoveStepDownCommand}"
                             ToolTip.Tip="Move step down">
                         <Button.Content>
-                            <controls:FontAwesomeIcon Icon="&#xf063;"></controls:FontAwesomeIcon>
+                            <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.ArrowDown}"></controls:FontAwesomeIcon>
                         </Button.Content>
                     </Button>
                     <Button Classes="withVSeparator"
                             Command="{Binding RemoveStepCommand}" ToolTip.Tip="Remove step">
                         <Button.Content>
-                            <controls:FontAwesomeIcon Icon="&#xf2ed;"></controls:FontAwesomeIcon>
+                            <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.TrashCan}"></controls:FontAwesomeIcon>
                         </Button.Content>
                     </Button>
                 </StackPanel>

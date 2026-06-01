@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:Taskington.Gui.ViewModels"
              xmlns:controls="using:Taskington.Gui.Controls"
+             xmlns:ext="using:Taskington.Gui.Extension"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Taskington.Gui.Views.EditSyncStepView"
              x:DataType="vm:EditSyncStepViewModel">
@@ -52,7 +53,7 @@
                         IsVisible="{Binding ShowPutPlaceholderIntoFromButton}"
                         ToolTip.Tip="{Binding PutPlaceholdersButtonTooltip}">
                     <Button.Content>
-                        <controls:FontAwesomeIcon Icon="&#xf05a;"></controls:FontAwesomeIcon>
+                        <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.CircleInfo}"></controls:FontAwesomeIcon>
                     </Button.Content>
                 </Button>
                 <Button Grid.Column="2" Command="{Binding SelectFromCommand}">...</Button>
@@ -67,7 +68,7 @@
                         IsVisible="{Binding ShowPutPlaceholderIntoToButton}"
                         ToolTip.Tip="{Binding PutPlaceholdersButtonTooltip}">
                     <Button.Content>
-                        <controls:FontAwesomeIcon Icon="&#xf05a;"></controls:FontAwesomeIcon>
+                        <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.CircleInfo}"></controls:FontAwesomeIcon>
                     </Button.Content>
                 </Button>
                 <Button Grid.Column="2" Command="{Binding SelectToCommand}">...</Button>

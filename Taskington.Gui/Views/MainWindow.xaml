@@ -72,7 +72,7 @@
             <StackPanel Grid.Row="2" HorizontalAlignment="Center" MinWidth="400">
                 <Button Margin="20,20,20,20" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding AddPlanCommand}">
                     <StackPanel Orientation="Horizontal">
-                        <controls:FontAwesomeIcon Icon="&#x2b;"></controls:FontAwesomeIcon>
+                        <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.Plus}"></controls:FontAwesomeIcon>
                         <TextBlock Margin="10,0,0,0">Add new plan</TextBlock>
                     </StackPanel>
                 </Button>

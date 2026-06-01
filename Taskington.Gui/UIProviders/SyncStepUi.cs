@@ -28,7 +28,7 @@ class SyncStepUi : IStepUi
         yield return new NewStepTemplate
         {
             Caption = "Synchronize file",
-            Icon = "fas fa-file",
+            Icon = FontAwesomeIconKind.File,
             Creator = () => new PlanStep("sync")
             {
                 DefaultProperty = "file"
@@ -37,7 +37,7 @@ class SyncStepUi : IStepUi
         yield return new NewStepTemplate
         {
             Caption = "Synchronize directory",
-            Icon = "fas fa-folder-open",
+            Icon = FontAwesomeIconKind.FolderOpen,
             Creator = () => new PlanStep("sync")
             {
                 DefaultProperty = "dir"
@@ -46,7 +46,7 @@ class SyncStepUi : IStepUi
         yield return new NewStepTemplate
         {
             Caption = "Synchronize sub-directories",
-            Icon = "fas fa-sitemap",
+            Icon = FontAwesomeIconKind.Sitemap,
             Creator = () => new PlanStep("sync")
             {
                 DefaultProperty = "sub-dirs"

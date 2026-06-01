@@ -15,8 +15,8 @@ class EditStepViewModelBase : ViewModelBase, IEditStepViewModel
         InitializeFromBasicModel();
     }
 
-    private string? icon;
-    public string? Icon
+    private FontAwesomeIconKind? icon;
+    public FontAwesomeIconKind? Icon
     {
         get => icon;
         set => this.RaiseAndSetIfChanged(ref icon, value);

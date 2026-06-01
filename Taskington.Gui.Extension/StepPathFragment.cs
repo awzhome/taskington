@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using Taskington.Base.SystemOperations;
-
 namespace Taskington.Gui.Extension;
 
 public enum PathFragmentColor
@@ -23,13 +22,13 @@ public class PathFragment
             {
                 case { } when text.StartsWith("drive:"):
                     Color = PathFragmentColor.Blue;
-                    Icon = "fas fa-hdd";
+                    Icon = FontAwesomeIconKind.HardDrive;
                     Text = text[6..];
                     break;
 
                 default:
                     Color = PathFragmentColor.Yellow;
-                    Icon = "fas fa-folder";
+                    Icon = FontAwesomeIconKind.Folder;
                     break;
             };
         }
@@ -38,7 +37,7 @@ public class PathFragment
     public string Text { get; }
     public bool IsPlaceholder { get; }
     public string? ExpandedText { get; set; }
-    public string? Icon { get; }
+    public FontAwesomeIconKind? Icon { get; }
     public PathFragmentColor Color { get; } = PathFragmentColor.BrightYellow;
 }
 

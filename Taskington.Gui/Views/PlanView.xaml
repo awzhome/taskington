@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:Taskington.Gui.ViewModels"
              xmlns:controls="using:Taskington.Gui.Controls"
+             xmlns:ext="using:Taskington.Gui.Extension"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Taskington.Gui.Views.PlanView"
              x:DataType="vm:PlanViewModel">
@@ -49,7 +50,7 @@
                         CommandParameter="{Binding}" VerticalAlignment="Top"
                         IsEnabled="{Binding IsPlayable}" ToolTip.Tip="Run">
                     <Button.Content>
-                        <controls:FontAwesomeIcon Icon="&#xf04b;"></controls:FontAwesomeIcon>
+                        <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.Play}"></controls:FontAwesomeIcon>
                     </Button.Content>
                 </Button>
 
@@ -70,20 +71,20 @@
                 <Button Grid.Column="2" Classes="cardMenu icon" VerticalAlignment="Top"
                         ToolTip.Tip="Plan actions" Click="OpenButtonMenu">
                     <Button.Content>
-                        <controls:FontAwesomeIcon Icon="&#xf142;"></controls:FontAwesomeIcon>
+                        <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.EllipsisVertical}"></controls:FontAwesomeIcon>
                     </Button.Content>
                     <Button.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Edit" Command="{Binding EditPlanCommand}" CommandParameter="{Binding}">
                                 <MenuItem.Icon>
-                                    <controls:FontAwesomeIcon Icon="&#xf304;"></controls:FontAwesomeIcon>
+                                    <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.PenToSquare}"></controls:FontAwesomeIcon>
 
                                 </MenuItem.Icon>
                             </MenuItem>
                             <MenuItem Header="Remove" Command="{Binding RemovePlanCommand}"
                                       CommandParameter="{Binding}">
                                 <MenuItem.Icon>
-                                    <controls:FontAwesomeIcon Icon="&#xf2ed;"></controls:FontAwesomeIcon>
+                                    <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.TrashCan}"></controls:FontAwesomeIcon>
                                 </MenuItem.Icon>
                             </MenuItem>
                         </ContextMenu>
@@ -102,7 +103,7 @@
 
                 <Button Grid.Column="1" Command="{Binding UndoPlanRemovalCommand}" CommandParameter="{Binding}">
                     <StackPanel Orientation="Horizontal">
-                        <controls:FontAwesomeIcon Icon="&#xf2ea;"></controls:FontAwesomeIcon>
+                        <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.ArrowRotateLeft}"></controls:FontAwesomeIcon>
                         <TextBlock Text="Restore" Margin="4,0,0,0" />
                     </StackPanel>
                 </Button>

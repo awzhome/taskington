@@ -74,10 +74,10 @@ class EditSyncStepViewModel : EditStepViewModelBase
             SubType = selectedType?.Type;
             Icon = selectedType?.Type switch
             {
-                SyncFileType => "fas fa-file",
-                SyncDirType => "fas fa-folder-open",
-                SyncSubDirsType => "fas fa-sitemap",
-                _ => ""
+                SyncFileType => FontAwesomeIconKind.File,
+                SyncDirType => FontAwesomeIconKind.FolderOpen,
+                SyncSubDirsType => FontAwesomeIconKind.Sitemap,
+                _ => null
             };
             leftTextPart.Text = selectedType?.Type switch
             {
