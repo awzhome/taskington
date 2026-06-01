@@ -5,7 +5,7 @@
         xmlns:ext="using:Taskington.Gui.Extension"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+        xmlns:controls="using:Taskington.Gui.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Taskington.Gui.Views.MainWindow" 
         x:DataType="vm:MainWindowViewModel"
@@ -72,7 +72,7 @@
             <StackPanel Grid.Row="2" HorizontalAlignment="Center" MinWidth="400">
                 <Button Margin="20,20,20,20" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding AddPlanCommand}">
                     <StackPanel Orientation="Horizontal">
-                        <i:Icon Value="fas fa-plus" />
+                        <controls:FontAwesomeIcon Icon="&#x2b;"></controls:FontAwesomeIcon>
                         <TextBlock Margin="10,0,0,0">Add new plan</TextBlock>
                     </StackPanel>
                 </Button>

@@ -27,28 +27,6 @@
           "Avalonia.X11": "12.0.2"
         }
       },
-      "Avalonia.Diagnostics": {
-        "type": "Direct",
-        "requested": "[11.3.14, )",
-        "resolved": "11.3.14",
-        "contentHash": "AGItOFZ5FU+nv30UjffC0/TQvuFqzvjOsgRVBD70pmcA14VV/lKo2mVDJNYupf4lJIPdopo1Vq7jaX+8z8UE2w==",
-        "dependencies": {
-          "Avalonia": "11.3.14",
-          "Avalonia.Controls.ColorPicker": "11.3.14",
-          "Avalonia.Themes.Simple": "11.3.14"
-        }
-      },
-      "Avalonia.ReactiveUI": {
-        "type": "Direct",
-        "requested": "[11.3.8, )",
-        "resolved": "11.3.8",
-        "contentHash": "nD7U8UhJcng9OEunDt5bFRDvo+UHxtVi/a+BNLH2dxQuNJnqtXpLp/2rEzrzJDtV8X2FU7fHTwTrDhNOyYjWxw==",
-        "dependencies": {
-          "Avalonia": "11.3.8",
-          "ReactiveUI": "20.1.1",
-          "System.Reactive": "6.0.1"
-        }
-      },
       "Avalonia.Themes.Fluent": {
         "type": "Direct",
         "requested": "[12.0.2, )",
@@ -67,13 +45,15 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.7"
         }
       },
-      "Projektanker.Icons.Avalonia.FontAwesome": {
+      "ReactiveUI.Avalonia": {
         "type": "Direct",
-        "requested": "[9.6.2, )",
-        "resolved": "9.6.2",
-        "contentHash": "mFDatxzoIUvBIHtPo45kX2sufhp+qf6L3I5WT/shUXrfbKbvIff4dtfjqFWCK2Z3RH31l0I9L7UHY5VLYsqX2g==",
+        "requested": "[12.0.1, )",
+        "resolved": "12.0.1",
+        "contentHash": "/xk7V8FEsphMHVz992l9Q/KxRmA4iBOny8C3Swd+iUWSiVZuwsFagYzd9bLF6lC3d6Qn8DQXz2QSdVCzlb322A==",
         "dependencies": {
-          "Projektanker.Icons.Avalonia": "9.6.2"
+          "Avalonia": "12.0.1",
+          "ReactiveUI": "23.2.1",
+          "Splat": "19.3.1"
         }
       },
       "Avalonia.Angle.Windows.Natives": {
@@ -85,15 +65,6 @@
         "type": "Transitive",
         "resolved": "11.3.2",
         "contentHash": "qHDToxto1e3hci5YqbG9n0Ty8mlp3zBUN5wT66wKqaDVzXyQ0do3EnRILd4Ke9jpvsktaPpgE0YjEk7hornryQ=="
-      },
-      "Avalonia.Controls.ColorPicker": {
-        "type": "Transitive",
-        "resolved": "11.3.14",
-        "contentHash": "weDk+0kMo5kOcukRH/eIiHvkeG+/LrfHwSl2XvGjSN6S610Syg3o8SF3gjAWHV0OpeD1BdlnrCX6idU6qigm5g==",
-        "dependencies": {
-          "Avalonia": "11.3.14",
-          "Avalonia.Remote.Protocol": "11.3.14"
-        }
       },
       "Avalonia.FreeDesktop": {
         "type": "Transitive",
@@ -148,14 +119,6 @@
           "SkiaSharp": "3.119.4-preview.1.1",
           "SkiaSharp.NativeAssets.Linux": "3.119.4-preview.1.1",
           "SkiaSharp.NativeAssets.WebAssembly": "3.119.4-preview.1.1"
-        }
-      },
-      "Avalonia.Themes.Simple": {
-        "type": "Transitive",
-        "resolved": "11.3.14",
-        "contentHash": "Mqs6SmyXBJOrIj+Hf4YnhqsqEGPdvS0XZ+SNNwaYD+17P9UY/JVxztG49UJQnBT58cWovuy9omL0CVCQKhQuTw==",
-        "dependencies": {
-          "Avalonia": "11.3.14"
         }
       },
       "Avalonia.Win32": {
@@ -224,14 +187,6 @@
         "type": "Transitive",
         "resolved": "10.0.7",
         "contentHash": "Z6mfFEaFcwCfSboxJwOLfu7/31npCY9q70WUamHW/vRQhDvBKOT4Vf9YkZj5J6hLvJpb0oDEYfHunQZj0xxvKw=="
-      },
-      "Projektanker.Icons.Avalonia": {
-        "type": "Transitive",
-        "resolved": "9.6.2",
-        "contentHash": "AFPMAp41KvbZCpvo5uS83KVFVVDe6nfWSSmefeP3MBDT1eZosKObcXhNI1BAyt4CDPAaB7dUWaOPAYanzk5ybQ==",
-        "dependencies": {
-          "Avalonia": "11.2.8"
-        }
       },
       "SkiaSharp": {
         "type": "Transitive",

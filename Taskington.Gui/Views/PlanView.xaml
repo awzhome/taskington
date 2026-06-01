@@ -2,8 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:vm="using:Taskington.Gui.ViewModels"
-			 xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+             xmlns:vm="using:Taskington.Gui.ViewModels"
+             xmlns:controls="using:Taskington.Gui.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Taskington.Gui.Views.PlanView"
              x:DataType="vm:PlanViewModel">
@@ -45,8 +45,12 @@
     <Border Classes="outerBorder" Margin="20,0,20,20">
         <StackPanel Classes="cardPanel" Orientation="Vertical">
             <Grid ColumnDefinitions="Auto,*,Auto" IsVisible="{Binding !IsRemoved}">
-                <Button Grid.Column="0" Classes="icon" Command="{Binding ExecutePlanCommand}" CommandParameter="{Binding}" VerticalAlignment="Top"
-                        IsEnabled="{Binding IsPlayable}" i:Attached.Icon="fas fa-play" ToolTip.Tip="Run" >
+                <Button Grid.Column="0" Classes="icon" Command="{Binding ExecutePlanCommand}"
+                        CommandParameter="{Binding}" VerticalAlignment="Top"
+                        IsEnabled="{Binding IsPlayable}" ToolTip.Tip="Run">
+                    <Button.Content>
+                        <controls:FontAwesomeIcon Icon="&#xf04b;"></controls:FontAwesomeIcon>
+                    </Button.Content>
                 </Button>
 
                 <StackPanel Grid.Column="1" Margin="20,0,0,0" Orientation="Vertical">
@@ -57,23 +61,29 @@
 
                         <StackPanel Height="5">
                             <ProgressBar Minimum="0" Maximum="100" Margin="0,5,0,0" Height="5"
-									Value="{Binding Progress, Mode=OneWay}"
-									IsVisible="{Binding IsRunning}" />
+                                         Value="{Binding Progress, Mode=OneWay}"
+                                         IsVisible="{Binding IsRunning}" />
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
 
-                <Button Grid.Column="2" Classes="cardMenu icon" VerticalAlignment="Top" i:Attached.Icon="fas fa-ellipsis-v" ToolTip.Tip="Plan actions"  Click="OpenButtonMenu">
+                <Button Grid.Column="2" Classes="cardMenu icon" VerticalAlignment="Top"
+                        ToolTip.Tip="Plan actions" Click="OpenButtonMenu">
+                    <Button.Content>
+                        <controls:FontAwesomeIcon Icon="&#xf142;"></controls:FontAwesomeIcon>
+                    </Button.Content>
                     <Button.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Edit" Command="{Binding EditPlanCommand}" CommandParameter="{Binding}">
                                 <MenuItem.Icon>
-                                    <i:Icon Value="fas fa-pen" />
+                                    <controls:FontAwesomeIcon Icon="&#xf304;"></controls:FontAwesomeIcon>
+
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem Header="Remove" Command="{Binding RemovePlanCommand}" CommandParameter="{Binding}">
+                            <MenuItem Header="Remove" Command="{Binding RemovePlanCommand}"
+                                      CommandParameter="{Binding}">
                                 <MenuItem.Icon>
-                                    <i:Icon Value="fas fa-trash-alt" />
+                                    <controls:FontAwesomeIcon Icon="&#xf2ed;"></controls:FontAwesomeIcon>
                                 </MenuItem.Icon>
                             </MenuItem>
                         </ContextMenu>
@@ -92,7 +102,7 @@
 
                 <Button Grid.Column="1" Command="{Binding UndoPlanRemovalCommand}" CommandParameter="{Binding}">
                     <StackPanel Orientation="Horizontal">
-                        <i:Icon Value="fas fa-undo" />
+                        <controls:FontAwesomeIcon Icon="&#xf2ea;"></controls:FontAwesomeIcon>
                         <TextBlock Text="Restore" Margin="4,0,0,0" />
                     </StackPanel>
                 </Button>

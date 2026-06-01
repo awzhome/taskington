@@ -2,13 +2,12 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using ReactiveUI;
-using Avalonia.ReactiveUI;
 using Taskington.Gui.ViewModels;
 using System;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using ReactiveUI.Avalonia;
 using System.Threading.Tasks;
-using System.Reactive;
 using System.Linq;
 
 namespace Taskington.Gui.Views;
@@ -18,10 +17,6 @@ class EditPlanWindow : ReactiveWindow<EditPlanViewModel>
     public EditPlanWindow()
     {
         InitializeComponent();
-#if DEBUG
-        this.AttachDevTools();
-#endif
-
         this.WhenActivated(d => d(ViewModel!.CloseCommand.Subscribe(save => Close(save))));
         this.WhenActivated(d => d(ViewModel!.OpenFolderDialog.RegisterHandler(OpenFolderDialogAsync)));
         this.WhenActivated(d => d(ViewModel!.OpenFileDialog.RegisterHandler(OpenFileDialogAsync)));

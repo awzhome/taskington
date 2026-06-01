@@ -34,11 +34,9 @@
 	<ItemGroup>
 		<PackageReference Include="Avalonia" />
 		<PackageReference Include="Avalonia.Desktop" />
-		<PackageReference Include="Avalonia.Diagnostics" />
-		<PackageReference Include="Avalonia.ReactiveUI" />
 		<PackageReference Include="Avalonia.Themes.Fluent" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
-		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" />
+		<PackageReference Include="ReactiveUI.Avalonia" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
