@@ -18,7 +18,7 @@ internal class AppNotificationViewModel : IAppNotificationViewModel
     {
         var notifications = Notifications.ToList();
         notifications.Add(notification);
-        var sortedNotifications = notifications.OrderByDescending(notification => notification.NotificationType);
+        var sortedNotifications = notifications.OrderByDescending(n => n.NotificationType);
         Notifications.Clear();
         Notifications.AddRange(sortedNotifications);
     }
