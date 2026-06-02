@@ -1,8 +1,19 @@
 #!/usr/bin/env bash
-# buildtool: versionize v1.1
+# buildtool: versionize v1.2
 
 get_latest_tag() {
-    git describe --tags --abbrev=0 --match 'v*' | sort -V | tail -n1
+    local latest_tag
+    latest_tag=$(git tag --list 'v*' --sort=-v:refname | head -n1)
+
+    if [ -n "$latest_tag" ]; then
+        echo "$latest_tag"
+    else
+        echo "v0.0.0"
+    fi
+}
+
+tag_exists() {
+    git rev-parse --verify --quiet "refs/tags/$1" >/dev/null
 }
 
 extract_version() {
@@ -11,8 +22,12 @@ extract_version() {
 
 commits_since_tag() {
     local tag=$1
-    local commits=$(git rev-list $tag..HEAD --count)
-    echo "$commits"
+
+    if tag_exists "$tag"; then
+        git rev-list "$tag"..HEAD --count
+    else
+        git rev-list HEAD --count
+    fi
 }
 
 current_branch() {
@@ -88,14 +103,6 @@ major=$(extract_major "$latest_tag")
 minor=$(extract_minor "$latest_tag")
 patch=$(extract_patch "$latest_tag")
 pretag=$(extract_preview_tag "$latest_tag")
-
-if [ -z "$latest_tag" ]; then
-    echo "No tags found starting with 'v'"
-    exit 1
-fi
-
-latest_tag_sha=$(git rev-parse "$latest_tag")
-head_sha=$(git rev-parse HEAD)
 
 # echo "Latest tag: $latest_tag_sha"
 # echo "HEAD: $head_sha"
