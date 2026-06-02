@@ -14,10 +14,6 @@
   <ItemGroup>
     <PackageReference Include="WixSharp" />
     <PackageReference Include="WixSharp.wix.bin" />
-    <PackageReference Include="GitVersion.MsBuild">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
   </ItemGroup>
 
 </Project>

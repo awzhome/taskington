@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 using WixSharp;
 using WixSharp.Controls;
@@ -13,6 +14,8 @@ namespace Taskington.Installer.Windows
         {
             Compiler.AutoGeneration.IgnoreWildCardEmptyDirectories = true;
 
+            var versionMetadata = GetVersionMetadata();
+
             var buildOutputDir = $@"output\publish-win64";
 
             var project = new Project("Taskington",
@@ -20,7 +23,7 @@ namespace Taskington.Installer.Windows
                                   new DirFiles(Path.Combine(buildOutputDir, "*.*"))));
 
             project.GUID = new Guid("91c41e60-c478-4ce8-a299-568bd3258b20");
-            project.Version = new Version(GitVersionInformation.AssemblySemFileVer);
+            project.Version = versionMetadata.FileVersion;
             project.LicenceFile = Path.Combine(Environment.CurrentDirectory, "license.rtf");
             project.SourceBaseDir = Path.GetDirectoryName(Environment.CurrentDirectory);
             project.InstallScope = InstallScope.perUser;
@@ -42,7 +45,18 @@ namespace Taskington.Installer.Windows
                     new FileShortcut("Taskington", @"%ProgramMenu%")
                 };
 
-            Compiler.BuildMsi(project, Path.Combine(project.SourceBaseDir, "output", $"Taskington-{GitVersionInformation.SemVer}-win64.msi"));
+            Compiler.BuildMsi(project, Path.Combine(project.SourceBaseDir, "output", $"Taskington-{versionMetadata.InformationalVersion}-win64.msi"));
+        }
+
+        private static (Version FileVersion, string InformationalVersion) GetVersionMetadata()
+        {
+            var assembly = typeof(Builder).Assembly;
+            var fileVersionAttribute = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()
+                ?? throw new InvalidOperationException("The installer assembly is missing a file version.");
+            var informationalVersionAttribute = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                ?? throw new InvalidOperationException("The installer assembly is missing an informational version.");
+
+            return (new Version(fileVersionAttribute.Version), informationalVersionAttribute.InformationalVersion);
         }
     }
 }
