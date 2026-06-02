@@ -1,0 +1,30 @@
+<Project>
+  <Target Name="ApplyTaskingtonVersioning"
+          BeforeTargets="GetAssemblyVersion;GenerateAssemblyInfo"
+          Condition="'$(DesignTimeBuild)' != 'true'">
+    <Exec Command='bash "$(MSBuildThisFileDirectory)buildtools/versionize" --next'
+          WorkingDirectory="$(MSBuildThisFileDirectory)"
+          ConsoleToMsBuild="true">
+      <Output TaskParameter="ConsoleOutput" ItemName="_TaskingtonVersion" />
+    </Exec>
+
+    <Exec Command='bash "$(MSBuildThisFileDirectory)buildtools/versionize" --assembly'
+          WorkingDirectory="$(MSBuildThisFileDirectory)"
+          ConsoleToMsBuild="true">
+      <Output TaskParameter="ConsoleOutput" ItemName="_TaskingtonAssemblyVersion" />
+    </Exec>
+
+    <Exec Command='bash "$(MSBuildThisFileDirectory)buildtools/versionize"'
+          WorkingDirectory="$(MSBuildThisFileDirectory)"
+          ConsoleToMsBuild="true">
+      <Output TaskParameter="ConsoleOutput" ItemName="_TaskingtonInformationalVersion" />
+    </Exec>
+
+    <PropertyGroup>
+      <Version Condition="'$(Version)' == ''">@(_TaskingtonVersion->'%(Identity)')</Version>
+      <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">@(_TaskingtonAssemblyVersion->'%(Identity)')</AssemblyVersion>
+      <FileVersion Condition="'$(FileVersion)' == ''">@(_TaskingtonAssemblyVersion->'%(Identity)')</FileVersion>
+      <InformationalVersion Condition="'$(InformationalVersion)' == ''">@(_TaskingtonInformationalVersion->'%(Identity)')</InformationalVersion>
+    </PropertyGroup>
+  </Target>
+</Project>

@@ -7,7 +7,6 @@
 		<Product>Taskington</Product>
 		<Description>Taskington Base Framework Tests</Description>
 		<Nullable>enable</Nullable>
-		<Version>0.1-preview.240</Version>
 		<OutputType>Library</OutputType>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 	</PropertyGroup>

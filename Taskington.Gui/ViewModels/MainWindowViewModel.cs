@@ -61,7 +61,7 @@ class MainWindowViewModel : ViewModelBase
         {
             NotificationType = AppNotificationType.AppInfo,
             LeftText = AppInfo.Copyright,
-            // TODO RightText = $"v{GitVersionInformation.SemVer}"
+            RightText = $"v{AppInfo.Version}"
         });
 
         configurationManager.Initialize();
