@@ -18,10 +18,4 @@
 		<PackageReference Include="Serilog.Sinks.File" />
 		<PackageReference Include="YamlDotNet" />
 	</ItemGroup>
-	<ItemGroup>
-		<None Remove="TinyBus\Endpoints\" />
-	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="TinyBus\Endpoints\" />
-	</ItemGroup>
 </Project>
