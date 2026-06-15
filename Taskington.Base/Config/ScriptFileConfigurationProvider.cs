@@ -2,26 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Taskington.Base.Config
+namespace Taskington.Base.Config;
+
+public class ScriptFileConfigurationProvider(IConfigurationManager configurationManager)
+    : WatchingFileReaderProvider(configurationManager)
 {
-    public class ScriptFileConfigurationProvider : WatchingFileReaderProvider
+    protected override IEnumerable<string> GetFileNames()
     {
-        public ScriptFileConfigurationProvider(IConfigurationManager configurationManager) : base(configurationManager)
-        {
-
-        }
-
-        protected override IEnumerable<string> GetFileNames()
-        {
-            return Directory.GetFiles(GetConfigDirectory(), "*.taskington");
-        }
-
-        protected override string GetConfigDirectory()
-        {
-            var localConfig = Path.Combine(Environment.CurrentDirectory, "plans");
-            return Directory.Exists(localConfig) ? localConfig : AppRoamingPath;
-        }
-
-        protected override string WatchedFilesFilter => "*.taskington";
+        return Directory.GetFiles(GetConfigDirectory(), "*.taskington");
     }
+
+    protected override string GetConfigDirectory()
+    {
+        var localConfig = Path.Combine(Environment.CurrentDirectory, "plans");
+        return Directory.Exists(localConfig) ? localConfig : AppRoamingPath;
+    }
+
+    protected override string WatchedFilesFilter => "*.taskington";
 }

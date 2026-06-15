@@ -1,10 +1,9 @@
 using System;
 using System.IO;
 
-namespace Taskington.Base.Config
+namespace Taskington.Base.Config;
+
+public interface IStreamWriterProvider
 {
-    public interface IStreamWriterProvider
-    {
-        void WriteConfigurationStreams(Action<TextWriter> configWriter);
-    }
+    void WriteConfigurationStreams(Action<TextWriter> configWriter);
 }

@@ -1,10 +1,9 @@
 using System;
 using System.IO;
 
-namespace Taskington.Base.Config
+namespace Taskington.Base.Config;
+
+public interface IStreamReaderProvider
 {
-    public interface IStreamReaderProvider
-    {
-        void ReadConfigurationStreams(Action<TextReader> configReader);
-    }
+    void ReadConfigurationStreams(Action<TextReader> configReader);
 }

@@ -10,247 +10,246 @@ using Taskington.Base.Steps;
 using Taskington.Base.SystemOperations;
 using Taskington.Gui.Extension;
 
-namespace Taskington.Gui.ViewModels
-{
-    class SyncTypeEntry
-    {
-        public string? Type { get; set; }
-        public string? Caption { get; set; }
+namespace Taskington.Gui.ViewModels;
 
+class SyncTypeEntry
+{
+    public string? Type { get; set; }
+    public string? Caption { get; set; }
+
+}
+
+class EditSyncStepViewModel : EditStepViewModelBase
+{
+    private const string SyncFileType = "file";
+    private const string SyncDirType = "dir";
+    private const string SyncSubDirsType = "sub-dirs";
+
+    public ReactiveCommand<Unit, Unit> SelectFromCommand { get; }
+    public ReactiveCommand<Unit, Unit> SelectToCommand { get; }
+    public ReactiveCommand<Unit, Unit> PutPlaceholderInFromFieldCommand { get; }
+    public ReactiveCommand<Unit, Unit> PutPlaceholderInToFieldCommand { get; }
+
+    public Interaction<string?, string?>? OpenFolderDialogInteraction { get; set; }
+    public Interaction<string?, string?>? OpenFileDialogInteraction { get; set; }
+
+    readonly StepCaptionFragment leftTextPart;
+    readonly StepPathFragment fromPathPart;
+    readonly StepCaptionFragment middleTextPart;
+    readonly StepPathFragment toPathPart;
+    private readonly Placeholders placeholders;
+
+    public EditSyncStepViewModel(PlanStep step, Placeholders placeholders) : base(step)
+    {
+
+        SelectFromCommand = ReactiveCommand.CreateFromTask(OpenSelectFromDialogAsync);
+        SelectToCommand = ReactiveCommand.CreateFromTask(OpenSelectToDialogAsync);
+        PutPlaceholderInFromFieldCommand = ReactiveCommand.Create(PutPlaceholderInFromField);
+        PutPlaceholderInToFieldCommand = ReactiveCommand.Create(PutPlaceholderInToField);
+
+        leftTextPart = new StepCaptionFragment();
+        fromPathPart = new StepPathFragment(placeholders);
+        middleTextPart = new StepCaptionFragment();
+        toPathPart = new StepPathFragment(placeholders);
+
+        this.placeholders = placeholders;
+        InitializeFromBasicModel(step);
     }
 
-    class EditSyncStepViewModel : EditStepViewModelBase
+    public List<SyncTypeEntry> SyncTypes { get; } =
+    [
+        new SyncTypeEntry { Type = SyncFileType, Caption = "file" },
+        new SyncTypeEntry { Type = SyncDirType, Caption = "directory" },
+        new SyncTypeEntry { Type = SyncSubDirsType, Caption = "sub-directories" }
+    ];
+
+    private SyncTypeEntry? selectedType;
+    public SyncTypeEntry? SelectedType
     {
-        private const string SyncFileType = "file";
-        private const string SyncDirType = "dir";
-        private const string SyncSubDirsType = "sub-dirs";
-
-        public ReactiveCommand<Unit, Unit> SelectFromCommand { get; }
-        public ReactiveCommand<Unit, Unit> SelectToCommand { get; }
-        public ReactiveCommand<Unit, Unit> PutPlaceholderInFromFieldCommand { get; }
-        public ReactiveCommand<Unit, Unit> PutPlaceholderInToFieldCommand { get; }
-
-        public Interaction<string?, string?>? OpenFolderDialogInteraction { get; set; }
-        public Interaction<string?, string?>? OpenFileDialogInteraction { get; set; }
-
-        readonly StepCaptionFragment leftTextPart;
-        readonly StepPathFragment fromPathPart;
-        readonly StepCaptionFragment middleTextPart;
-        readonly StepPathFragment toPathPart;
-        private readonly Placeholders placeholders;
-
-        public EditSyncStepViewModel(PlanStep step, Placeholders placeholders) : base(step)
+        get => selectedType;
+        set
         {
-
-            SelectFromCommand = ReactiveCommand.CreateFromTask(OpenSelectFromDialogAsync);
-            SelectToCommand = ReactiveCommand.CreateFromTask(OpenSelectToDialogAsync);
-            PutPlaceholderInFromFieldCommand = ReactiveCommand.Create(PutPlaceholderInFromField);
-            PutPlaceholderInToFieldCommand = ReactiveCommand.Create(PutPlaceholderInToField);
-
-            leftTextPart = new();
-            fromPathPart = new(placeholders);
-            middleTextPart = new();
-            toPathPart = new(placeholders);
-
-            this.placeholders = placeholders;
-            InitializeFromBasicModel(step);
+            this.RaiseAndSetIfChanged(ref selectedType, value);
+            this.RaisePropertyChanged(nameof(FromCaption));
+            SubType = selectedType?.Type;
+            Icon = selectedType?.Type switch
+            {
+                SyncFileType => FontAwesomeIconKind.File,
+                SyncDirType => FontAwesomeIconKind.FolderOpen,
+                SyncSubDirsType => FontAwesomeIconKind.Sitemap,
+                _ => null
+            };
+            leftTextPart.Text = selectedType?.Type switch
+            {
+                SyncFileType => $"Synchronize {selectedType?.Caption} ",
+                _ => $"Synchronize {selectedType?.Caption} from ",
+            };
+            middleTextPart.Text = " to ";
         }
+    }
 
-        public List<SyncTypeEntry> SyncTypes { get; } = new()
+    public string? from;
+    public string? From
+    {
+        get => from;
+        set
         {
-            new() { Type = SyncFileType, Caption = "file" },
-            new() { Type = SyncDirType, Caption = "directory" },
-            new() { Type = SyncSubDirsType, Caption = "sub-directories" }
+            this.RaiseAndSetIfChanged(ref from, value);
+            fromPathPart.Text = from;
+            ShowPutPlaceholderIntoFromButton = ContainsPlaceholderValues(value);
+        }
+    }
+
+    public string? to;
+    public string? To
+    {
+        get => to;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref to, value);
+            toPathPart.Text = to;
+            ShowPutPlaceholderIntoToButton = ContainsPlaceholderValues(value);
+        }
+    }
+
+    public string? FromCaption
+    {
+        get => selectedType?.Type switch
+        {
+            SyncFileType => "File:",
+            _ => "From:"
         };
+    }
 
-        private SyncTypeEntry? selectedType;
-        public SyncTypeEntry? SelectedType
+    public string? ToCaption
+    {
+        get => "To:";
+    }
+
+    public bool? showPutPlaceholderIntoFromButton = false;
+    public bool? ShowPutPlaceholderIntoFromButton
+    {
+        get => showPutPlaceholderIntoFromButton;
+        set
         {
-            get => selectedType;
-            set
+            this.RaiseAndSetIfChanged(ref showPutPlaceholderIntoFromButton, value);
+        }
+    }
+
+    public bool? showPutPlaceholderIntoToButton = true;
+    public bool? ShowPutPlaceholderIntoToButton
+    {
+        get => showPutPlaceholderIntoToButton;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref showPutPlaceholderIntoToButton, value);
+        }
+    }
+
+    public string PutPlaceholdersButtonTooltip { get; } =
+        "Your path contains parts which can be replaced with placeholders.\nThis improves portability and stability of your plan.";
+
+    private void InitializeFromBasicModel(PlanStep step)
+    {
+        SelectedType = SyncTypes.FirstOrDefault(entry => entry.Type == step.DefaultProperty);
+        From = selectedType?.Type switch
+        {
+            SyncFileType => Path.Combine(step["from"] ?? "", step["name"] ?? ""),
+            _ => step["from"]
+        };
+        To = step["to"];
+
+        CaptionFragments = [leftTextPart, fromPathPart, middleTextPart, toPathPart];
+    }
+
+    public override PlanStep ConvertToStep()
+    {
+        var step = base.ConvertToStep();
+        if (selectedType?.Type == SyncFileType)
+        {
+            if (from != null)
             {
-                this.RaiseAndSetIfChanged(ref selectedType, value);
-                this.RaisePropertyChanged(nameof(FromCaption));
-                SubType = selectedType?.Type;
-                Icon = selectedType?.Type switch
+                step["from"] = Path.GetDirectoryName(from);
+                step["name"] = Path.GetFileName(from);
+            }
+        }
+        else
+        {
+            step["from"] = from;
+        }
+        step["to"] = to;
+        return step;
+    }
+
+    private async Task OpenSelectFromDialogAsync()
+    {
+        if (selectedType?.Type == "file")
+        {
+            if (OpenFileDialogInteraction != null)
+            {
+                var selectedFile = await OpenFileDialogInteraction.Handle(from);
+                if (!string.IsNullOrEmpty(selectedFile))
                 {
-                    SyncFileType => "fas fa-file",
-                    SyncDirType => "fas fa-folder-open",
-                    SyncSubDirsType => "fas fa-sitemap",
-                    _ => ""
-                };
-                leftTextPart.Text = selectedType?.Type switch
-                {
-                    SyncFileType => $"Synchronize {selectedType?.Caption} ",
-                    _ => $"Synchronize {selectedType?.Caption} from ",
-                };
-                middleTextPart.Text = " to ";
-            }
-        }
-
-        public string? from;
-        public string? From
-        {
-            get => from;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref from, value);
-                fromPathPart.Text = from;
-                ShowPutPlaceholderIntoFromButton = ContainsPlaceholderValues(value);
-            }
-        }
-
-        public string? to;
-        public string? To
-        {
-            get => to;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref to, value);
-                toPathPart.Text = to;
-                ShowPutPlaceholderIntoToButton = ContainsPlaceholderValues(value);
-            }
-        }
-
-        public string? FromCaption
-        {
-            get => selectedType?.Type switch
-            {
-                SyncFileType => "File:",
-                _ => "From:"
-            };
-        }
-
-        public string? ToCaption
-        {
-            get => "To:";
-        }
-
-        public bool? showPutPlaceholderIntoFromButton = false;
-        public bool? ShowPutPlaceholderIntoFromButton
-        {
-            get => showPutPlaceholderIntoFromButton;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref showPutPlaceholderIntoFromButton, value);
-            }
-        }
-
-        public bool? showPutPlaceholderIntoToButton = true;
-        public bool? ShowPutPlaceholderIntoToButton
-        {
-            get => showPutPlaceholderIntoToButton;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref showPutPlaceholderIntoToButton, value);
-            }
-        }
-
-        public string PutPlaceholdersButtonTooltip { get; } =
-            "Your path contains parts which can be replaced with placeholders.\nThis improves portability and stability of your plan.";
-
-        private void InitializeFromBasicModel(PlanStep step)
-        {
-            SelectedType = SyncTypes.FirstOrDefault(entry => entry.Type == step.DefaultProperty);
-            From = selectedType?.Type switch
-            {
-                SyncFileType => Path.Combine(step["from"] ?? "", step["name"] ?? ""),
-                _ => step["from"]
-            };
-            To = step["to"];
-
-            CaptionFragments = new[] { leftTextPart, fromPathPart, middleTextPart, toPathPart };
-        }
-
-        public override PlanStep ConvertToStep()
-        {
-            var step = base.ConvertToStep();
-            if (selectedType?.Type == SyncFileType)
-            {
-                if (from != null)
-                {
-                    step["from"] = Path.GetDirectoryName(from);
-                    step["name"] = Path.GetFileName(from);
-                }
-            }
-            else
-            {
-                step["from"] = from;
-            }
-            step["to"] = to;
-            return step;
-        }
-
-        private async Task OpenSelectFromDialogAsync()
-        {
-            if (selectedType?.Type == "file")
-            {
-                if (OpenFileDialogInteraction != null)
-                {
-                    var selectedFile = await OpenFileDialogInteraction.Handle(from);
-                    if (!string.IsNullOrEmpty(selectedFile))
-                    {
-                        From = selectedFile;
-                    }
-                }
-            }
-            else
-            {
-                if (OpenFolderDialogInteraction != null)
-                {
-                    var selectedPath = await OpenFolderDialogInteraction.Handle(from);
-                    if (!string.IsNullOrEmpty(selectedPath))
-                    {
-                        From = selectedPath;
-                    }
+                    From = selectedFile;
                 }
             }
         }
-
-        private async Task OpenSelectToDialogAsync()
+        else
         {
             if (OpenFolderDialogInteraction != null)
             {
-                var selectedPath = await OpenFolderDialogInteraction.Handle(to);
+                var selectedPath = await OpenFolderDialogInteraction.Handle(from);
                 if (!string.IsNullOrEmpty(selectedPath))
                 {
-                    To = selectedPath;
+                    From = selectedPath;
                 }
             }
         }
+    }
 
-        private void PutPlaceholderInFromField()
+    private async Task OpenSelectToDialogAsync()
+    {
+        if (OpenFolderDialogInteraction != null)
         {
-            From = ReplaceWithPlaceholderValues(From);
-        }
-
-        private void PutPlaceholderInToField()
-        {
-            To = ReplaceWithPlaceholderValues(To);
-        }
-
-        private bool ContainsPlaceholderValues(string? path)
-        {
-            return path switch
+            var selectedPath = await OpenFolderDialogInteraction.Handle(to);
+            if (!string.IsNullOrEmpty(selectedPath))
             {
-                not null => placeholders.Values.Any(val => path.StartsWith(val, true, CultureInfo.InvariantCulture)),
-                _ => false
-            };
-        }
-
-        private string? ReplaceWithPlaceholderValues(string? path)
-        {
-            if (path != null)
-            {
-                KeyValuePair<string, string>? placeholderInPath =
-                    placeholders.Entries.FirstOrDefault(keyValue => path.StartsWith(keyValue.Value, true, CultureInfo.InvariantCulture));
-                if (placeholderInPath != null)
-                {
-                    return path.Replace(placeholderInPath.Value.Value, $"${{{placeholderInPath.Value.Key}}}", true, CultureInfo.InvariantCulture);
-                }
+                To = selectedPath;
             }
-
-            return path;
         }
+    }
+
+    private void PutPlaceholderInFromField()
+    {
+        From = ReplaceWithPlaceholderValues(From);
+    }
+
+    private void PutPlaceholderInToField()
+    {
+        To = ReplaceWithPlaceholderValues(To);
+    }
+
+    private bool ContainsPlaceholderValues(string? path)
+    {
+        return path switch
+        {
+            not null => placeholders.Values.Any(val => path.StartsWith(val, true, CultureInfo.InvariantCulture)),
+            _ => false
+        };
+    }
+
+    private string? ReplaceWithPlaceholderValues(string? path)
+    {
+        if (path != null)
+        {
+            KeyValuePair<string, string>? placeholderInPath =
+                placeholders.Entries.FirstOrDefault(keyValue => path.StartsWith(keyValue.Value, true, CultureInfo.InvariantCulture));
+            if (placeholderInPath != null)
+            {
+                return path.Replace(placeholderInPath.Value.Value, $"${{{placeholderInPath.Value.Key}}}", true, CultureInfo.InvariantCulture);
+            }
+        }
+
+        return path;
     }
 }

@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<AssemblyName>taskington-gui</AssemblyName>
 		<PackageId>Taskington.Gui</PackageId>
@@ -12,6 +12,7 @@
 		<Description>Taskington GUI Frontend</Description>
 		<Copyright>Copyright (c) Andreas Weizel</Copyright>
 		<ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 	</PropertyGroup>
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
@@ -31,20 +32,14 @@
 		<Content Include="Assets\AppIcon.ico" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="11.1.2" />
-		<PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
-		<PackageReference Include="Avalonia.Diagnostics" Version="11.0.10" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.2" />
-		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.3.0" />
-		<PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
+		<PackageReference Include="Avalonia" />
+		<PackageReference Include="Avalonia.Desktop" />
+		<PackageReference Include="Avalonia.Themes.Fluent" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+		<PackageReference Include="ReactiveUI.Avalonia" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
 		<ProjectReference Include="..\Taskington.Gui.Extension\Taskington.Gui.Extension.csproj" />
-		<ProjectReference Include="..\Taskington.Update.Windows\Taskington.Update.Windows.csproj" />
 	</ItemGroup>
 </Project>

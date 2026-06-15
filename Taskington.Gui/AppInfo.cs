@@ -1,7 +1,13 @@
-namespace Taskington.Gui
+using System.Linq;
+using System.Reflection;
+
+namespace Taskington.Gui;
+
+static class AppInfo
 {
-    static class AppInfo
-    {
-        public static string Copyright = "Copyright © Andreas Weizel";
-    }
+    public const string Copyright = "Copyright © Andreas Weizel";
+
+    public static string Version => Assembly.GetExecutingAssembly()
+        .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+        .InformationalVersion.Split('+').FirstOrDefault() ?? "local";
 }

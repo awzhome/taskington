@@ -13,36 +13,43 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
         with:
           fetch-depth: 0
 
+      - name: Full Unicode check
+        if: github.ref == 'refs/heads/master'
+        run: buildtools/unicode-check --all
+
+      - name: PR-based Unicode check
+        if: github.event_name == 'pull_request' || startsWith(github.ref, 'refs/pull/')
+        run: buildtools/unicode-check
+
       - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 #v5.2.0
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - name: Check .NET Core version
         shell: bash
         run: |
           dotnet --version
+          
+      - name: Publish MacOS build
+        run: buildtools/publish-macosarm64
       
-      - name: Build Windows Installer
-        shell: bash
-        run: buildtools/installer-win64
-
       - name: Test
         shell: bash
         run: buildtools/test
 
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: Windows x64 Installer
-          path: output/Taskington-*-win64.msi
+#      - name: Archive artifacts
+#        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f #7.0.0
+#        with:
+#          name: Windows x64 Installer
+#          path: output/Taskington-*-win64.msi
 
       - name: Create draft release
         if: startsWith(github.ref, 'refs/tags/v')

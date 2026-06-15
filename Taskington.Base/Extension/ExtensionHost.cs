@@ -6,19 +6,10 @@ using Taskington.Base.Log;
 
 namespace Taskington.Base.Extension;
 
-public class ExtensionHost<T>
+public class ExtensionHost<T>(T baseEnvironment, ILog log)
 {
-    private readonly T baseEnvironment;
-    private readonly ILog log;
+    private readonly List<object> environments = [];
 
-    private readonly List<object> environments = new();
-
-
-    public ExtensionHost(T baseEnvironment, ILog log)
-    {
-        this.baseEnvironment = baseEnvironment;
-        this.log = log;
-    }
 
     public object? LoadExtensionFrom(Assembly assembly)
     {

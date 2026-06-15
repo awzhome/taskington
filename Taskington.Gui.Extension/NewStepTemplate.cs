@@ -1,12 +1,10 @@
 using System;
 using Taskington.Base.Steps;
+namespace Taskington.Gui.Extension;
 
-namespace Taskington.Gui.Extension
+public class NewStepTemplate
 {
-    public class NewStepTemplate
-    {
-        public string? Icon { get; set; }
-        public string? Caption { get; set; }
-        public Func<PlanStep>? Creator { get; set; }
-    }
+    public FontAwesomeIconKind? Icon { get; set; }
+    public string? Caption { get; set; }
+    public Func<PlanStep>? Creator { get; set; }
 }

@@ -1,123 +1,110 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
-namespace Taskington.Base.SystemOperations
+namespace Taskington.Base.SystemOperations;
+
+public class Placeholders
 {
-    public class Placeholders
+    private readonly Dictionary<string, string> placeholderMappings = new();
+
+    public string? this[string placeholder]
     {
-        private readonly Dictionary<string, string> placeholderMappings = new();
-
-        public string? this[string placeholder]
+        get
         {
-            get
-            {
-                if (placeholderMappings.TryGetValue(placeholder, out string? val))
-                {
-                    return val;
-                }
-
-                return null;
-            }
-
-            set
-            {
-                if (value == null)
-                {
-                    placeholderMappings.Remove(placeholder);
-                }
-                else
-                {
-                    placeholderMappings[placeholder] = value;
-                }
-            }
+            return placeholderMappings.GetValueOrDefault(placeholder);
         }
 
-        public IEnumerable<KeyValuePair<string, string>> Entries => placeholderMappings;
-        public IEnumerable<string> Keys => placeholderMappings.Keys;
-        public IEnumerable<string> Values => placeholderMappings.Values;
-
-        public string? ResolvePlaceholders(string? input)
+        set
         {
-            if (input == null)
+            if (value == null)
             {
-                return null;
+                placeholderMappings.Remove(placeholder);
             }
-
-            var output = new StringBuilder();
-
-            int pos = 0;
-            while (pos < input.Length)
+            else
             {
-                int placeholderStart = input.IndexOf("${", pos);
-                if (placeholderStart == -1)
-                {
-                    output.Append(input[pos..]);
-                    break;
-                }
-                else
-                {
-                    output.Append(input[pos..placeholderStart]);
-
-                    int placeholderEnd = input.IndexOf('}', placeholderStart);
-                    if (placeholderEnd == -1)
-                    {
-                        output.Append(input[placeholderStart..]);
-                        break;
-                    }
-                    else
-                    {
-                        string placeholder = input.Substring(placeholderStart + 2, placeholderEnd - placeholderStart - 2);
-                        string? placeholderValue = this[placeholder];
-                        if (placeholderValue != null)
-                        {
-                            output.Append(placeholderValue);
-                        }
-                        else
-                        {
-                            output.Append("${" + placeholder + "}");
-                        }
-
-                        pos = placeholderEnd + 1;
-                    }
-                }
-
+                placeholderMappings[placeholder] = value;
             }
+        }
+    }
 
-            return output.ToString();
+    public IEnumerable<KeyValuePair<string, string>> Entries => placeholderMappings;
+    public IEnumerable<string> Keys => placeholderMappings.Keys;
+    public IEnumerable<string> Values => placeholderMappings.Values;
+
+    public string? ResolvePlaceholders(string? input)
+    {
+        if (input == null)
+        {
+            return null;
         }
 
-        public IEnumerable<(string Placeholder, string? Resolved)> ExtractPlaceholders(string input)
+        var output = new StringBuilder();
+
+        int pos = 0;
+        while (pos < input.Length)
         {
-            var foundPlaceholders = new HashSet<string>();
-
-            int pos = 0;
-            while (pos < input.Length)
+            int placeholderStart = input.IndexOf("${", pos, StringComparison.Ordinal);
+            if (placeholderStart == -1)
             {
-                int placeholderStart = input.IndexOf("${", pos);
-                if (placeholderStart == -1)
-                {
-                    break;
-                }
-                else
-                {
-                    int placeholderEnd = input.IndexOf('}', placeholderStart);
-                    if (placeholderEnd == -1)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        string placeholder = input.Substring(placeholderStart + 2, placeholderEnd - placeholderStart - 2);
-                        if (!foundPlaceholders.Contains(placeholder))
-                        {
-                            yield return (placeholder, this[placeholder]);
-                            foundPlaceholders.Add(placeholder);
-                        }
-
-                        pos = placeholderEnd + 1;
-                    }
-                }
+                output.Append(input[pos..]);
+                break;
             }
+
+            output.Append(input[pos..placeholderStart]);
+
+            int placeholderEnd = input.IndexOf('}', placeholderStart);
+            if (placeholderEnd == -1)
+            {
+                output.Append(input[placeholderStart..]);
+                break;
+            }
+
+            string placeholder = input.Substring(placeholderStart + 2, placeholderEnd - placeholderStart - 2);
+            string? placeholderValue = this[placeholder];
+            if (placeholderValue != null)
+            {
+                output.Append(placeholderValue);
+            }
+            else
+            {
+                output.Append("${" + placeholder + "}");
+            }
+
+            pos = placeholderEnd + 1;
+
+        }
+
+        return output.ToString();
+    }
+
+    public IEnumerable<(string Placeholder, string? Resolved)> ExtractPlaceholders(string input)
+    {
+        var foundPlaceholders = new HashSet<string>();
+
+        int pos = 0;
+        while (pos < input.Length)
+        {
+            int placeholderStart = input.IndexOf("${", pos, StringComparison.Ordinal);
+            if (placeholderStart == -1)
+            {
+                break;
+            }
+
+            int placeholderEnd = input.IndexOf('}', placeholderStart);
+            if (placeholderEnd == -1)
+            {
+                break;
+            }
+
+            string placeholder = input.Substring(placeholderStart + 2, placeholderEnd - placeholderStart - 2);
+            if (!foundPlaceholders.Contains(placeholder))
+            {
+                yield return (placeholder, this[placeholder]);
+                foundPlaceholders.Add(placeholder);
+            }
+
+            pos = placeholderEnd + 1;
         }
     }
 }

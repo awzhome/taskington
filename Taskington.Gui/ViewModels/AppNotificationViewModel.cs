@@ -12,13 +12,13 @@ internal interface IAppNotificationViewModel : IAppNotifications
 
 internal class AppNotificationViewModel : IAppNotificationViewModel
 {
-    public ObservableCollection<AppNotification> Notifications { get; } = new();
+    public ObservableCollection<AppNotification> Notifications { get; } = [];
 
     public void Add(AppNotification notification)
     {
         var notifications = Notifications.ToList();
         notifications.Add(notification);
-        var sortedNotifications = notifications.OrderByDescending(notification => notification.NotificationType);
+        var sortedNotifications = notifications.OrderByDescending(n => n.NotificationType);
         Notifications.Clear();
         Notifications.AddRange(sortedNotifications);
     }

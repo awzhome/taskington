@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using Taskington.Base.Plans;
-using Taskington.Base.TinyBus;
 
 namespace Taskington.Base.Config;
 
@@ -31,7 +29,7 @@ public class ConfigurationManager : IConfigurationManager
 
     private bool isInitialized = false;
     private bool reloadDelayed = false;
-    private readonly HashSet<Plan> runningPlans = new();
+    private readonly HashSet<Plan> runningPlans = [];
     private readonly YamlConfigurationReader configurationReader;
     private readonly YamlConfigurationWriter configurationWriter;
 
@@ -48,7 +46,7 @@ public class ConfigurationManager : IConfigurationManager
         planExecution.PlanRunningUpdated += OnPlanIsRunningUpdated;
     }
 
-    private readonly List<Plan> plans = new();
+    private readonly List<Plan> plans = [];
 
     private readonly Dictionary<string, string?> configValues = new();
 
@@ -76,7 +74,7 @@ public class ConfigurationManager : IConfigurationManager
 
         if (configReloaded)
         {
-            ConfigurationReloadDelayed?.Invoke(this, new());
+            ConfigurationReloadDelayed?.Invoke(this, new EventArgs());
         }
     }
 
@@ -92,7 +90,7 @@ public class ConfigurationManager : IConfigurationManager
         {
             if (!reloadDelayed)
             {
-                ConfigurationReloadDelayed?.Invoke(this, new());
+                ConfigurationReloadDelayed?.Invoke(this, new EventArgs());
             }
             reloadDelayed = true;
             return false;
@@ -126,14 +124,14 @@ public class ConfigurationManager : IConfigurationManager
                 runningPlans.Remove(e.Plan);
                 if (runningPlans.Count == 0 && reloadDelayed)
                 {
-                    ConfigurationReloadDelayed?.Invoke(this, new());
+                    ConfigurationReloadDelayed?.Invoke(this, new EventArgs());
                     reloadDelayed = false;
                     configReloaded = TryReloadConfiguration();
                 }
             }
             if (configReloaded)
             {
-                ConfigurationReloaded?.Invoke(this, new());
+                ConfigurationReloaded?.Invoke(this, new EventArgs());
             }
         }
     }

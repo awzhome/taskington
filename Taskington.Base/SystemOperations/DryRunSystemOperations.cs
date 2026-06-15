@@ -3,15 +3,8 @@ using Taskington.Base.Log;
 
 namespace Taskington.Base.SystemOperations;
 
-class DryRunSystemOperations : ISystemOperations
+class DryRunSystemOperations(ILog log) : ISystemOperations
 {
-    private readonly ILog log;
-
-    public DryRunSystemOperations(ILog log)
-    {
-        this.log = log;
-    }
-
     public void SyncDirectory(SyncDirection direction, string from, string to)
     {
         var directionOutput = direction switch

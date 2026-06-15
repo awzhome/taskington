@@ -14,17 +14,17 @@ internal class GuiEnvironment : IFullGuiEnvironment
 {
     public GuiEnvironment()
     {
-        StepUIs = new KeyedRegistry<IStepUI>();
+        StepUIs = new KeyedRegistry<IStepUi>();
         AppNotificationViewModel = new AppNotificationViewModel();
         AppNotifications = AppNotificationViewModel;
 
-        SyncStepUI = new SyncStepUI(StepUIs);
+        SyncStepUI = new SyncStepUi(StepUIs);
     }
 
-    public IKeyedRegistry<IStepUI> StepUIs { get; }
+    public IKeyedRegistry<IStepUi> StepUIs { get; }
 
     public IAppNotifications AppNotifications { get; }
     public IAppNotificationViewModel AppNotificationViewModel { get; }
 
-    internal SyncStepUI SyncStepUI { get; }
+    internal SyncStepUi SyncStepUI { get; }
 }

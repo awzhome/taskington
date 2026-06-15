@@ -1,15 +1,9 @@
 using System;
 
-namespace Taskington.Base.Extension
-{
-    [AttributeUsage(AttributeTargets.Assembly)]
-    public class TaskingtonExtensionAttribute : Attribute
-    {
-        public Type Binder { get; set; }
+namespace Taskington.Base.Extension;
 
-        public TaskingtonExtensionAttribute(Type binder)
-        {
-            Binder = binder;
-        }
-    }
+[AttributeUsage(AttributeTargets.Assembly)]
+public class TaskingtonExtensionAttribute(Type binder) : Attribute
+{
+    public Type Binder { get; set; } = binder;
 }

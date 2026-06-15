@@ -15,7 +15,7 @@ class EditPlanViewModel : ViewModelBase, IEditPlanViewModel
 {
     private readonly Plan plan;
     private readonly Placeholders placeholders;
-    private readonly IKeyedRegistry<IStepUI> stepUIs;
+    private readonly IKeyedRegistry<IStepUi> stepUIs;
 
 
     public ReactiveCommand<bool, bool> CloseCommand { get; }
@@ -27,7 +27,7 @@ class EditPlanViewModel : ViewModelBase, IEditPlanViewModel
     public Interaction<string?, string?> OpenFolderDialog { get; }
     public Interaction<string?, string?> OpenFileDialog { get; }
 
-    public EditPlanViewModel(ISystemOperations systemOperations, IKeyedRegistry<IStepUI> stepUIs, PlanViewModel planViewModel)
+    public EditPlanViewModel(ISystemOperations systemOperations, IKeyedRegistry<IStepUi> stepUIs, PlanViewModel planViewModel)
     {
         this.stepUIs = stepUIs;
 
@@ -46,8 +46,8 @@ class EditPlanViewModel : ViewModelBase, IEditPlanViewModel
         MoveStepDownCommand = ReactiveCommand.Create(MoveStepDown,
             this.WhenAnyValue(x => x.SelectedItem, (IEditStepViewModel? selectedItem) => Steps.LastOrDefault() != selectedItem));
 
-        OpenFolderDialog = new();
-        OpenFileDialog = new();
+        OpenFolderDialog = new Interaction<string?, string?>();
+        OpenFileDialog = new Interaction<string?, string?>();
 
         InitializeFromBasicModel();
         SelectedItem = Steps.FirstOrDefault();
@@ -55,7 +55,7 @@ class EditPlanViewModel : ViewModelBase, IEditPlanViewModel
         NewStepTemplates = CollectNewStepTemplates();
     }
 
-    public ObservableCollection<IEditStepViewModel> Steps { get; } = new();
+    public ObservableCollection<IEditStepViewModel> Steps { get; } = [];
 
     public List<NewStepTemplate> NewStepTemplates { get; }
 
@@ -93,7 +93,7 @@ class EditPlanViewModel : ViewModelBase, IEditPlanViewModel
         stepUIs.Get(step.StepType)?.CreateEditViewModel(step, this, placeholders) ?? new EditGeneralStepViewModel(step);
 
     private List<NewStepTemplate> CollectNewStepTemplates() =>
-        new(stepUIs.All.SelectMany(stepUI => stepUI.GetNewStepTemplates()));
+        [..stepUIs.All.SelectMany(stepUI => stepUI.GetNewStepTemplates())];
 
     private void InitializeFromBasicModel()
     {

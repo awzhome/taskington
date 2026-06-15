@@ -7,9 +7,9 @@ using Taskington.Gui.ViewModels;
 
 namespace Taskington.Gui.UIProviders;
 
-class SyncStepUI : IStepUI
+class SyncStepUi : IStepUi
 {
-    public SyncStepUI(IKeyedRegistry<IStepUI> stepUIs)
+    public SyncStepUi(IKeyedRegistry<IStepUi> stepUIs)
     {
         stepUIs.Add("sync", this);
     }
@@ -25,28 +25,28 @@ class SyncStepUI : IStepUI
 
     public IEnumerable<NewStepTemplate> GetNewStepTemplates()
     {
-        yield return new()
+        yield return new NewStepTemplate
         {
             Caption = "Synchronize file",
-            Icon = "fas fa-file",
+            Icon = FontAwesomeIconKind.File,
             Creator = () => new PlanStep("sync")
             {
                 DefaultProperty = "file"
             }
         };
-        yield return new()
+        yield return new NewStepTemplate
         {
             Caption = "Synchronize directory",
-            Icon = "fas fa-folder-open",
+            Icon = FontAwesomeIconKind.FolderOpen,
             Creator = () => new PlanStep("sync")
             {
                 DefaultProperty = "dir"
             }
         };
-        yield return new()
+        yield return new NewStepTemplate
         {
             Caption = "Synchronize sub-directories",
-            Icon = "fas fa-sitemap",
+            Icon = FontAwesomeIconKind.Sitemap,
             Creator = () => new PlanStep("sync")
             {
                 DefaultProperty = "sub-dirs"

@@ -2,24 +2,23 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
-namespace Taskington.Gui.Views
+namespace Taskington.Gui.Views;
+
+class PlanView : UserControl
 {
-    class PlanView : UserControl
+    public PlanView()
     {
-        public PlanView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
 
-        private void OpenButtonMenu(object sender, RoutedEventArgs args)
-        {
-            var senderControl = sender as Control;
-            senderControl?.ContextMenu?.Open(senderControl);
-        }
+    private void OpenButtonMenu(object sender, RoutedEventArgs args)
+    {
+        var senderControl = sender as Control;
+        senderControl?.ContextMenu?.Open(senderControl);
     }
 }

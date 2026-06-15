@@ -2,9 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+             xmlns:vm="using:Taskington.Gui.ViewModels"
+             xmlns:controls="using:Taskington.Gui.Controls"
+             xmlns:ext="using:Taskington.Gui.Extension"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Taskington.Gui.Views.EditSyncStepView">
+             x:Class="Taskington.Gui.Views.EditSyncStepView"
+             x:DataType="vm:EditSyncStepViewModel">
 
     <UserControl.Styles>
         <Style Selector="Label">
@@ -33,7 +36,7 @@
             <Label Grid.Column="0">Synchronize</Label>
             <ComboBox Grid.Column="1" ItemsSource="{Binding SyncTypes}" SelectedItem="{Binding SelectedType}">
                 <ComboBox.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="vm:SyncTypeEntry">
                         <TextBlock Text="{Binding Caption}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
@@ -44,24 +47,30 @@
             <Label Grid.Row="0" Grid.Column="0" Content="{Binding FromCaption}" />
             <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,Auto,Auto">
                 <TextBox Grid.Column="0" Text="{Binding From}" />
-                <Button Grid.Column="1" 
-                        i:Attached.Icon="fas fa-info-circle"
+                <Button Grid.Column="1"
                         Classes="putPlaceholder"
-                        Command="{Binding PutPlaceholderInFromFieldCommand}" 
+                        Command="{Binding PutPlaceholderInFromFieldCommand}"
                         IsVisible="{Binding ShowPutPlaceholderIntoFromButton}"
-                        ToolTip.Tip="{Binding PutPlaceholdersButtonTooltip}"></Button>
+                        ToolTip.Tip="{Binding PutPlaceholdersButtonTooltip}">
+                    <Button.Content>
+                        <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.CircleInfo}"></controls:FontAwesomeIcon>
+                    </Button.Content>
+                </Button>
                 <Button Grid.Column="2" Command="{Binding SelectFromCommand}">...</Button>
             </Grid>
 
             <Label Grid.Row="1" Grid.Column="0" Content="{Binding ToCaption}" />
             <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="*,Auto,Auto">
                 <TextBox Grid.Column="0" Text="{Binding To}" />
-                <Button Grid.Column="1" 
-                        i:Attached.Icon="fas fa-info-circle" 
+                <Button Grid.Column="1"
                         Classes="putPlaceholder"
-                        Command="{Binding PutPlaceholderInToFieldCommand}" 
+                        Command="{Binding PutPlaceholderInToFieldCommand}"
                         IsVisible="{Binding ShowPutPlaceholderIntoToButton}"
-                        ToolTip.Tip="{Binding PutPlaceholdersButtonTooltip}"></Button>
+                        ToolTip.Tip="{Binding PutPlaceholdersButtonTooltip}">
+                    <Button.Content>
+                        <controls:FontAwesomeIcon Icon="{x:Static ext:FontAwesomeIconKind.CircleInfo}"></controls:FontAwesomeIcon>
+                    </Button.Content>
+                </Button>
                 <Button Grid.Column="2" Command="{Binding SelectToCommand}">...</Button>
             </Grid>
         </Grid>
