@@ -4,12 +4,12 @@
     "net10.0": {
       "ReactiveUI": {
         "type": "Direct",
-        "requested": "[23.2.27, )",
-        "resolved": "23.2.27",
-        "contentHash": "0ZdM1e2YAAdj2UrO62DefbibSq5OY3XfyxZMMXsXNeqPM80Y3zhFY6xjQz4elZjUQBEVKL+vvtqJ34W5IMp67Q==",
+        "requested": "[23.2.28, )",
+        "resolved": "23.2.28",
+        "contentHash": "9sSuHnMcLTLhgMTQpQO6Jhz9Cbub3Pg44i6FS4Ot4UtbV8dpwMH3JGzGjT72oav4aSrJlmzbFyI87gX55oPzLA==",
         "dependencies": {
           "DynamicData": "9.4.31",
-          "Splat": "19.3.1",
+          "Splat": "19.4.1",
           "System.Reactive": "6.1.0"
         }
       },
@@ -28,38 +28,32 @@
       },
       "Splat": {
         "type": "Transitive",
-        "resolved": "19.3.1",
-        "contentHash": "at6uM1+KfkjyjfYRIiiUjTBUTEwxBysoLOE4zuxGCy6kqNAG9mpSGliTkZtsPe8WqJuU6+Jup7oOoNdjz5R8FQ==",
+        "resolved": "19.4.1",
+        "contentHash": "3VJOloRQA3bgbAxyNAi4mvLAR/mKH3h1agN5pIrUXvp9lAA2/rvUgxOYjt+GZ4suouLfXxkeKcS/bRjSclo1LQ==",
         "dependencies": {
-          "Splat.Builder": "19.3.1",
-          "Splat.Logging": "19.3.1",
-          "System.Reactive": "6.1.0"
+          "Splat.Builder": "19.4.1",
+          "Splat.Logging": "19.4.1"
         }
       },
       "Splat.Builder": {
         "type": "Transitive",
-        "resolved": "19.3.1",
-        "contentHash": "FR9ISOBiEV/wXTq0oU+VrGZmsWVEE/yWkI79oeXF7luvr9P6GKRzZD+acjl+5T8oAJdXPWnBhFTJ/XDpAEW35Q==",
+        "resolved": "19.4.1",
+        "contentHash": "9i0RLWEwfheI8aI17WaW8AJmNlFVi7LaX3XQwAavGqUaJJi7Vp5Eh9umWqVQYBLjs87ztVLmax/OMzMyW2igKQ==",
         "dependencies": {
-          "Splat.Core": "19.3.1",
-          "System.Reactive": "6.1.0"
+          "Splat.Core": "19.4.1"
         }
       },
       "Splat.Core": {
         "type": "Transitive",
-        "resolved": "19.3.1",
-        "contentHash": "MrRbpO/wdWtAfH5c2Nys8Bm7EQ5yi+IAJD3AJsCUMyaRssImIhqmbC7QwfXRnpC2EXOdGENRi0NCTf6y5ODWxQ==",
-        "dependencies": {
-          "System.Reactive": "6.1.0"
-        }
+        "resolved": "19.4.1",
+        "contentHash": "fOjcUDP9YzJPZnSDI2eBO+NwRoEJVFEkTGlh/tFa7GUXc5mtMcQdwak60Ju4DWvPSAfsxlu2geObmhZAQe1VLg=="
       },
       "Splat.Logging": {
         "type": "Transitive",
-        "resolved": "19.3.1",
-        "contentHash": "u4MCO7dFKCX9+dnxNhbAWB9GmtY70fvVGexqr3YoesevExijpYoMiPpsCSYk36bJyKpq9XVgyJBxdg4ChrPS3A==",
+        "resolved": "19.4.1",
+        "contentHash": "bvudJQxxMnHIa9dtZaUUCpvmd96rQxA0yjrZLoB4OSiAJpIxMCDCwnDmG6RhDyW2pS3O0xef2e1STY/oL1PqRw==",
         "dependencies": {
-          "Splat.Core": "19.3.1",
-          "System.Reactive": "6.1.0"
+          "Splat.Core": "19.4.1"
         }
       },
       "System.Reactive": {
