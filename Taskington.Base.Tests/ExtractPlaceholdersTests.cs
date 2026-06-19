@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Taskington.Base.SystemOperations;
 using Xunit;
 

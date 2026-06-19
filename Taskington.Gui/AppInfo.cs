@@ -5,7 +5,7 @@ namespace Taskington.Gui;
 
 static class AppInfo
 {
-    public const string Copyright = "Copyright © Andreas Weizel";
+    public const string Copyright = "Copyright (c) Andreas Weizel";
 
     public static string Version => Assembly.GetExecutingAssembly()
         .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?

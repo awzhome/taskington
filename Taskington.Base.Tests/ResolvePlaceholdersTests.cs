@@ -1,4 +1,4 @@
-﻿using Taskington.Base.SystemOperations;
+using Taskington.Base.SystemOperations;
 using Xunit;
 
 namespace Taskington.Base.Tests;
