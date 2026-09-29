@@ -20,9 +20,6 @@
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="Executors\" />
-	</ItemGroup>
-	<ItemGroup>
 		<ProjectReference Include="..\Taskington.Base\Taskington.Base.csproj" />
 	</ItemGroup>
 </Project>
