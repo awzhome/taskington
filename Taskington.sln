@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskington.Base.Tests", "Ta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskington.App", "Taskington.App\Taskington.App.csproj", "{0FDCA944-7FD3-4C2B-ADB2-E8453B3188DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskington.App.Tests", "Taskington.App.Tests\Taskington.App.Tests.csproj", "{9BB63CE0-8E43-47D8-8106-B7C47E3E9C8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{0FDCA944-7FD3-4C2B-ADB2-E8453B3188DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FDCA944-7FD3-4C2B-ADB2-E8453B3188DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FDCA944-7FD3-4C2B-ADB2-E8453B3188DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BB63CE0-8E43-47D8-8106-B7C47E3E9C8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BB63CE0-8E43-47D8-8106-B7C47E3E9C8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BB63CE0-8E43-47D8-8106-B7C47E3E9C8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BB63CE0-8E43-47D8-8106-B7C47E3E9C8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

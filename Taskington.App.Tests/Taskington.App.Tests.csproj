@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Product>Taskington</Product>
+        <Authors>Andreas Weizel</Authors>
+        <Copyright>Copyright (c) Andreas Weizel</Copyright>
+        <Description>Taskington Application Tests</Description>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="xunit" />
+    </ItemGroup>
+
+</Project>
