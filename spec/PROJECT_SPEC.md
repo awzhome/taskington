@@ -1,6 +1,6 @@
 # Taskington - Project Specification
 
-**Document Version: 2.1 - 2026-10-09 - Andreas Weizel (with Mistral Vibe)**
+**Document Version: 2.2 - 2026-10-12 - Andreas Weizel (with Mistral Vibe)**
 
 Living document: any development change that alters a decision stated here updates this
 spec (plus `JOB_SYNTAX.md` and the `AGENTS.md` files as applicable) in the same change;
@@ -136,8 +136,10 @@ never dialogs.
 | File not found / permission denied | Stop, Failed | Tile + message in output |
 | Internal error | Stop, log, Failed | Tile + output |
 
-Serilog with verbose level for development; not user-configurable in MVP. Log files
-under the platform `logs/` dir (`application-*.log`, `errors-*.log`).
+Serilog with verbose level for development; not user-configurable in MVP. Verbose is
+enabled in Debug build configuration or via the `--verbose` startup flag; otherwise the
+level is Information. Log files under the platform `logs/` dir (`application-*.log` for
+all events, `errors-*.log` for errors only), both created on application start.
 
 ## 11. Testing
 

@@ -9,9 +9,6 @@
 		<Nullable>enable</Nullable>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DefineConstants>TRACE</DefineConstants>
-	</PropertyGroup>
 	<ItemGroup>
 		<InternalsVisibleTo Include="Taskington.Base.Tests" />
 	</ItemGroup>

@@ -42,8 +42,10 @@ applies; authoritative behavior in `spec/PROJECT_SPEC.md` chapters 4, 6-10.
 
 ## Conventions
 
-- Serilog logging; verbose level for development; no user-facing log configuration in
-  MVP.
+- Serilog logging via `LoggingBootstrap`: file sinks `application-*.log` (all events)
+  and `errors-*.log` (errors only) under the platform `logs/` dir, both created on
+  application start; verbose in Debug builds or with the `--verbose` startup flag; no
+  user-facing log configuration in MVP.
 - Execution paths never block callers; output/progress published as events with a
   bounded in-memory buffer.
 - MVP: no timeouts, no output persistence, no backups, no scheduling.
