@@ -1,8 +1,9 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
-using Taskington.Base.FileSystem;
+using Taskington.Base.DependencyInjection;
 using Taskington.Base.Logging;
 using Taskington.Base.Platform;
 
@@ -16,15 +17,17 @@ sealed class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        var platformDirectories = new PlatformDirectoryService();
+        var serviceProvider = BuildContainer();
+
+        var platformDirectories = serviceProvider.GetRequiredService<PlatformDirectoryService>();
         platformDirectories.EnsureDirectories();
-        var loggingBootstrap = new LoggingBootstrap(new FileSystemService());
+        var loggingBootstrap = serviceProvider.GetRequiredService<LoggingBootstrap>();
         loggingBootstrap.Configure(platformDirectories, args);
 
         try
         {
             Log.Information("Taskington starting");
-            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+            BuildAvaloniaApp(new App(serviceProvider)).StartWithClassicDesktopLifetime(args);
         }
         finally
         {
@@ -32,9 +35,20 @@ sealed class Program
         }
     }
 
+    private static ServiceProvider BuildContainer()
+    {
+        var services = new ServiceCollection();
+        services.AddTaskingtonBase();
+        services.AddTaskingtonApp();
+        return services.BuildServiceProvider();
+    }
+
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
+        => BuildAvaloniaApp(null);
+
+    private static AppBuilder BuildAvaloniaApp(App? app)
+        => (app is null ? AppBuilder.Configure<App>() : AppBuilder.Configure(() => app))
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace()

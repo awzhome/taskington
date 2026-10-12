@@ -1,13 +1,28 @@
+using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Taskington.App.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Taskington.App.Views;
 
 namespace Taskington.App;
 
 public partial class App : Application
 {
+    private readonly IServiceProvider? services;
+
+    /// <summary>
+    /// Design-time constructor, used by the visual designer via BuildAvaloniaApp().
+    /// </summary>
+    public App()
+    {
+    }
+
+    public App(IServiceProvider services)
+    {
+        this.services = services;
+    }
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -15,9 +30,10 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (services is not null
+            && ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow { DataContext = new MainWindowViewModel(), };
+            desktop.MainWindow = services.GetRequiredService<MainWindow>();
         }
 
         base.OnFrameworkInitializationCompleted();

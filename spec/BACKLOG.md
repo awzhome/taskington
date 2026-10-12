@@ -17,7 +17,7 @@ Phase 9 last.
 
 - [x] **S0.1 Platform directory service:** resolve/create per-OS user config dir + `jobs/`, `logs/` subdirs (macOS `~/Library/Application Support/Taskington/`, Linux `$XDG_CONFIG_HOME/taskington/`, Windows `%APPDATA%\Taskington\`). Tests cover resolution/creation per OS.
 - [x] **S0.2 Logging bootstrap:** Serilog file sinks under platform `logs/`, verbose level for development. Log files written on start; verbose via build config or startup flag.
-- [ ] **S0.3 DI setup:** container at app entry, registration extension methods per module. Root services resolved from container; no manual construction in views/VMs.
+- [x] **S0.3 DI setup:** container at app entry, registration extension methods per module. Root services resolved from container; no manual construction in views/VMs.
 - [ ] **S0.4 CI sanity:** CI builds the solution and runs both test projects; green on push.
 
 ## Phase 1: Core domain (Taskington.Base)
