@@ -1,4 +1,4 @@
-﻿namespace Taskington.App.ViewModels;
+namespace Taskington.App.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {

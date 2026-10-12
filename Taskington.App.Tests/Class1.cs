@@ -1,4 +1,4 @@
-﻿namespace Taskington.App.Tests;
+namespace Taskington.App.Tests;
 
 public class Class1
 {
