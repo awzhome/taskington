@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
 
-cd Taskington.Base.Tests
-dotnet test
+set -e
+
+dotnet build Taskington.sln
+dotnet test Taskington.sln --no-build
