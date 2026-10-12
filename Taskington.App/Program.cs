@@ -2,6 +2,7 @@
 using Avalonia.ReactiveUI;
 using Serilog;
 using System;
+using Taskington.Base.FileSystem;
 using Taskington.Base.Logging;
 using Taskington.Base.Platform;
 
@@ -17,7 +18,8 @@ sealed class Program
     {
         var platformDirectories = new PlatformDirectoryService();
         platformDirectories.EnsureDirectories();
-        LoggingBootstrap.Configure(platformDirectories, args);
+        var loggingBootstrap = new LoggingBootstrap(new FileSystemService());
+        loggingBootstrap.Configure(platformDirectories, args);
 
         try
         {
@@ -26,7 +28,7 @@ sealed class Program
         }
         finally
         {
-            LoggingBootstrap.ShutDown();
+            loggingBootstrap.ShutDown();
         }
     }
 

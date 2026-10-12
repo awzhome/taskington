@@ -42,6 +42,8 @@ applies; authoritative behavior in `spec/PROJECT_SPEC.md` chapters 4, 6-10.
 
 ## Conventions
 
+- File system operations go through `IFileSystemService` (System.IO implementation:
+  `FileSystemService`) so dependent services can be unit tested without disk access.
 - Serilog logging via `LoggingBootstrap`: file sinks `application-*.log` (all events)
   and `errors-*.log` (errors only) under the platform `logs/` dir, both created on
   application start; verbose in Debug builds or with the `--verbose` startup flag; no
