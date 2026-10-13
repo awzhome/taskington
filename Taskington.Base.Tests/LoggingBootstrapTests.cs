@@ -211,6 +211,31 @@ public class LoggingBootstrapTests : IDisposable
         {
             CreatedFiles.Add(path);
         }
+
+        public string ReadAllText(string path)
+        {
+            throw new NotSupportedException("Not used in this test.");
+        }
+
+        public void WriteAllText(string path, string contents)
+        {
+            throw new NotSupportedException("Not used in this test.");
+        }
+
+        public void DeleteFile(string path)
+        {
+            throw new NotSupportedException("Not used in this test.");
+        }
+
+        public void MoveFile(string sourcePath, string destinationPath, bool overwrite)
+        {
+            throw new NotSupportedException("Not used in this test.");
+        }
+
+        public string[] GetFiles(string directoryPath, string searchPattern)
+        {
+            throw new NotSupportedException("Not used in this test.");
+        }
     }
 
     /// <summary>

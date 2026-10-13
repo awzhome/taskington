@@ -1,6 +1,6 @@
 # Taskington - Project Specification
 
-**Document Version: 2.2 - 2026-10-12 - Andreas Weizel (with Mistral Vibe)**
+**Document Version: 2.3 - 2026-10-13 - Andreas Weizel (with Mistral Vibe)**
 
 Living document: any development change that alters a decision stated here updates this
 spec (plus `JOB_SYNTAX.md` and the `AGENTS.md` files as applicable) in the same change;
@@ -107,6 +107,11 @@ executionMode, status, exitCode - metadata only, never output); `logs/`;
 Job output is never persisted in MVP (live viewer only, in-memory). Internal paths use
 the platform dirs; paths inside scripts are the user's responsibility (a variable system
 may help later).
+
+Repository behavior: `JobRepository` assigns CreatedAt on a job's first save and
+updates ModifiedAt on every save; writes are atomic (unique temp file plus rename).
+Job files with invalid JSON or missing required fields are skipped on load with a log
+entry; one bad file never fails the whole load.
 
 ## 9. Execution flow
 

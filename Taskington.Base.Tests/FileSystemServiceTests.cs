@@ -81,4 +81,91 @@ public class FileSystemServiceTests : IDisposable
 
         Assert.Empty(File.ReadAllText(file));
     }
+
+    [Fact]
+    public void ReadAllTextReturnsFileContent()
+    {
+        string file = Path.Combine(tempDirectory, "read.txt");
+        Directory.CreateDirectory(tempDirectory);
+        File.WriteAllText(file, "file content");
+
+        Assert.Equal("file content", fileSystem.ReadAllText(file));
+    }
+
+    [Fact]
+    public void WriteAllTextWritesAndOverwrites()
+    {
+        string file = Path.Combine(tempDirectory, "write.txt");
+        Directory.CreateDirectory(tempDirectory);
+
+        fileSystem.WriteAllText(file, "first");
+        fileSystem.WriteAllText(file, "second");
+
+        Assert.Equal("second", File.ReadAllText(file));
+    }
+
+    [Fact]
+    public void DeleteFileRemovesExistingFile()
+    {
+        string file = Path.Combine(tempDirectory, "delete.txt");
+        Directory.CreateDirectory(tempDirectory);
+        File.WriteAllText(file, "content");
+
+        fileSystem.DeleteFile(file);
+
+        Assert.False(File.Exists(file));
+    }
+
+    [Fact]
+    public void DeleteFileIsSafeForMissingFile()
+    {
+        string file = Path.Combine(tempDirectory, "missing.txt");
+        Directory.CreateDirectory(tempDirectory);
+
+        fileSystem.DeleteFile(file);
+
+        Assert.False(File.Exists(file));
+    }
+
+    [Fact]
+    public void MoveFileOverwritesDestinationWhenAllowed()
+    {
+        string source = Path.Combine(tempDirectory, "source.txt");
+        string destination = Path.Combine(tempDirectory, "destination.txt");
+        Directory.CreateDirectory(tempDirectory);
+        File.WriteAllText(source, "source content");
+        File.WriteAllText(destination, "destination content");
+
+        fileSystem.MoveFile(source, destination, overwrite: true);
+
+        Assert.Equal("source content", File.ReadAllText(destination));
+        Assert.False(File.Exists(source));
+    }
+
+    [Fact]
+    public void MoveFileThrowsWhenDestinationExistsAndOverwriteNotAllowed()
+    {
+        string source = Path.Combine(tempDirectory, "source.txt");
+        string destination = Path.Combine(tempDirectory, "destination.txt");
+        Directory.CreateDirectory(tempDirectory);
+        File.WriteAllText(source, "source content");
+        File.WriteAllText(destination, "destination content");
+
+        Assert.Throws<IOException>(() => fileSystem.MoveFile(source, destination, overwrite: false));
+    }
+
+    [Fact]
+    public void GetFilesReturnsMatchingFilesWithoutSubdirectories()
+    {
+        Directory.CreateDirectory(Path.Combine(tempDirectory, "sub"));
+        File.WriteAllText(Path.Combine(tempDirectory, "a.json"), "{}");
+        File.WriteAllText(Path.Combine(tempDirectory, "b.json"), "{}");
+        File.WriteAllText(Path.Combine(tempDirectory, "c.txt"), "");
+        File.WriteAllText(Path.Combine(tempDirectory, "sub", "d.json"), "{}");
+
+        string[] files = fileSystem.GetFiles(tempDirectory, "*.json");
+
+        Assert.Equal(2, files.Length);
+        Assert.All(files, file => Assert.EndsWith(".json", file));
+    }
 }

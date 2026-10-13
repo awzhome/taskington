@@ -3,6 +3,7 @@ using Taskington.Base.DependencyInjection;
 using Taskington.Base.FileSystem;
 using Taskington.Base.Logging;
 using Taskington.Base.Platform;
+using Taskington.Base.Storage;
 using Xunit;
 
 namespace Taskington.Base.Tests;
@@ -29,6 +30,7 @@ public class ServiceCollectionExtensionsTests
         Assert.IsType<FileSystemService>(serviceProvider.GetRequiredService<IFileSystemService>());
         Assert.NotNull(serviceProvider.GetRequiredService<PlatformDirectoryService>());
         Assert.NotNull(serviceProvider.GetRequiredService<LoggingBootstrap>());
+        Assert.NotNull(serviceProvider.GetRequiredService<JobRepository>());
     }
 
     [Fact]
@@ -47,5 +49,8 @@ public class ServiceCollectionExtensionsTests
         Assert.Same(
             serviceProvider.GetRequiredService<LoggingBootstrap>(),
             serviceProvider.GetRequiredService<LoggingBootstrap>());
+        Assert.Same(
+            serviceProvider.GetRequiredService<JobRepository>(),
+            serviceProvider.GetRequiredService<JobRepository>());
     }
 }
