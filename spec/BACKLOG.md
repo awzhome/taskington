@@ -26,6 +26,10 @@ Phase 9 last.
 - [x] **S1.2 JobRepository:** one JSON file per job, GUID ids, atomic writes (temp + rename), load/save/delete. Tests include malformed files and concurrent access.
 - [ ] **S1.3 JobHistoryService:** metadata JSON per execution under `history/<GUID>/`. Tests verify layout and record-on-completion.
 
+End of phase: add an in-memory `IFileSystemService` fake in the test projects and use
+it to replace real-disk file access in the repository/history tests where the file
+system itself is not the subject.
+
 ## Phase 2: Scripting engine and sandbox
 
 - [ ] **S2.1 LuaScriptEngine:** load/parse scripts, structured syntax errors with line info.
