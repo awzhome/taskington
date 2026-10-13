@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using Taskington.Base.FileSystem;
 using Taskington.Base.Models;
 using Taskington.Base.Platform;
 using Taskington.Base.Storage;
@@ -10,29 +9,20 @@ using Xunit;
 
 namespace Taskington.Base.Tests;
 
-public class JobHistoryServiceTests : IDisposable
+public class JobHistoryServiceTests
 {
-    private readonly string tempDirectory = Path.Combine(
-        Path.GetTempPath(), "taskington-tests-" + Guid.NewGuid());
-    private readonly JobHistoryService service;
+    private const string TestHome = "/taskington-test-home";
 
-    public JobHistoryServiceTests()
+    private static string HistoryDirectory => Path.Combine(
+        TestHome, "Library", "Application Support", "Taskington", "history");
+
+    private static (JobHistoryService Service, InMemoryFileSystem FileSystem) CreateService()
     {
+        var fileSystem = new InMemoryFileSystem();
         var platformDirectories = new PlatformDirectoryService(
-            DesktopPlatform.MacOS, _ => null, tempDirectory);
-        service = new JobHistoryService(platformDirectories, new FileSystemService());
+            DesktopPlatform.MacOS, _ => null, TestHome);
+        return (new JobHistoryService(platformDirectories, fileSystem), fileSystem);
     }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(tempDirectory))
-        {
-            Directory.Delete(tempDirectory, true);
-        }
-    }
-
-    private string HistoryDirectory => Path.Combine(
-        tempDirectory, "Library", "Application Support", "Taskington", "history");
 
     private static ExecutionResult CreateResult(
         JobState status = JobState.Completed,
@@ -48,13 +38,14 @@ public class JobHistoryServiceTests : IDisposable
     [Fact]
     public void RecordExecutionWritesMetadataFileUnderJobHistoryDirectory()
     {
+        var (service, fileSystem) = CreateService();
         var result = CreateResult();
 
         service.RecordExecution(result);
 
         string file = Path.Combine(HistoryDirectory, result.JobId.ToString(), result.ExecutionId + ".json");
-        Assert.True(File.Exists(file));
-        using var document = JsonDocument.Parse(File.ReadAllText(file));
+        Assert.True(fileSystem.FileExists(file));
+        using var document = JsonDocument.Parse(fileSystem.ReadAllText(file));
         var properties = document.RootElement.EnumerateObject().Select(p => p.Name).ToList();
         Assert.Equal(
             new[]
@@ -71,11 +62,12 @@ public class JobHistoryServiceTests : IDisposable
     [Fact]
     public void RecordedMetadataNeverContainsOutputOrErrorMessage()
     {
+        var (service, fileSystem) = CreateService();
         var result = CreateResult(status: JobState.Failed, exitCode: 1);
 
         service.RecordExecution(result);
 
-        string json = File.ReadAllText(
+        string json = fileSystem.ReadAllText(
             Path.Combine(HistoryDirectory, result.JobId.ToString(), result.ExecutionId + ".json"));
         Assert.DoesNotContain("errorMessage", json);
         Assert.DoesNotContain("failure details", json);
@@ -85,6 +77,7 @@ public class JobHistoryServiceTests : IDisposable
     [Fact]
     public void LoadHistoryReturnsRecordedExecutionsWithAllValues()
     {
+        var (service, _) = CreateService();
         var result = CreateResult(mode: ExecutionMode.Dry, exitCode: 3);
         service.RecordExecution(result);
 
@@ -103,12 +96,15 @@ public class JobHistoryServiceTests : IDisposable
     [Fact]
     public void LoadHistoryReturnsEmptyForUnknownJob()
     {
+        var (service, _) = CreateService();
+
         Assert.Empty(service.LoadHistory(Guid.NewGuid()));
     }
 
     [Fact]
     public void LoadHistoryReturnsExecutionsOldestFirst()
     {
+        var (service, _) = CreateService();
         var jobId = Guid.NewGuid();
         var now = DateTimeOffset.Now;
         var oldest = new ExecutionResult(
@@ -132,6 +128,7 @@ public class JobHistoryServiceTests : IDisposable
     [Fact]
     public void RecordExecutionOverwritesRecordOfSameExecution()
     {
+        var (service, _) = CreateService();
         var result = CreateResult(exitCode: 0);
         service.RecordExecution(result);
 
@@ -149,10 +146,11 @@ public class JobHistoryServiceTests : IDisposable
     [Fact]
     public void LoadHistorySkipsMalformedFiles()
     {
+        var (service, fileSystem) = CreateService();
         var result = CreateResult();
         service.RecordExecution(result);
         string jobDirectory = Path.Combine(HistoryDirectory, result.JobId.ToString());
-        File.WriteAllText(Path.Combine(jobDirectory, Guid.NewGuid() + ".json"), "not JSON");
+        fileSystem.WriteAllText(Path.Combine(jobDirectory, Guid.NewGuid() + ".json"), "not JSON");
 
         var history = service.LoadHistory(result.JobId);
 

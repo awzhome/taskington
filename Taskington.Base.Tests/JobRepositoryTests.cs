@@ -11,29 +11,20 @@ using Xunit;
 
 namespace Taskington.Base.Tests;
 
-public class JobRepositoryTests : IDisposable
+public class JobRepositoryTests
 {
-    private readonly string tempDirectory = Path.Combine(
-        Path.GetTempPath(), "taskington-tests-" + Guid.NewGuid());
-    private readonly JobRepository repository;
+    private const string TestHome = "/taskington-test-home";
 
-    public JobRepositoryTests()
+    private static string JobsDirectory => Path.Combine(
+        TestHome, "Library", "Application Support", "Taskington", "jobs");
+
+    private static (JobRepository Repository, InMemoryFileSystem FileSystem) CreateRepository()
     {
+        var fileSystem = new InMemoryFileSystem();
         var platformDirectories = new PlatformDirectoryService(
-            DesktopPlatform.MacOS, _ => null, tempDirectory);
-        repository = new JobRepository(platformDirectories, new FileSystemService());
+            DesktopPlatform.MacOS, _ => null, TestHome);
+        return (new JobRepository(platformDirectories, fileSystem), fileSystem);
     }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(tempDirectory))
-        {
-            Directory.Delete(tempDirectory, true);
-        }
-    }
-
-    private string JobsDirectory => Path.Combine(
-        tempDirectory, "Library", "Application Support", "Taskington", "jobs");
 
     private static Job CreateJob(string name = "Test job")
     {
@@ -48,6 +39,7 @@ public class JobRepositoryTests : IDisposable
     [Fact]
     public void SaveAssignsIdAndTimestampsToNewJob()
     {
+        var (repository, _) = CreateRepository();
         var job = CreateJob();
         var before = DateTimeOffset.Now;
 
@@ -61,14 +53,15 @@ public class JobRepositoryTests : IDisposable
     [Fact]
     public void SaveWritesCamelCaseJsonFileNamedAfterId()
     {
+        var (repository, fileSystem) = CreateRepository();
         var job = CreateJob();
         job.Script = "print('hi')";
 
         repository.Save(job);
 
         string file = Path.Combine(JobsDirectory, job.Id + ".json");
-        Assert.True(File.Exists(file));
-        using var document = JsonDocument.Parse(File.ReadAllText(file));
+        Assert.True(fileSystem.FileExists(file));
+        using var document = JsonDocument.Parse(fileSystem.ReadAllText(file));
         var properties = document.RootElement.EnumerateObject().Select(p => p.Name).ToList();
         Assert.Equal(
             new[] { "id", "name", "description", "script", "createdAt", "modifiedAt" },
@@ -80,6 +73,7 @@ public class JobRepositoryTests : IDisposable
     [Fact]
     public void SaveKeepsExistingIdCreatedAtAndUpdatesModifiedAt()
     {
+        var (repository, _) = CreateRepository();
         var job = CreateJob();
         repository.Save(job);
         Guid id = job.Id;
@@ -96,6 +90,7 @@ public class JobRepositoryTests : IDisposable
     [Fact]
     public void LoadReturnsSavedJobWithAllValues()
     {
+        var (repository, _) = CreateRepository();
         var job = new Job
         {
             Id = Guid.NewGuid(),
@@ -122,12 +117,15 @@ public class JobRepositoryTests : IDisposable
     [Fact]
     public void LoadReturnsNullForUnknownJob()
     {
+        var (repository, _) = CreateRepository();
+
         Assert.Null(repository.Load(Guid.NewGuid()));
     }
 
     [Fact]
     public void LoadAllReturnsAllPersistedJobs()
     {
+        var (repository, _) = CreateRepository();
         var first = CreateJob("first");
         var second = CreateJob("second");
         repository.Save(first);
@@ -143,10 +141,10 @@ public class JobRepositoryTests : IDisposable
     [Fact]
     public void LoadAllSkipsMalformedJobFiles()
     {
+        var (repository, fileSystem) = CreateRepository();
         var valid = CreateJob("valid");
         repository.Save(valid);
-        string malformedPath = Path.Combine(JobsDirectory, Guid.NewGuid() + ".json");
-        File.WriteAllText(malformedPath, "this is not JSON");
+        fileSystem.WriteAllText(Path.Combine(JobsDirectory, Guid.NewGuid() + ".json"), "this is not JSON");
 
         var jobs = repository.LoadAll();
 
@@ -157,9 +155,11 @@ public class JobRepositoryTests : IDisposable
     [Fact]
     public void LoadAllSkipsIncompleteJobFiles()
     {
-        Directory.CreateDirectory(JobsDirectory);
-        string incompletePath = Path.Combine(JobsDirectory, Guid.NewGuid() + ".json");
-        File.WriteAllText(incompletePath, @"{ ""name"": ""missing other fields"" }");
+        var (repository, fileSystem) = CreateRepository();
+        fileSystem.CreateDirectory(JobsDirectory);
+        fileSystem.WriteAllText(
+            Path.Combine(JobsDirectory, Guid.NewGuid() + ".json"),
+            @"{ ""name"": ""missing other fields"" }");
 
         Assert.Empty(repository.LoadAll());
     }
@@ -167,10 +167,12 @@ public class JobRepositoryTests : IDisposable
     [Fact]
     public void SaveLeavesNoTemporaryFileBehind()
     {
+        var (repository, fileSystem) = CreateRepository();
         var job = CreateJob();
+
         repository.Save(job);
 
-        var files = Directory.GetFiles(JobsDirectory);
+        var files = fileSystem.GetFiles(JobsDirectory, "*");
         var file = Assert.Single(files);
         Assert.EndsWith(job.Id + ".json", file);
     }
@@ -178,24 +180,54 @@ public class JobRepositoryTests : IDisposable
     [Fact]
     public void DeleteRemovesJobFile()
     {
+        var (repository, fileSystem) = CreateRepository();
         var job = CreateJob();
         repository.Save(job);
 
         Assert.True(repository.Delete(job.Id));
         Assert.Null(repository.Load(job.Id));
-        Assert.Empty(Directory.GetFiles(JobsDirectory));
+        Assert.Empty(fileSystem.GetFiles(JobsDirectory, "*.json"));
     }
 
     [Fact]
     public void DeleteReturnsFalseForUnknownJob()
     {
+        var (repository, _) = CreateRepository();
+
         Assert.False(repository.Delete(Guid.NewGuid()));
+    }
+}
+
+/// <summary>
+/// Concurrency and atomicity are properties of the real file system (rename
+/// semantics), so these tests intentionally use FileSystemService with actual
+/// disk access instead of the in-memory fake.
+/// </summary>
+public class JobRepositoryConcurrencyTests : IDisposable
+{
+    private readonly string tempDirectory = Path.Combine(
+        Path.GetTempPath(), "taskington-tests-" + Guid.NewGuid());
+
+    public void Dispose()
+    {
+        if (Directory.Exists(tempDirectory))
+        {
+            Directory.Delete(tempDirectory, true);
+        }
+    }
+
+    private JobRepository CreateRepository()
+    {
+        var platformDirectories = new PlatformDirectoryService(
+            DesktopPlatform.MacOS, _ => null, tempDirectory);
+        return new JobRepository(platformDirectories, new FileSystemService());
     }
 
     [Fact]
     public async Task ConcurrentSavesOfSameJobKeepFileComplete()
     {
-        var job = CreateJob();
+        var repository = CreateRepository();
+        var job = new Job { Name = "Test job", Script = "log('hello')" };
 
         await Task.WhenAll(Enumerable.Range(0, 20).Select(_ => Task.Run(() =>
         {
@@ -206,7 +238,9 @@ public class JobRepositoryTests : IDisposable
         var loaded = repository.Load(job.Id);
         Assert.NotNull(loaded);
         Assert.Equal(job.Id, loaded!.Id);
-        var files = Directory.GetFiles(JobsDirectory);
+        string jobsDirectory = Path.Combine(
+            tempDirectory, "Library", "Application Support", "Taskington", "jobs");
+        var files = Directory.GetFiles(jobsDirectory);
         Assert.Single(files);
         Assert.True(files[0].EndsWith(".json"));
     }
@@ -214,8 +248,9 @@ public class JobRepositoryTests : IDisposable
     [Fact]
     public async Task ConcurrentSavesOfDifferentJobsAllPersist()
     {
+        var repository = CreateRepository();
         var jobs = Enumerable.Range(0, 10)
-            .Select(i => CreateJob("job " + i))
+            .Select(i => new Job { Name = "job " + i, Script = "log('hello')" })
             .ToList();
 
         await Task.WhenAll(jobs.Select(job => Task.Run(() => repository.Save(job))));
