@@ -9,6 +9,7 @@ namespace Taskington.Base.Models;
 public sealed class ExecutionResult(
     Guid executionId,
     Guid jobId,
+    ExecutionMode executionMode,
     JobState status,
     DateTimeOffset startTime,
     DateTimeOffset endTime,
@@ -18,6 +19,8 @@ public sealed class ExecutionResult(
     public Guid ExecutionId { get; } = executionId;
 
     public Guid JobId { get; } = jobId;
+
+    public ExecutionMode ExecutionMode { get; } = executionMode;
 
     /// <summary>
     /// Terminal state of the execution: Completed, Failed or Cancelled.

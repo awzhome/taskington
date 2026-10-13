@@ -61,12 +61,13 @@ public class PlatformDirectoryServiceTests
     }
 
     [Fact]
-    public void JobsAndLogsDirectoriesAreSubdirectoriesOfConfigDirectory()
+    public void JobsHistoryAndLogsDirectoriesAreSubdirectoriesOfConfigDirectory()
     {
         var service = new PlatformDirectoryService(
             DesktopPlatform.MacOS, _ => null, "/Users/test");
 
         Assert.Equal(Path.Combine(service.ConfigDirectory, "jobs"), service.JobsDirectory);
+        Assert.Equal(Path.Combine(service.ConfigDirectory, "history"), service.HistoryDirectory);
         Assert.Equal(Path.Combine(service.ConfigDirectory, "logs"), service.LogsDirectory);
     }
 
@@ -98,7 +99,7 @@ public class PlatformDirectoryServiceTests
     }
 
     [Fact]
-    public void EnsureDirectoriesCreatesConfigJobsAndLogsDirectories()
+    public void EnsureDirectoriesCreatesConfigJobsHistoryAndLogsDirectories()
     {
         string tempHome = Path.Combine(Path.GetTempPath(), "taskington-tests-" + Guid.NewGuid());
         try
@@ -110,6 +111,7 @@ public class PlatformDirectoryServiceTests
 
             Assert.True(Directory.Exists(service.ConfigDirectory));
             Assert.True(Directory.Exists(service.JobsDirectory));
+            Assert.True(Directory.Exists(service.HistoryDirectory));
             Assert.True(Directory.Exists(service.LogsDirectory));
         }
         finally

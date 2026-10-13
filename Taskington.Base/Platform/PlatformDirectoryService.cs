@@ -17,13 +17,14 @@ public enum DesktopPlatform
 /// Resolves and creates the per-platform user configuration directory and its
 /// subdirectories (see spec chapter 8): macOS ~/Library/Application Support/Taskington/,
 /// Linux $XDG_CONFIG_HOME/taskington/ (default ~/.config/taskington/),
-/// Windows %APPDATA%\Taskington\, each containing jobs/ and logs/.
+/// Windows %APPDATA%\Taskington\, each containing jobs/, history/ and logs/.
 /// </summary>
 public sealed class PlatformDirectoryService
 {
     public DesktopPlatform Platform { get; }
     public string ConfigDirectory { get; }
     public string JobsDirectory { get; }
+    public string HistoryDirectory { get; }
     public string LogsDirectory { get; }
 
     public PlatformDirectoryService()
@@ -39,6 +40,7 @@ public sealed class PlatformDirectoryService
         Platform = platform;
         ConfigDirectory = ResolveConfigDirectory(platform, getEnvironmentVariable, userHomeDirectory);
         JobsDirectory = Path.Combine(ConfigDirectory, "jobs");
+        HistoryDirectory = Path.Combine(ConfigDirectory, "history");
         LogsDirectory = Path.Combine(ConfigDirectory, "logs");
     }
 
@@ -50,6 +52,7 @@ public sealed class PlatformDirectoryService
     {
         Directory.CreateDirectory(ConfigDirectory);
         Directory.CreateDirectory(JobsDirectory);
+        Directory.CreateDirectory(HistoryDirectory);
         Directory.CreateDirectory(LogsDirectory);
     }
 

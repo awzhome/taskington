@@ -24,7 +24,7 @@ Phase 9 last.
 
 - [x] **S1.1 Domain models:** Job, JobState, ExecutionMode, JobExecution, ExecutionResult, ScriptValidationResult. Tests cover state transitions.
 - [x] **S1.2 JobRepository:** one JSON file per job, GUID ids, atomic writes (temp + rename), load/save/delete. Tests include malformed files and concurrent access.
-- [ ] **S1.3 JobHistoryService:** metadata JSON per execution under `history/<GUID>/`. Tests verify layout and record-on-completion.
+- [x] **S1.3 JobHistoryService:** metadata JSON per execution under `history/<GUID>/`. Tests verify layout and record-on-completion.
 
 End of phase: add an in-memory `IFileSystemService` fake in the test projects and use
 it to replace real-disk file access in the repository/history tests where the file

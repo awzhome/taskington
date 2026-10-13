@@ -31,6 +31,7 @@ public class ServiceCollectionExtensionsTests
         Assert.NotNull(serviceProvider.GetRequiredService<PlatformDirectoryService>());
         Assert.NotNull(serviceProvider.GetRequiredService<LoggingBootstrap>());
         Assert.NotNull(serviceProvider.GetRequiredService<JobRepository>());
+        Assert.NotNull(serviceProvider.GetRequiredService<JobHistoryService>());
     }
 
     [Fact]
@@ -52,5 +53,8 @@ public class ServiceCollectionExtensionsTests
         Assert.Same(
             serviceProvider.GetRequiredService<JobRepository>(),
             serviceProvider.GetRequiredService<JobRepository>());
+        Assert.Same(
+            serviceProvider.GetRequiredService<JobHistoryService>(),
+            serviceProvider.GetRequiredService<JobHistoryService>());
     }
 }

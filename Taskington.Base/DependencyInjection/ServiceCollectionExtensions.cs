@@ -19,6 +19,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<PlatformDirectoryService>();
         services.AddSingleton<LoggingBootstrap>();
         services.AddSingleton<JobRepository>();
+        services.AddSingleton<JobHistoryService>();
         return services;
     }
 }
