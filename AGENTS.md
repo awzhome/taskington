@@ -47,6 +47,9 @@ spec's Document Version when a decision stated there changes.
 ## Coding rules
 
 - Follow `.editorconfig` (4-space indent, UTF-8); nullable reference types enabled.
+- Prefer C# primary constructors over traditional constructor syntax where possible;
+  use classic constructors only when the primary form cannot express it (e.g. multiple
+  overloads with logic, or non-public construction required).
 - Clean, reviewable code: no speculative abstractions, no dead or commented-out code.
 - ASCII where possible (`buildtools/unicode-check` enforces); no emoji anywhere.
 - DI via constructor injection only; no service locator.

@@ -22,7 +22,7 @@ Phase 9 last.
 
 ## Phase 1: Core domain (Taskington.Base)
 
-- [ ] **S1.1 Domain models:** Job, JobState, ExecutionMode, JobExecution, ExecutionResult, ScriptValidationResult. Tests cover state transitions.
+- [x] **S1.1 Domain models:** Job, JobState, ExecutionMode, JobExecution, ExecutionResult, ScriptValidationResult. Tests cover state transitions.
 - [ ] **S1.2 JobRepository:** one JSON file per job, GUID ids, atomic writes (temp + rename), load/save/delete. Tests include malformed files and concurrent access.
 - [ ] **S1.3 JobHistoryService:** metadata JSON per execution under `history/<GUID>/`. Tests verify layout and record-on-completion.
 
