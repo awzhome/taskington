@@ -3,6 +3,7 @@ using Taskington.Base.DependencyInjection;
 using Taskington.Base.FileSystem;
 using Taskington.Base.Logging;
 using Taskington.Base.Platform;
+using Taskington.Base.Scripting;
 using Taskington.Base.Storage;
 using Xunit;
 
@@ -32,6 +33,8 @@ public class ServiceCollectionExtensionsTests
         Assert.NotNull(serviceProvider.GetRequiredService<LoggingBootstrap>());
         Assert.NotNull(serviceProvider.GetRequiredService<JobRepository>());
         Assert.NotNull(serviceProvider.GetRequiredService<JobHistoryService>());
+        Assert.NotNull(serviceProvider.GetRequiredService<LuaScriptEngine>());
+        Assert.NotNull(serviceProvider.GetRequiredService<ScriptSandbox>());
     }
 
     [Fact]
@@ -56,5 +59,11 @@ public class ServiceCollectionExtensionsTests
         Assert.Same(
             serviceProvider.GetRequiredService<JobHistoryService>(),
             serviceProvider.GetRequiredService<JobHistoryService>());
+        Assert.Same(
+            serviceProvider.GetRequiredService<LuaScriptEngine>(),
+            serviceProvider.GetRequiredService<LuaScriptEngine>());
+        Assert.Same(
+            serviceProvider.GetRequiredService<ScriptSandbox>(),
+            serviceProvider.GetRequiredService<ScriptSandbox>());
     }
 }

@@ -29,6 +29,16 @@
         "resolved": "4.0.0",
         "contentHash": "kzLFyBYUnoidpGOXvpNOfIo8C92gVgVR6X8ncHwhcrDYugiOut5rrhDkr0L3cWHd7J2pKXf6LgaeXoBBDlx1ag=="
       },
+      "LuaCSharp.Annotations": {
+        "type": "Transitive",
+        "resolved": "0.5.7",
+        "contentHash": "564xGuNTWHcOTPuml/ST6MDw4v5ju+c//R4OmXlmmcOBS/mGE7h9JaLeLblulF78ZqSiq3q+mi0ImHRLdSSIRQ=="
+      },
+      "LuaCSharp.SourceGenerator": {
+        "type": "Transitive",
+        "resolved": "0.5.7",
+        "contentHash": "uaD/gfASJrt0jDGXaryeGAXoCaUBBoEF7AGxJ9H0tFfkKEAeU5RjBolyym7Hq0tKgn86WLmbXf+dd8JfyDpmfQ=="
+      },
       "Microsoft.CodeCoverage": {
         "type": "Transitive",
         "resolved": "18.10.1",
@@ -95,9 +105,20 @@
       "taskington.base": {
         "type": "Project",
         "dependencies": {
+          "LuaCSharp": "[0.5.7, )",
           "Microsoft.Extensions.DependencyInjection": "[10.0.12, )",
           "Serilog": "[4.4.0, )",
           "Serilog.Sinks.File": "[7.0.0, )"
+        }
+      },
+      "LuaCSharp": {
+        "type": "CentralTransitive",
+        "requested": "[0.5.7, )",
+        "resolved": "0.5.7",
+        "contentHash": "R5FojfU6ejLtuPZbJATG1Hea7IfGF8BThxWSAfk4qwnUYZpUtjIKHtUb8Ko4yKFVqMkqkVWRJSdPWzR8axFo0Q==",
+        "dependencies": {
+          "LuaCSharp.Annotations": "0.5.7",
+          "LuaCSharp.SourceGenerator": "0.5.7"
         }
       },
       "Microsoft.Extensions.DependencyInjection": {

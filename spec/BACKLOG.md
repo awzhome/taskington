@@ -33,8 +33,8 @@ Phase 9 last.
 
 ## Phase 2: Scripting engine and sandbox
 
-- [ ] **S2.1 LuaScriptEngine:** load/parse scripts, structured syntax errors with line info.
-- [ ] **S2.2 ScriptSandbox:** fresh environment per execution, no standard libraries; escape-attempt tests (os, io, require-style, metatables).
+- [x] **S2.1 LuaScriptEngine:** load/parse scripts, structured syntax errors with line info.
+- [x] **S2.2 ScriptSandbox:** fresh environment per execution, no standard libraries; escape-attempt tests (os, io, require-style, metatables).
 - [ ] **S2.3 Define MVP syntax in [JOB_SYNTAX.md](JOB_SYNTAX.md):** simple, non-technical, human-readable; commands, rsync sync, logging, progress/status. Code names must match it.
 - [ ] **S2.4 TaskingtonLuaApi:** exactly the JOB_SYNTAX.md functions, delegating via IActionExecutor, argument validation raising Lua errors. Tests per function with mock and real executors.
 

@@ -278,6 +278,7 @@
       "taskington.base": {
         "type": "Project",
         "dependencies": {
+          "LuaCSharp": "[0.5.7, )",
           "Microsoft.Extensions.DependencyInjection": "[10.0.12, )",
           "Serilog": "[4.4.0, )",
           "Serilog.Sinks.File": "[7.0.0, )"
