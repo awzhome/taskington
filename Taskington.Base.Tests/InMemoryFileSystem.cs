@@ -36,7 +36,7 @@ internal sealed class InMemoryFileSystem : IFileSystemService
 
     public string ReadAllText(string path)
     {
-        return files.TryGetValue(path, out string contents)
+        return files.TryGetValue(path, out string? contents)
             ? contents
             : throw new FileNotFoundException("File not found.", path);
     }
@@ -54,7 +54,7 @@ internal sealed class InMemoryFileSystem : IFileSystemService
 
     public void MoveFile(string sourcePath, string destinationPath, bool overwrite)
     {
-        if (!files.TryGetValue(sourcePath, out string contents))
+        if (!files.TryGetValue(sourcePath, out string? contents))
         {
             throw new FileNotFoundException("File not found.", sourcePath);
         }

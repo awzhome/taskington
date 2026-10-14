@@ -7,7 +7,7 @@ using Taskington.App.Views;
 
 namespace Taskington.App;
 
-public partial class App : Application
+public class App : Application
 {
     private readonly IServiceProvider? services;
 

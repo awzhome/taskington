@@ -105,7 +105,7 @@ public class JobRepositoryTests
         var loaded = repository.Load(job.Id);
 
         Assert.NotNull(loaded);
-        Assert.Equal(job.Id, loaded!.Id);
+        Assert.Equal(job.Id, loaded.Id);
         Assert.Equal("Round trip", loaded.Name);
         Assert.Equal("description", loaded.Description);
         Assert.Equal("log('round trip')", loaded.Script);
@@ -237,12 +237,12 @@ public class JobRepositoryConcurrencyTests : IDisposable
 
         var loaded = repository.Load(job.Id);
         Assert.NotNull(loaded);
-        Assert.Equal(job.Id, loaded!.Id);
+        Assert.Equal(job.Id, loaded.Id);
         string jobsDirectory = Path.Combine(
             tempDirectory, "Library", "Application Support", "Taskington", "jobs");
         var files = Directory.GetFiles(jobsDirectory);
         Assert.Single(files);
-        Assert.True(files[0].EndsWith(".json"));
+        Assert.EndsWith(".json", files[0]);
     }
 
     [Fact]

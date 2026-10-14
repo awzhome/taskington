@@ -113,10 +113,7 @@ public sealed class JobRepository(
     /// </summary>
     private static bool IsComplete(JobFile jobFile)
     {
-        return jobFile.Id != Guid.Empty
-            && jobFile.Name is not null
-            && jobFile.Description is not null
-            && jobFile.Script is not null;
+        return jobFile.Id != Guid.Empty;
     }
 
     private string GetJobFilePath(Guid id)
